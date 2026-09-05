@@ -46,4 +46,5 @@ export const recoveryApi = {
   },
   seedDemo: () => fetchProxy<{ status: string; seeded_count: number; case_ids?: string[] }>("/v1/recovery/demo/seed", { method: "POST" }),
   getSystemHealth: () => fetchProxy<Record<string, unknown>>("/v1/health/dependencies"),
+  getRouteHealth: () => fetchProxy<{ status: string; corridors: any[] }>("/v1/routes/health"),
 };

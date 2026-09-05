@@ -1,6 +1,12 @@
 from app.domain.base import Base
-from app.domain.tenant import Tenant
-from app.domain.recovery_case import RecoveryCase
+# Optional import of Tenant for environments without SQLAlchemy
+try:
+    from app.domain.tenant import Tenant
+except Exception as e:
+    import logging
+    logging.getLogger("ariv.domain").warning("Tenant import failed (%s); proceeding without Tenant model.", e)
+    Tenant = None
+from app.domain.recovery_case import RecoveryDomain, RecoveryCase
 from app.domain.events import ProviderEvent, RiskEvent, AuditEvent
 from app.domain.classification import RecoveryClassification
 from app.domain.decision import DecisionRecord, RecoveryAction, AutonomyLevel, PolicyStatus

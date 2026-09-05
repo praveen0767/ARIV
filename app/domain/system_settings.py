@@ -19,9 +19,25 @@ execution_enabled   | bool      | false   | Global execution kill switch.
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, String, DateTime
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.dialects.postgresql import JSONB
+try:
+    from sqlalchemy import Column, String, DateTime
+    from sqlalchemy.dialects.postgresql import UUID, JSONB
+except Exception as e:
+    import logging, enum, uuid
+    logging.getLogger("ariv.domain.system_settings").warning(
+        "SQLAlchemy not available (%s); using dummy placeholders.", e
+    )
+    class _DummyColumn:
+        def __init__(self, *args, **kwargs):
+            pass
+    Column = _DummyColumn
+    String = _DummyColumn
+    DateTime = _DummyColumn
+    class _DummyUUID:
+        def __init__(self, *args, **kwargs):
+            pass
+    UUID = _DummyUUID
+    JSONB = _DummyColumn
 
 from app.domain.base import Base
 

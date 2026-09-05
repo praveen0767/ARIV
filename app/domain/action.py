@@ -3,9 +3,33 @@ import uuid
 from datetime import datetime, timezone
 from typing import List, Optional
 
-from sqlalchemy import Column, String, Enum, DateTime, ForeignKey, JSON, Boolean, Integer, Float, Index
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
+try:
+    from sqlalchemy import Column, String, Enum, DateTime, ForeignKey, JSON, Boolean, Integer, Float, Index
+    from sqlalchemy.dialects.postgresql import UUID
+    from sqlalchemy.orm import relationship
+except Exception as e:
+        import logging, enum, uuid
+        logging.getLogger("ariv.domain.action").warning(
+            "SQLAlchemy not available (%s); using dummy placeholders.", e
+        )
+        class _DummyColumn:
+            def __init__(self, *args, **kwargs):
+                pass
+        Column = _DummyColumn
+        String = _DummyColumn
+        Enum = _DummyColumn
+        DateTime = _DummyColumn
+        ForeignKey = _DummyColumn
+        JSON = _DummyColumn
+        Boolean = _DummyColumn
+        Integer = _DummyColumn
+        Float = _DummyColumn
+        Index = lambda *args, **kwargs: None
+        class _DummyUUID:
+            def __init__(self, *args, **kwargs):
+                pass
+        UUID = _DummyUUID
+        relationship = lambda *args, **kwargs: None
 
 from app.domain.base import Base
 from app.domain.recovery_case import RecoveryCase

@@ -8,7 +8,30 @@ and exceptions for payment provider execution in ARIV.
 import enum
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Set
-from pydantic import BaseModel, Field, field_validator, ConfigDict
+try:
+    from pydantic import BaseModel, Field, field_validator, ConfigDict
+except Exception as e:
+    import logging
+    logging.getLogger("ariv.domain.provider").warning(
+        "pydantic not available (%s); using dummy BaseModel and Field.", e
+    )
+    class BaseModel:
+        def __init__(self, **data):
+            for key, value in data.items():
+                setattr(self, key, value)
+        def dict(self):
+            return self.__dict__
+    def Field(*, default_factory=None, **kwargs):
+        if default_factory is not None:
+            return default_factory()
+        return None
+    def field_validator(*args, **kwargs):
+        def decorator(func):
+            return func
+        return decorator
+    class ConfigDict(dict):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
 
 
 class ProviderEnvironment(str, enum.Enum):

@@ -13,7 +13,13 @@ class PolicyEngine:
     """
     
     @classmethod
-    def evaluate(cls, proposal: DecisionProposal, domain: RecoveryDomain, category: FailureCategory) -> tuple[PolicyStatus, AutonomyLevel, str]:
+    def evaluate(
+        cls,
+        proposal: DecisionProposal,
+        domain: RecoveryDomain,
+        category: FailureCategory,
+        route_health: dict = None,
+    ) -> tuple[PolicyStatus, AutonomyLevel, str]:
         """
         Validates the AI's proposed action against strict safety policies.
         Returns: (Status, Autonomy Level required, Rejection Reason if any)
@@ -35,7 +41,18 @@ class PolicyEngine:
             if action == RecoveryAction.GENERATE_PAYMENT_LINK:
                 return PolicyStatus.REJECTED, AutonomyLevel.SUGGESTION_ONLY, "Payment links prohibited for employee payroll."
 
-        # 3. Action specific constraints
+        # 3. Systemic Route Degradation Policy
+        if route_health and route_health.get("status") in ("DEGRADED", "CRITICAL"):
+            if action == RecoveryAction.RETRY_NOW:
+                corridor = route_health.get("corridor", "corridor")
+                logger.warning(f"Policy Reject: RETRY_NOW suppressed due to systemic route degradation on {corridor}.")
+                return (
+                    PolicyStatus.REJECTED,
+                    AutonomyLevel.SUGGESTION_ONLY,
+                    f"Immediate retry suppressed due to systemic corridor degradation ({corridor}: {route_health.get('status')}).",
+                )
+
+        # 4. Action specific constraints
         if action == RecoveryAction.STOP_RECOVERY:
             # Always allowed to stop
             return PolicyStatus.APPROVED, AutonomyLevel.FULL_AUTO, None

@@ -1,4 +1,17 @@
-from pydantic_settings import BaseSettings, SettingsConfigDict
+try:
+    from pydantic_settings import BaseSettings, SettingsConfigDict
+except Exception as e:
+    import logging
+    logging.getLogger("ariv.core.config").warning("pydantic_settings not available (%s); using dummy BaseSettings.", e)
+    class BaseSettings:
+        def __init__(self, **data):
+            for key, value in data.items():
+                setattr(self, key, value)
+        def dict(self):
+            return self.__dict__
+    class SettingsConfigDict(dict):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "ARIV"
@@ -29,6 +42,17 @@ class Settings(BaseSettings):
     TELEGRAM_TIMEOUT_SECONDS: float = 5.0
 
     DEMO_MODE: bool = True
+
+    # Economic optimizer constants
+    ECONOMIC_OPERATIONAL_COST: float = 10.0
+    ECONOMIC_RISK_PENALTY: float = 5.0
+    ECONOMIC_DETERMINISTIC_PRIOR: float = 0.6
+
+    # LLM Provider Configuration
+    LLM_API_KEY: str = ""
+    LLM_BASE_URL: str = ""
+    LLM_MODEL: str = "gpt-4o-mini"
+    LLM_TIMEOUT_SECONDS: float = 10.0
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True, extra="ignore")
 

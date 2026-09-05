@@ -51,3 +51,15 @@ async def health_dependencies():
         "razorpay": "ok",
         "telegram": telegram_status,
     }
+
+
+@router.get("/routes/health")
+@router.get("/v1/routes/health")
+async def routes_health():
+    """Return real-time health and degradation status of payment corridors."""
+    from app.services.systemic_intelligence import SystemicIntelligenceService
+    corridors = SystemicIntelligenceService.get_all_corridors()
+    return {
+        "status": "ok",
+        "corridors": corridors,
+    }

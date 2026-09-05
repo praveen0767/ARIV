@@ -13,10 +13,37 @@ Guarantees:
 import enum
 import uuid
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, DateTime, ForeignKey, JSON, Integer, Index, Enum
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
+try:
+    from sqlalchemy import Column, String, DateTime, ForeignKey, JSON, Integer, Index, Enum
+    from sqlalchemy.dialects.postgresql import UUID
+    from sqlalchemy.orm import relationship
+    from sqlalchemy.sql import func
+except Exception as e:
+    import logging
+    logging.getLogger("ariv.domain.knowledge_outbox").warning(
+        "SQLAlchemy not available (%s); using dummy placeholders.", e
+    )
+    class _DummyColumn:
+        def __init__(self, *args, **kwargs):
+            pass
+    Column = _DummyColumn
+    String = _DummyColumn
+    DateTime = _DummyColumn
+    ForeignKey = _DummyColumn
+    JSON = _DummyColumn
+    Integer = _DummyColumn
+    Index = lambda *args, **kwargs: None
+    Enum = _DummyColumn
+    class _DummyUUID:
+        def __init__(self, *args, **kwargs):
+            pass
+    UUID = _DummyUUID
+    relationship = lambda *args, **kwargs: None
+    class _DummyFunc:
+        @staticmethod
+        def now():
+            return None
+    func = _DummyFunc
 from app.domain.base import Base
 
 

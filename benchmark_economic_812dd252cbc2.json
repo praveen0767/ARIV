@@ -1,0 +1,77 @@
+{
+  "benchmark_id": "812dd252cbc2",
+  "seed": 42,
+  "total_cases": 5,
+  "amount_range_paise": {
+    "min": 10000,
+    "max": 1000000
+  },
+  "assumptions": {
+    "operational_cost_inr": 10.0,
+    "risk_penalty_inr": 5.0,
+    "benchmark_mode": "SYNTHETIC",
+    "data_mode": "SYNTHETIC",
+    "outcome_mode": "MODELED",
+    "external_calls": false,
+    "database_mutations": false
+  },
+  "strategy_comparison": {
+    "NAIVE": {
+      "total_cases": 5,
+      "policy_compliant_cases": 5,
+      "policy_compliance_rate": 1.0,
+      "total_expected_recovery_inr": 10382.22,
+      "total_operational_costs_inr": 50.0,
+      "total_risk_penalties_inr": 25.0,
+      "total_expected_net_recovery_inr": 10307.22,
+      "avg_enr_per_case_inr": 2061.44,
+      "action_distribution": {
+        "RETRY_NOW": 5
+      }
+    },
+    "BASELINE": {
+      "total_cases": 5,
+      "policy_compliant_cases": 5,
+      "policy_compliance_rate": 1.0,
+      "total_expected_recovery_inr": 4201.62,
+      "total_operational_costs_inr": 20.0,
+      "total_risk_penalties_inr": 10.0,
+      "total_expected_net_recovery_inr": 4171.62,
+      "avg_enr_per_case_inr": 834.32,
+      "action_distribution": {
+        "STOP_RECOVERY": 3,
+        "GENERATE_PAYMENT_LINK": 1,
+        "RETRY_NOW": 1
+      }
+    },
+    "ECONOMIC": {
+      "total_cases": 5,
+      "policy_compliant_cases": 5,
+      "policy_compliance_rate": 1.0,
+      "total_expected_recovery_inr": 4201.62,
+      "total_operational_costs_inr": 20.0,
+      "total_risk_penalties_inr": 10.0,
+      "total_expected_net_recovery_inr": 4171.62,
+      "avg_enr_per_case_inr": 834.32,
+      "action_distribution": {
+        "STOP_RECOVERY": 3,
+        "GENERATE_PAYMENT_LINK": 1,
+        "RETRY_NOW": 1
+      }
+    },
+    "AI_PLUS_ECONOMIC": {
+      "total_cases": 5,
+      "policy_compliant_cases": 5,
+      "policy_compliance_rate": 1.0,
+      "total_expected_recovery_inr": 16900.76,
+      "total_operational_costs_inr": 50.0,
+      "total_risk_penalties_inr": 25.0,
+      "total_expected_net_recovery_inr": 16825.76,
+      "avg_enr_per_case_inr": 3365.15,
+      "action_distribution": {
+        "RETRY_LATER": 3,
+        "GENERATE_PAYMENT_LINK": 2
+      }
+    }
+  }
+}

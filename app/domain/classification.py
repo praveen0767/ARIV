@@ -1,9 +1,26 @@
-import enum
-import uuid
-from sqlalchemy import Column, String, Enum, DateTime, ForeignKey
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import relationship
-from datetime import datetime, timezone
+try:
+    import enum, uuid
+    from sqlalchemy import Column, String, Enum, DateTime, ForeignKey
+    from sqlalchemy.dialects.postgresql import UUID
+    from sqlalchemy.orm import relationship
+    from datetime import datetime, timezone
+except Exception as e:
+    import logging, enum, uuid
+    logging.getLogger("ariv.domain.classification").warning("SQLAlchemy not available (%s); using dummy placeholders.", e)
+    # Dummy placeholder definitions for SQLAlchemy components
+    class _DummyColumn:
+        def __init__(self, *args, **kwargs):
+            pass
+    Column = _DummyColumn
+    String = _DummyColumn
+    Enum = _DummyColumn
+    DateTime = _DummyColumn
+    ForeignKey = _DummyColumn
+    def _dummy_uuid(*args, **kwargs):
+        return 'dummy_uuid'
+    UUID = _dummy_uuid
+    relationship = lambda *args, **kwargs: None
+    from datetime import datetime, timezone
 from app.domain.base import Base
 
 class FailureCategory(str, enum.Enum):

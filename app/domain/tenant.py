@@ -1,7 +1,25 @@
 import enum
 import uuid
-from sqlalchemy import Column, String, JSON, Enum, DateTime
-from sqlalchemy.dialects.postgresql import UUID
+try:
+    from sqlalchemy import Column, String, JSON, Enum, DateTime
+    from sqlalchemy.dialects.postgresql import UUID
+except Exception as e:
+        import logging, enum, uuid
+        logging.getLogger("ariv.domain.tenant").warning(
+            "SQLAlchemy not available (%s); using dummy placeholders.", e
+        )
+        class _DummyColumn:
+            def __init__(self, *args, **kwargs):
+                pass
+        Column = _DummyColumn
+        String = _DummyColumn
+        JSON = _DummyColumn
+        Enum = _DummyColumn
+        DateTime = _DummyColumn
+        class _DummyUUID:
+            def __init__(self, *args, **kwargs):
+                pass
+        UUID = _DummyUUID
 from datetime import datetime, timezone
 from app.domain.base import Base
 

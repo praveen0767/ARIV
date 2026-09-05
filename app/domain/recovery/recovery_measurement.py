@@ -1,11 +1,36 @@
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import Column, String, Integer, DateTime, Boolean
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship
+try:
+    from sqlalchemy import Column, String, Integer, DateTime, Boolean
+    from sqlalchemy.dialects.postgresql import UUID
+    from sqlalchemy.sql.schema import ForeignKey
+    from sqlalchemy.sql import func
+    from sqlalchemy.orm import relationship
+except Exception as e:
+    import logging
+    logging.getLogger("ariv.domain.recovery_measurement").warning(
+        "SQLAlchemy not available (%s); using dummy placeholders.", e
+    )
+    class _DummyColumn:
+        def __init__(self, *args, **kwargs):
+            pass
+    Column = _DummyColumn
+    String = _DummyColumn
+    Integer = _DummyColumn
+    DateTime = _DummyColumn
+    Boolean = _DummyColumn
+    class _DummyUUID:
+        def __init__(self, *args, **kwargs):
+            pass
+    UUID = _DummyUUID
+    relationship = lambda *args, **kwargs: None
+    ForeignKey = lambda *args, **kwargs: None
+    class _DummyFunc:
+        @staticmethod
+        def now():
+            return None
+    func = _DummyFunc
 
 from app.domain.base import Base
 

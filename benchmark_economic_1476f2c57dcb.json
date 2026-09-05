@@ -1,0 +1,121 @@
+{
+  "benchmark_id": "1476f2c57dcb",
+  "seed": 42,
+  "total_cases": 30,
+  "amount_range_paise": {
+    "min": 10000,
+    "max": 1000000
+  },
+  "total_amount_at_risk_inr": 143419.07,
+  "evidence_classification": {
+    "cohort_data": "SYNTHETIC",
+    "evaluator_outcomes": "MODELED",
+    "net_value": "ESTIMATED",
+    "real_provider_calls": false,
+    "database_mutations": false
+  },
+  "assumptions": {
+    "operational_cost_inr": 10.0,
+    "risk_penalty_inr": 5.0,
+    "high_risk_penalty_inr": 25.0,
+    "held_out_evaluation_truth": true
+  },
+  "strategy_comparison": {
+    "NAIVE": {
+      "total_cases": 30,
+      "amount_at_risk_inr": 143419.07,
+      "modeled_successful_recoveries": 2,
+      "modeled_recovery_rate": 0.0667,
+      "modeled_gross_recovered_inr": 9491.56,
+      "total_operational_costs_inr": 300.0,
+      "total_risk_penalties_inr": 390.0,
+      "modeled_net_recovered_value_inr": 8801.56,
+      "avg_net_value_per_case_inr": 293.39,
+      "policy_compliant_cases": 13,
+      "policy_compliance_rate": 0.4333,
+      "false_interventions": 17,
+      "unnecessary_retries_avoided": 0,
+      "stop_count": 0,
+      "escalation_count": 0,
+      "action_distribution": {
+        "RETRY_NOW": 30
+      }
+    },
+    "BASELINE": {
+      "total_cases": 30,
+      "amount_at_risk_inr": 143419.07,
+      "modeled_successful_recoveries": 14,
+      "modeled_recovery_rate": 0.4667,
+      "modeled_gross_recovered_inr": 53034.0,
+      "total_operational_costs_inr": 200.0,
+      "total_risk_penalties_inr": 100.0,
+      "modeled_net_recovered_value_inr": 52734.0,
+      "avg_net_value_per_case_inr": 1757.8,
+      "policy_compliant_cases": 27,
+      "policy_compliance_rate": 0.9,
+      "false_interventions": 0,
+      "unnecessary_retries_avoided": 12,
+      "stop_count": 10,
+      "escalation_count": 0,
+      "action_distribution": {
+        "RETRY_LATER": 12,
+        "GENERATE_PAYMENT_LINK": 4,
+        "REQUEST_PAYMENT_METHOD_UPDATE": 4,
+        "STOP_RECOVERY": 10
+      }
+    },
+    "ECONOMIC": {
+      "total_cases": 30,
+      "amount_at_risk_inr": 143419.07,
+      "modeled_successful_recoveries": 16,
+      "modeled_recovery_rate": 0.5333,
+      "modeled_gross_recovered_inr": 65897.29,
+      "total_operational_costs_inr": 230.0,
+      "total_risk_penalties_inr": 115.0,
+      "modeled_net_recovered_value_inr": 65552.29,
+      "avg_net_value_per_case_inr": 2185.08,
+      "policy_compliant_cases": 30,
+      "policy_compliance_rate": 1.0,
+      "false_interventions": 0,
+      "unnecessary_retries_avoided": 12,
+      "stop_count": 7,
+      "escalation_count": 0,
+      "action_distribution": {
+        "RETRY_LATER": 12,
+        "GENERATE_PAYMENT_LINK": 4,
+        "REQUEST_PAYMENT_METHOD_UPDATE": 4,
+        "SEND_REMINDER": 3,
+        "STOP_RECOVERY": 7
+      }
+    },
+    "AI_PLUS_ECONOMIC": {
+      "total_cases": 30,
+      "amount_at_risk_inr": 143419.07,
+      "modeled_successful_recoveries": 17,
+      "modeled_recovery_rate": 0.5667,
+      "modeled_gross_recovered_inr": 73789.02,
+      "total_operational_costs_inr": 230.0,
+      "total_risk_penalties_inr": 115.0,
+      "modeled_net_recovered_value_inr": 73444.02,
+      "avg_net_value_per_case_inr": 2448.13,
+      "policy_compliant_cases": 30,
+      "policy_compliance_rate": 1.0,
+      "false_interventions": 0,
+      "unnecessary_retries_avoided": 12,
+      "stop_count": 7,
+      "escalation_count": 3,
+      "action_distribution": {
+        "RETRY_LATER": 9,
+        "GENERATE_PAYMENT_LINK": 11,
+        "ESCALATE_TO_HUMAN": 3,
+        "STOP_RECOVERY": 7
+      }
+    }
+  },
+  "relative_improvements_inr": {
+    "baseline_vs_naive_inr": 43932.44,
+    "economic_vs_baseline_inr": 12818.29,
+    "ai_plus_economic_vs_baseline_inr": 20710.02,
+    "ai_plus_economic_vs_economic_inr": 7891.73
+  }
+}
