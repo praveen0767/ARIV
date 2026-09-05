@@ -9,15 +9,33 @@
 </p>
 
 <p align="center">
-  <a href="#architecture">Architecture</a> •
-  <a href="#ai--agentic-system">AI / Agentic System</a> •
-  <a href="#qdrant-semantic-recovery-memory">Qdrant Memory</a> •
-  <a href="#mcp-tool-boundary">MCP</a> •
-  <a href="#real-end-to-end-recovery">Live Recovery</a> •
-  <a href="#recovery-attribution--measurement">Measurement</a> •
-  <a href="#ask-ariv">ASK ARIV</a> •
-  <a href="#engineering-reliability">Reliability</a> •
-  <a href="#local-development">Run Locally</a>
+  <a href="#architecture">
+    <img src="https://img.shields.io/badge/🏗️%20Architecture-0A66C2?style=for-the-badge" />
+  </a>
+  <a href="#ai--agentic-system">
+    <img src="https://img.shields.io/badge/🤖%20AI%20%2F%20Agentic-7C3AED?style=for-the-badge" />
+  </a>
+  <a href="#qdrant-semantic-recovery-memory">
+    <img src="https://img.shields.io/badge/🧠%20Qdrant%20Memory-E63946?style=for-the-badge" />
+  </a>
+  <a href="#mcp-tool-boundary">
+    <img src="https://img.shields.io/badge/🔌%20MCP-16A34A?style=for-the-badge" />
+  </a>
+  <a href="#real-end-to-end-recovery">
+    <img src="https://img.shields.io/badge/💳%20Live%20Recovery-F59E0B?style=for-the-badge" />
+  </a>
+  <a href="#recovery-attribution--measurement">
+    <img src="https://img.shields.io/badge/📈%20Measurement-0891B2?style=for-the-badge" />
+  </a>
+  <a href="#ask-ariv">
+    <img src="https://img.shields.io/badge/💬%20ASK%20ARIV-DB2777?style=for-the-badge" />
+  </a>
+  <a href="#engineering-reliability">
+    <img src="https://img.shields.io/badge/🛡️%20Reliability-475569?style=for-the-badge" />
+  </a>
+  <a href="#local-development">
+    <img src="https://img.shields.io/badge/⚙️%20Run%20Locally-111827?style=for-the-badge" />
+  </a>
 </p>
 
 ---
