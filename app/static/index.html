@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARIV — Autonomous Revenue Intelligence & Value Engine</title>
+  <meta name="description" content="ARIV Production Recovery Dashboard & Buildathon Product Experience.">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- TOP HEADER -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo-wrap">
+          <span class="logo-shield">⚡</span>
+          <div class="logo-text">
+            <h1>ARIV</h1>
+            <span class="logo-tag">Autonomous Revenue Recovery Engine</span>
+          </div>
+        </div>
+        <div class="system-status-badges">
+          <span class="status-pill status-online" title="Authoritative Ledger">
+            <span class="dot"></span> Postgres Authoritative
+          </span>
+          <span class="status-pill status-sandbox" title="Razorpay Test/Sandbox Provider">
+            <span class="dot amber"></span> Razorpay Sandbox
+          </span>
+          <span class="status-pill status-qdrant" title="Tenant-Isolated Vector Memory">
+            <span class="dot purple"></span> Qdrant Memory (768d)
+          </span>
+          <span class="status-pill status-policy" title="Deterministic Hard Safety Guardrails">
+            <span class="dot blue"></span> Policy Guardrails Active
+          </span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="tenant-badge" id="tenantDisplayWrap">
+          <span class="tenant-label">ACCOUNT</span>
+          <span class="tenant-id" id="displayAccountId">acc_test_tenant</span>
+        </div>
+        <button id="btnConfig" class="btn btn-secondary" title="Configure Account & API Key">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          Auth
+        </button>
+        <button id="btnSeedDemo" class="btn btn-demo pulse" title="Seed 4 deterministic sandbox demo scenarios">
+          <span>⚡ Seed Sandbox Scenarios</span>
+        </button>
+        <button id="btnRefresh" class="btn btn-secondary" title="Refresh Live Data">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+          Refresh
+        </button>
+      </div>
+    </header>
+
+    <!-- BANNER NOTIFICATION -->
+    <div id="demoBanner" class="demo-banner hidden">
+      <div class="banner-content">
+        <span class="banner-icon">🎯</span>
+        <div class="banner-text" id="demoBannerText">
+          <strong>Deterministic Sandbox Demo Ready:</strong> 4 test scenarios loaded across Payment Link, Policy Rejection, Reconciled Gateway Timeout, and Organic Recovery.
+        </div>
+      </div>
+      <button class="banner-close" id="btnCloseBanner">&times;</button>
+    </div>
+
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="dashboard-main">
+
+      <!-- TOP KPI METRIC CARDS -->
+      <section class="section-kpis">
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Revenue At Risk</span>
+            <span class="badge badge-observed" title="Authoritative sum of all failed/disrupted transactions">OBSERVED</span>
+          </div>
+          <div class="kpi-value" id="kpiRevenueAtRisk">₹0.00</div>
+          <div class="kpi-subtext" id="kpiRiskCount">0 payment failures detected</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Eligible for Recovery</span>
+            <span class="badge badge-observed" title="Cases classified as recoverable by policy">OBSERVED</span>
+          </div>
+          <div class="kpi-value" id="kpiEligibleRevenue">₹0.00</div>
+          <div class="kpi-subtext" id="kpiEligibleCount">0 cases passed safety policy</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Actioned Revenue</span>
+            <span class="badge badge-observed" title="Dispatched recovery attempts to Razorpay sandbox">OBSERVED</span>
+          </div>
+          <div class="kpi-value" id="kpiAttemptedRevenue">₹0.00</div>
+          <div class="kpi-subtext" id="kpiAttemptedCount">0 actions executed</div>
+        </div>
+
+        <div class="kpi-card highlight-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Recovered Revenue</span>
+            <span class="badge badge-observed" title="Authoritative settled funds collected">OBSERVED</span>
+          </div>
+          <div class="kpi-value text-emerald" id="kpiRecoveredRevenue">₹0.00</div>
+          <div class="kpi-subtext" id="kpiRecoveredCount">0 successful recoveries</div>
+        </div>
+
+        <div class="kpi-card estimate-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Incremental Recovery</span>
+            <span class="badge badge-estimate" title="Estimated incremental recovery beyond heuristic baseline">ESTIMATE</span>
+          </div>
+          <div class="kpi-value text-amber" id="kpiIncrementalEstimate">₹0.00</div>
+          <div class="kpi-subtext">Deterministic counterfactual baseline</div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Recovery Rate</span>
+            <span class="badge badge-observed">OBSERVED</span>
+          </div>
+          <div class="kpi-value" id="kpiRecoveryRate">0.0%</div>
+          <div class="kpi-subtext">Of eligible recoverable revenue</div>
+        </div>
+      </section>
+
+      <!-- RECOVERY FUNNEL & ACTION PERFORMANCE -->
+      <div class="dashboard-grid">
+        
+        <!-- VISUAL RECOVERY FUNNEL -->
+        <section class="card funnel-section">
+          <div class="card-header">
+            <div class="card-title-wrap">
+              <h2 class="card-title">Recovery Conversion Funnel</h2>
+              <span class="card-subtitle">End-to-end lifecycle from transaction failure to incremental valuation</span>
+            </div>
+            <div class="badge-group">
+              <span class="badge badge-observed">Observed 1-4</span>
+              <span class="badge badge-estimate">Estimate 5</span>
+            </div>
+          </div>
+          <div class="funnel-container" id="funnelContainer">
+            <!-- Rendered dynamically -->
+            <div class="funnel-loading">Loading recovery funnel data...</div>
+          </div>
+        </section>
+
+        <!-- ACTION PERFORMANCE ANALYTICS -->
+        <section class="card action-perf-section">
+          <div class="card-header">
+            <div class="card-title-wrap">
+              <h2 class="card-title">Action Performance & Win Rates</h2>
+              <span class="card-subtitle">Empirical performance of autonomous recovery interventions</span>
+            </div>
+          </div>
+          <div class="action-perf-table-wrap">
+            <table class="data-table" id="actionPerfTable">
+              <thead>
+                <tr>
+                  <th>Action Type</th>
+                  <th>Attempts</th>
+                  <th>Success</th>
+                  <th>Win Rate</th>
+                  <th>Recovered</th>
+                </tr>
+              </thead>
+              <tbody id="actionPerfBody">
+                <tr><td colspan="5" class="text-center">No action executions recorded yet.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- SANDBOX DEMO SCENARIOS CALLOUT -->
+      <section class="card demo-scenarios-card">
+        <div class="demo-card-header">
+          <div class="demo-title">
+            <span class="demo-bolt">⚡</span>
+            <div>
+              <h3>Buildathon Interactive Sandbox Scenarios</h3>
+              <p>Deterministic end-to-end scenarios demonstrating ARIV safety, execution, reconciliation, and vector memory.</p>
+            </div>
+          </div>
+          <div class="demo-legend">
+            <span class="legend-item"><span class="chip chip-success">Action Attributed</span></span>
+            <span class="legend-item"><span class="chip chip-danger">Policy Rejected</span></span>
+            <span class="legend-item"><span class="chip chip-warning">Unknown Reconciled</span></span>
+            <span class="legend-item"><span class="chip chip-info">Organic Recovery</span></span>
+          </div>
+        </div>
+        <div class="demo-scenarios-grid" id="demoScenariosGrid">
+          <div class="scenario-box" data-scenario="CUSTOMER_PAYMENT_LINK_SUCCESS">
+            <div class="scenario-status status-recovered">Scenario 1: Payment Link Success</div>
+            <div class="scenario-name">Customer Action Required (₹150.00)</div>
+            <p class="scenario-desc">Classification: CUSTOMER_ACTION_REQUIRED. Action: GENERATE_PAYMENT_LINK. Result: Paid within window, Action Attributed.</p>
+            <div class="scenario-tags">
+              <span class="tag">B2C</span>
+              <span class="tag tag-green">Attributed</span>
+              <span class="tag">Policy: Approved</span>
+            </div>
+          </div>
+
+          <div class="scenario-box" data-scenario="TERMINAL_NON_RETRIABLE_REJECTED">
+            <div class="scenario-status status-failed">Scenario 2: Policy Engine Rejection</div>
+            <div class="scenario-name">Terminal Non-Retriable (₹250.00)</div>
+            <p class="scenario-desc">AI proposed retry, but deterministic PolicyEngine blocked execution to prevent customer spam and gateway abuse.</p>
+            <div class="scenario-tags">
+              <span class="tag">B2C</span>
+              <span class="tag tag-red">Safety Guardrail</span>
+              <span class="tag">Policy: REJECTED</span>
+            </div>
+          </div>
+
+          <div class="scenario-box" data-scenario="PROVIDER_TIMEOUT_RECONCILED">
+            <div class="scenario-status status-unknown">Scenario 3: Timeout & Reconciliation</div>
+            <div class="scenario-name">Provider Degradation (₹120.00)</div>
+            <p class="scenario-desc">Attempt 1 timed out (UNKNOWN state). Safe reconciliation worker verified state before re-dispatching successfully.</p>
+            <div class="scenario-tags">
+              <span class="tag">B2C</span>
+              <span class="tag tag-amber">UNKNOWN State</span>
+              <span class="tag">Auto-Reconciled</span>
+            </div>
+          </div>
+
+          <div class="scenario-box" data-scenario="ORGANIC_RECOVERY_BEFORE_ACTION">
+            <div class="scenario-status status-organic">Scenario 4: Organic Recovery</div>
+            <div class="scenario-name">Invoice Overdue Paid Organically (₹500.00)</div>
+            <p class="scenario-desc">Customer paid invoice organically before action. Attribution correctly identified as ORGANIC_RECOVERY; no false credit taken.</p>
+            <div class="scenario-tags">
+              <span class="tag">B2B</span>
+              <span class="tag tag-blue">Organic</span>
+              <span class="tag">Zero False Credit</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECOVERY CASES EXPLORER -->
+      <section class="card cases-card">
+        <div class="card-header">
+          <div class="card-title-wrap">
+            <h2 class="card-title">Recovery Cases Explorer</h2>
+            <span class="card-subtitle">Authoritative transactional records with cryptographic audit trail</span>
+          </div>
+          <div class="cases-filters">
+            <button class="filter-btn active" data-filter="ALL">All Cases</button>
+            <button class="filter-btn" data-filter="RECOVERED">Recovered</button>
+            <button class="filter-btn" data-filter="FAILED">Failed / Blocked</button>
+            <button class="filter-btn" data-filter="OPEN">Open</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table" id="casesTable">
+            <thead>
+              <tr>
+                <th>Case ID</th>
+                <th>Domain</th>
+                <th>Case Type</th>
+                <th>Amount</th>
+                <th>Case Status</th>
+                <th>Outcome</th>
+                <th>Attribution Source</th>
+                <th>Recorded</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="casesTableBody">
+              <tr>
+                <td colspan="9" class="text-center">Loading recovery cases from PostgreSQL...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FULL CASE DETAIL MODAL / DRAWER -->
+    <div id="caseModal" class="modal-backdrop hidden">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <div class="modal-badge-row">
+              <span class="domain-badge" id="modalDomain">B2C</span>
+              <span class="case-status-badge" id="modalStatus">RECOVERED</span>
+            </div>
+            <h2 id="modalCaseId">Case Details</h2>
+            <span class="modal-subtitle" id="modalCaseType">PAYMENT_FAILED</span>
+          </div>
+          <button id="btnCloseModal" class="btn-close">&times;</button>
+        </div>
+
+        <div class="modal-body" id="modalBody">
+          <!-- Dynamic Content Rendered by app.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIG MODAL (Tenant & Secret Configuration) -->
+    <div id="configModal" class="modal-backdrop hidden">
+      <div class="modal-dialog modal-dialog-sm">
+        <div class="modal-header">
+          <h2>Tenant Authentication Settings</h2>
+          <button id="btnCloseConfig" class="btn-close">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p class="config-desc">ARIV enforces HMAC-SHA256 tenant authorization across all recovery and telemetry APIs.</p>
+          <div class="form-group">
+            <label for="inputAccountId">Account ID (Tenant Identifier)</label>
+            <input type="text" id="inputAccountId" class="form-control" value="acc_test_tenant" placeholder="e.g. acc_test_tenant">
+          </div>
+          <div class="form-group">
+            <label for="inputApiKey">Internal API Key (HMAC Shared Secret)</label>
+            <input type="password" id="inputApiKey" class="form-control" value="test_internal_key" placeholder="Enter INTERNAL_API_KEY">
+          </div>
+          <div class="modal-actions">
+            <button id="btnSaveConfig" class="btn btn-primary">Save & Re-Authenticate</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

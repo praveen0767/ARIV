@@ -1,0 +1,45 @@
+.git
+.github
+
+# Python
+__pycache__
+*.py[cod]
+.pytest_cache
+.mypy_cache
+.ruff_cache
+.coverage
+htmlcov
+.venv
+venv
+env
+
+# Node / Next.js
+node_modules
+**/node_modules
+.next
+**/.next
+out
+**/out
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDE / OS
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+
+# Tests / local artifacts
+.pytest_cache
+coverage
+dist
+build
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Documentation / local artifacts
+*.log

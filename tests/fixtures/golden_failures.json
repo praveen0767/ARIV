@@ -1,0 +1,87 @@
+[
+    {
+        "id": "transient_timeout",
+        "expected_category": "TRANSIENT_TECHNICAL",
+        "expected_retryability": "IMMEDIATE_RETRY_POSSIBLE",
+        "expected_recoverability": "HIGH",
+        "payload": {
+            "event": "payment.failed",
+            "payload": {
+                "payment": {
+                    "entity": {
+                        "error_code": "GATEWAY_ERROR",
+                        "error_reason": "Payment processing timeout"
+                    }
+                }
+            }
+        }
+    },
+    {
+        "id": "insufficient_balance",
+        "expected_category": "CUSTOMER_ACTION_REQUIRED",
+        "expected_retryability": "REQUIRES_NEW_METHOD",
+        "expected_recoverability": "MEDIUM",
+        "payload": {
+            "event": "payment.failed",
+            "payload": {
+                "payment": {
+                    "entity": {
+                        "error_code": "BAD_REQUEST_ERROR",
+                        "error_reason": "Insufficient balance"
+                    }
+                }
+            }
+        }
+    },
+    {
+        "id": "authentication_required",
+        "expected_category": "CUSTOMER_ACTION_REQUIRED",
+        "expected_retryability": "REQUIRES_NEW_METHOD",
+        "expected_recoverability": "HIGH",
+        "payload": {
+            "event": "payment.failed",
+            "payload": {
+                "payment": {
+                    "entity": {
+                        "error_code": "BAD_REQUEST_ERROR",
+                        "error_reason": "Authentication failed"
+                    }
+                }
+            }
+        }
+    },
+    {
+        "id": "expired_card",
+        "expected_category": "NON_RETRIABLE",
+        "expected_retryability": "BLOCKED",
+        "expected_recoverability": "LOW",
+        "payload": {
+            "event": "payment.failed",
+            "payload": {
+                "payment": {
+                    "entity": {
+                        "error_code": "BAD_REQUEST_ERROR",
+                        "error_reason": "Card expired"
+                    }
+                }
+            }
+        }
+    },
+    {
+        "id": "unknown_failure",
+        "expected_category": "UNKNOWN",
+        "expected_retryability": "BLOCKED",
+        "expected_recoverability": "UNKNOWN",
+        "payload": {
+            "event": "payment.failed",
+            "payload": {
+                "payment": {
+                    "entity": {
+                        "error_code": "NEW_UNKNOWN_ERROR_TYPE",
+                        "error_reason": "Something weird happened"
+                    }
+                }
+            }
+        }
+    }
+]
