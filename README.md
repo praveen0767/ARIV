@@ -1065,53 +1065,19 @@ docker compose down -v
 
 ---
 
-# 📸 Product & Architecture Story
-
-The screenshots in the repository are intentionally arranged around the complete recovery narrative.
-
 | Stage | Screenshot | What it demonstrates |
 |---|---|---|
-| **01** | `01-command-center.png` | 🖥️ ARIV command center and system state |
-| **02** | `02-failed-payment-case.png` | 💳 Failed payment entering the recovery workflow |
-| **03** | `03-ai-decision-policy.png` | 🤖 AI reasoning + deterministic PolicyEngine boundary |
-| **04** | `04-recovery-action.png` | ⚙️ Governed recovery action |
-| **05** | `05-razorpay-test-payment.png` | 💳 Real Razorpay Test-Mode payment flow |
-| **06** | `06-recovered-attribution.png` | ✅ Provider-confirmed recovery + attribution |
-| **07** | `07-telegram-recovery.png` | 📲 Recovery notification / operator visibility |
-| **08** | `08-ask-ariv.png` | 💬 Conversational operational control layer |
-| **09** | `09-qdrant-memory.png` | 🧠 Semantic recovery memory |
-| **10** | `10-system-health.png` | ❤️ Backend / infrastructure health |
-| **11** | `11-measurement.png` | 📊 Recovery measurement and outcome visibility |
-
-## 📸 Screenshot Sequence
-
-```text
-01  COMMAND CENTER
-        ↓
-02  FAILED PAYMENT
-        ↓
-03  AI DECISION + POLICY
-        ↓
-04  RECOVERY ACTION
-        ↓
-05  RAZORPAY TEST PAYMENT
-        ↓
-06  RECOVERED + ATTRIBUTED
-        ↓
-07  TELEGRAM CONFIRMATION
-        ↓
-08  ASK ARIV
-        ↓
-09  QDRANT MEMORY
-        ↓
-10  SYSTEM HEALTH
-        ↓
-11  MEASUREMENT
-```
-
-This mirrors the actual system lifecycle rather than presenting isolated UI screenshots.
-
----
+| 01 | ![Command Center](docs/screenshots/01-command-center.png) | 🖥️ ARIV command center and system state |
+| 02 | ![Failed Payment](docs/screenshots/02-failed-payment-case.png) | 💳 Failed payment entering the recovery workflow |
+| 03 | ![AI Decision + Policy](docs/screenshots/03-ai-decision-policy.png) | 🤖 AI reasoning + deterministic PolicyEngine boundary |
+| 04 | ![Recovery Action](docs/screenshots/04-recovery-action.png) | ⚙️ Governed recovery action |
+| 05 | ![Razorpay Test Payment](docs/screenshots/05-razorpay-test-payment.png) | 💳 Real Razorpay Test-Mode payment flow |
+| 06 | ![Recovered Attribution](docs/screenshots/06-recovered-attribution.png) | ✅ Provider-confirmed recovery + attribution |
+| 07 | ![Telegram Recovery](docs/screenshots/07-telegram-recovery.png) | 📲 Recovery notification / operator visibility |
+| 08 | ![ASK ARIV](docs/screenshots/08-ask-ariv.png) | 💬 Conversational operational control layer |
+| 09 | ![Qdrant Memory](docs/screenshots/09-qdrant-memory.png) | 🧠 Semantic recovery memory |
+| 10 | ![System Health](docs/screenshots/10-system-health.png) | ❤️ Backend / infrastructure health |
+| 11 | ![Measurement](docs/screenshots/11-measurement.png) | 📊 Recovery measurement and outcome visibility |
 
 # 🎥 Product Walkthrough
 
