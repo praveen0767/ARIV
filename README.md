@@ -156,6 +156,9 @@ Payment Failure
 
 Each stage is observable and auditable. **Creating an action is not recovering revenue** — revenue is counted only after provider-confirmed, attributed payment.
 
+## Architecture
+
+```mermaid
 flowchart TD
     RP[Razorpay Events] --> WH[Webhook Verification]
     WH --> PE[ProviderEvent Persistence]
@@ -194,7 +197,6 @@ flowchart TD
     UI --> ASK[ASK ARIV]
     ASK --> UI
 
-
     %% =========================
     %% ARIV SYSTEM COLOR PALETTE
     %% =========================
@@ -215,9 +217,8 @@ flowchart TD
     classDef operator fill:#ECEEF2,stroke:#737A86,color:#252A31,stroke-width:1.5px;
     classDef stop fill:#FDE2E2,stroke:#D55C5C,color:#4A1818,stroke-width:2px;
 
-
     %% Provider boundary
-    class RP,RPI provider;
+    class RP provider;
 
     %% Event ingestion / persistence
     class WH ingestion;
@@ -233,8 +234,7 @@ flowchart TD
     class AI,PROP agentic;
 
     %% Decision / economics
-    class GEN economics;
-    class ECON economics;
+    class GEN,ECON economics;
 
     %% Deterministic safety boundary
     class POL policy;
@@ -257,6 +257,7 @@ flowchart TD
 
     %% Operator surfaces
     class TG,UI,ASK operator;
+```
 
 
 > The systems-integration box is a **typed capability / tool boundary**: a declared interface offering controlled, authorized actions to the decision and control layers — not a fully-fledged MCP server or an unrestricted agent-execution gateway.
