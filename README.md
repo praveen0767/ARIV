@@ -156,38 +156,108 @@ Payment Failure
 
 Each stage is observable and auditable. **Creating an action is not recovering revenue** — revenue is counted only after provider-confirmed, attributed payment.
 
-## Architecture
-
-```mermaid
 flowchart TD
     RP[Razorpay Events] --> WH[Webhook Verification]
     WH --> PE[ProviderEvent Persistence]
     PE --> C[Recovery Case]
+
     C --> FI[Failure Intelligence]
     C --> SYS[Systemic Route Intelligence]
+
     SYS --> DC[Decision Context]
     FI --> DC
+
     DC --> Q[Qdrant Semantic Recovery Memory]
     Q --> DC
+
     DC --> AI[AI / Agentic Decision Engine]
     AI --> PROP[Typed Decision Proposal]
     PROP --> GEN[Candidate Generator]
     GEN --> ECON[Economic Optimizer]
     ECON --> POL[Deterministic PolicyEngine]
+
     POL -->|Approved| OUT[Transactional Outbox]
     POL -->|Rejected| STOP[STOP_RECOVERY]
+
     OUT --> WK[Execution Worker]
     WK --> AD[Razorpay Adapter]
     AD --> RPI[Razorpay API]
+
     RPI --> RECON[Provider Reconciliation]
     RECON --> OC[Recovery Outcome]
+
     OC --> ATTR[Recovery Attribution]
     OC --> MEAS[Recovery Measurement]
+
     MEAS --> TG[Telegram]
     MEAS --> UI[Operator Dashboard]
     UI --> ASK[ASK ARIV]
     ASK --> UI
-```
+
+
+    %% =========================
+    %% ARIV SYSTEM COLOR PALETTE
+    %% =========================
+
+    classDef provider fill:#FFF4D6,stroke:#D4A72C,color:#3D3200,stroke-width:1.5px;
+    classDef ingestion fill:#E8F1FF,stroke:#5B8DEF,color:#172B4D,stroke-width:1.5px;
+    classDef database fill:#DCEBFF,stroke:#4A7BD0,color:#102A43,stroke-width:2px;
+    classDef intelligence fill:#E8E0FF,stroke:#8064C9,color:#29204A,stroke-width:1.5px;
+    classDef memory fill:#FCE4EC,stroke:#D46A86,color:#4A1725,stroke-width:1.5px;
+    classDef agentic fill:#E7DEFF,stroke:#7557C7,color:#26184B,stroke-width:1.5px;
+    classDef economics fill:#FFF0D5,stroke:#D79A32,color:#4A2E08,stroke-width:1.5px;
+    classDef policy fill:#E3F5EA,stroke:#4B9B69,color:#163B25,stroke-width:2px;
+    classDef execution fill:#DDF4F0,stroke:#42A69A,color:#123C37,stroke-width:1.5px;
+    classDef api fill:#E5EEFF,stroke:#527CC7,color:#152B50,stroke-width:1.5px;
+    classDef reconciliation fill:#DDF3F8,stroke:#4B9DB0,color:#12343C,stroke-width:1.5px;
+    classDef outcome fill:#E1F5E8,stroke:#43A86B,color:#153A25,stroke-width:2px;
+    classDef measurement fill:#E9E7FF,stroke:#736FC2,color:#25234A,stroke-width:1.5px;
+    classDef operator fill:#ECEEF2,stroke:#737A86,color:#252A31,stroke-width:1.5px;
+    classDef stop fill:#FDE2E2,stroke:#D55C5C,color:#4A1818,stroke-width:2px;
+
+
+    %% Provider boundary
+    class RP,RPI provider;
+
+    %% Event ingestion / persistence
+    class WH ingestion;
+    class PE,C database;
+
+    %% Intelligence layer
+    class FI,SYS,DC intelligence;
+
+    %% Semantic memory
+    class Q memory;
+
+    %% AI / reasoning
+    class AI,PROP agentic;
+
+    %% Decision / economics
+    class GEN economics;
+    class ECON economics;
+
+    %% Deterministic safety boundary
+    class POL policy;
+    class STOP stop;
+
+    %% Durable execution
+    class OUT,WK,AD execution;
+
+    %% External API boundary
+    class RPI api;
+
+    %% Provider truth / reconciliation
+    class RECON reconciliation;
+
+    %% Financial outcome
+    class OC outcome;
+
+    %% Attribution / measurement
+    class ATTR,MEAS measurement;
+
+    %% Operator surfaces
+    class TG,UI,ASK operator;
+
 
 > The systems-integration box is a **typed capability / tool boundary**: a declared interface offering controlled, authorized actions to the decision and control layers — not a fully-fledged MCP server or an unrestricted agent-execution gateway.
 
