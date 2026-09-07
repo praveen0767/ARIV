@@ -2,7 +2,7 @@
 
 <img src="./logo.png" alt="ARIV Logo" width="150"/>
 
-# ARIV — AI-Assisted Revenue Recovery for Razorpay
+# ARIV — Agentic Revenue Recovery for Razorpay
 
 <img src="https://img.shields.io/badge/Razorpay-Test%20Mode-0f172a?style=for-the-badge" alt="Razorpay Test Mode"/>
 <img src="https://img.shields.io/badge/FastAPI-Python-0f172a?style=for-the-badge&logo=fastapi" alt="FastAPI"/>
@@ -14,11 +14,18 @@
 
 </div>
 
+**Agentic AI** reasons, retrieves context, diagnoses failures, and proposes recovery actions.
+**Economic logic** ranks candidates.
+**PolicyEngine** authorizes financial actions.
+**Durable infrastructure** executes them.
+**Razorpay provider events** establish truth.
+**Attribution** determines recovered revenue.
+
+*"Agentic" describes the reasoning/workflow layer — not unrestricted authority over money movement.*
+
 **Detect a failed payment. Decide the best recovery. Authorize with deterministic policy. Execute safely. Verify provider truth. Attribute the revenue. Measure the outcome.**
 
 ARIV is a recovery control plane for Razorpay that turns failed payments into governed, observable, measurable workflows.
-
-AI **proposes**. Economic logic **ranks**. PolicyEngine **authorizes**. Infrastructure **executes**. Provider events **establish truth**.
 
 ## 🎥 Product Walkthrough
 
@@ -49,7 +56,7 @@ A concise walkthrough of the ARIV recovery workflow: decisioning, policy enforce
 
 Recovering failed payments is not about retrying everything. Real recovery requires deciding *which* failures are worth acting on, doing so within strict safety and financial controls, and only crediting revenue after the payment provider confirms it. ARIV implements that end-to-end loop for Razorpay and proves it with real Test-Mode execution evidence.
 
-- **Decisioning**: failure classification + semantic memory + an AI layer that *proposes* a typed recovery decision.
+- **Decisioning**: failure classification + semantic memory + an agentic AI layer that *proposes* a typed recovery decision.
 - **Ranking**: a deterministic economic optimizer ranks candidate actions by expected net recovery (ENR).
 - **Safety**: a deterministic PolicyEngine is the only authority that authorizes money-movement actions.
 - **Execution**: durable transactional outbox → worker → Razorpay adapter.
@@ -192,9 +199,29 @@ flowchart TD
 
 > The systems-integration box is a **typed capability / tool boundary**: a declared interface offering controlled, authorized actions to the decision and control layers — not a fully-fledged MCP server or an unrestricted agent-execution gateway.
 
-## 🤖 AI decision layer
+## 🤖 Agentic AI Decision Layer
 
-The AI layer is a **context-aware recovery decision layer** that *proposes* — it does not move money.
+ARIV uses an **agentic reasoning layer** to:
+
+- diagnose payment failures
+- retrieve relevant recovery context
+- evaluate candidate interventions
+- produce structured recovery proposals
+- explain decisions to operators
+
+The agent does **not** authorize or directly execute financial actions.
+
+```text
+Agentic AI
+    ↓
+Proposal
+    ↓
+Economic Ranking
+    ↓
+PolicyEngine
+    ↓
+Execution
+```
 
 **AI is advisory:**
 
@@ -204,10 +231,6 @@ The AI layer is a **context-aware recovery decision layer** that *proposes* — 
 - **Model confidence is not recovery probability** — probabilities and ENR come from the deterministic `ProbabilityProvider` and `EconomicOptimizer`.
 - **Real LLM adapter** (OpenAI-compatible) with explicit timeouts; deterministic baseline fallback on failure — never bypassing policy.
 - Produces a **structured, typed proposal**: diagnosis, recommended action, candidate actions, confidence (0.0–1.0), and an auditable reason.
-
-```
-AI reasons and proposes → PolicyEngine authorizes → infrastructure executes
-```
 
 ## 🧠 Qdrant semantic memory
 
@@ -272,7 +295,7 @@ ARIV deliberately separates *judgment* from *authority*:
 
 | Layer | Role | Trust property |
 |---|---|---|
-| AI layer | Reason, retrieve, propose | Cannot trigger money movement alone |
+| Agentic AI layer | Reason, retrieve, propose | Cannot trigger money movement alone |
 | PolicyEngine | Authorize | Deterministic, auditable, non-bypassable |
 | Outbox + worker | Execute durably | Idempotent, crash-safe |
 | Provider reconciliation | Confirm truth | Only provider confirmation counts |
@@ -428,6 +451,6 @@ docker compose exec web pytest -q
 
 ## ✅ Final takeaway
 
-ARIV is a **recovery control plane**. AI proposes, PolicyEngine authorizes, durable infrastructure executes, Razorpay establishes provider truth, and attribution determines recovered revenue. Its evidence is bounded and honest: execution-scale and scenario-diversity benchmarks prove the pipeline works, the offline ablation shows which layers add value and which do not, the zero-recovery reading on failure-only cohorts makes no false claim, and the separately demonstrated provider-confirmed recovery shows what is proven and what is claimed.
+ARIV is a **recovery control plane**. Agentic AI proposes, PolicyEngine authorizes, durable infrastructure executes, Razorpay establishes provider truth, and attribution determines recovered revenue. Its evidence is bounded and honest: execution-scale and scenario-diversity benchmarks prove the pipeline works, the offline ablation shows which layers add value and which do not, the zero-recovery reading on failure-only cohorts makes no false claim, and the separately demonstrated provider-confirmed recovery shows what is proven and what is claimed.
 
 **Detect · Diagnose · Retrieve · Propose · Rank · Authorize · Execute · Verify · Attribute · Measure**
