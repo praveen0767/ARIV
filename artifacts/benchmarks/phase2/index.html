@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ARIV Phase 2 Ablation Dashboard</title>
+    <style>
+        body { background-color: #090d16; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; margin: 0; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; border-bottom: 1px solid #1e293b; padding-bottom: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 20px; max-width: 1400px; margin: 0 auto; }
+        .card { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; }
+        h2 { color: #38bdf8; font-size: 1.1rem; margin-top: 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.9rem; }
+        th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #334155; }
+        th { background: #0f172a; color: #94a3b8; }
+        .highlight { color: #4ade80; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>ARIV Phase 2 AI Ablation Evaluation</h1>
+        <p>10,000 cases × 10 seeds (500,000 evaluations) • Multi-Variant Incremental Analysis</p>
+    </div>
+    <div class="grid">
+        <div class="card">
+            <h2>Net Recovery Comparison (SVG Plot)</h2>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="100%" height="100%" style="background:#0f172a; font-family:sans-serif;">
+<text x="400" y="35" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="bold">Phase 2 Ablation: Net Recovered Value (INR)</text>
+<rect x="100" y="107" width="80" height="213" rx="6" fill="#64748b"/>
+<text x="140" y="97" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="bold">₹22.17Cr</text>
+<text x="140" y="345" text-anchor="middle" fill="#94a3b8" font-size="11">A0</text>
+<rect x="230" y="94" width="80" height="226" rx="6" fill="#3b82f6"/>
+<text x="270" y="84" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="bold">₹23.44Cr</text>
+<text x="270" y="345" text-anchor="middle" fill="#94a3b8" font-size="11">A1</text>
+<rect x="360" y="98" width="80" height="222" rx="6" fill="#ef4444"/>
+<text x="400" y="88" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="bold">₹23.05Cr</text>
+<text x="400" y="345" text-anchor="middle" fill="#94a3b8" font-size="11">A2</text>
+<rect x="490" y="115" width="80" height="205" rx="6" fill="#f59e0b"/>
+<text x="530" y="105" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="bold">₹21.27Cr</text>
+<text x="530" y="345" text-anchor="middle" fill="#94a3b8" font-size="11">A3</text>
+<rect x="620" y="98" width="80" height="222" rx="6" fill="#10b981"/>
+<text x="660" y="88" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="bold">₹23.07Cr</text>
+<text x="660" y="345" text-anchor="middle" fill="#94a3b8" font-size="11">A4</text>
+</svg>
+        </div>
+        <div class="card">
+            <h2>Aggregate Summary (10 Seeds Total)</h2>
+            <table>
+                <tr><th>Variant</th><th>Net Recovered (₹)</th><th>Case Rec Rate</th><th>Oracle Capture</th></tr>
+<tr><td><b>A0_BASELINE</b></td><td class='highlight'>₹221,734,962.59</td><td>44.19%</td><td>76.26%</td></tr>
+<tr><td><b>A1_ECONOMIC</b></td><td class='highlight'>₹234,413,917.40</td><td>46.69%</td><td>80.62%</td></tr>
+<tr><td><b>A2_AI_ECONOMIC</b></td><td class='highlight'>₹230,486,294.80</td><td>45.91%</td><td>79.27%</td></tr>
+<tr><td><b>A3_AI_ECONOMIC_MEMORY</b></td><td class='highlight'>₹212,749,159.43</td><td>42.42%</td><td>73.17%</td></tr>
+<tr><td><b>A4_FULL_ARIV</b></td><td class='highlight'>₹230,694,194.23</td><td>45.94%</td><td>79.34%</td></tr>
+
+            </table>
+        </div>
+    </div>
+</body>
+</html>

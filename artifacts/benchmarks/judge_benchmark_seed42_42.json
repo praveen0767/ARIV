@@ -1,0 +1,2167 @@
+{
+  "benchmark_metadata": {
+    "benchmark_id": "judge-eval-60b89ae170",
+    "version": "1.0.0-phase1-judge",
+    "timestamp": "2026-09-07T05:34:34Z",
+    "runtime_seconds": 0.04,
+    "execution_invariants": {
+      "benchmark_mode": "SYNTHETIC",
+      "data_mode": "SYNTHETIC",
+      "outcome_mode": "MODELED",
+      "ai_mode": "OFFLINE_DETERMINISTIC",
+      "external_network_calls": 0,
+      "database_mutations": 0,
+      "hidden_truth_leakage": "NONE"
+    },
+    "configuration": {
+      "cases_per_seed": 10,
+      "seeds": [
+        42
+      ],
+      "total_cases_evaluated": 10,
+      "total_strategy_evaluations": 50,
+      "strategies": [
+        "NO_ACTION",
+        "NAIVE_RETRY",
+        "BASELINE",
+        "ECONOMIC",
+        "AI_PLUS_ECONOMIC"
+      ],
+      "economic_parameters": {
+        "operational_cost_inr": 10.0,
+        "risk_penalty_inr": 5.0,
+        "high_risk_penalty_inr": 25.0
+      },
+      "confidence_interval_method": "Student's t-distribution (df=9, t_crit=2.262 for 95% two-sided CI)"
+    }
+  },
+  "aggregate_results": {
+    "NO_ACTION": {
+      "net_recovered_value_inr": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "recovery_rate": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "gross_recovered_inr": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "total_costs_inr": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "false_interventions": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "unsafe_interventions": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "total_economic_regret_inr": {
+        "mean": 31731.2,
+        "median": 31731.2,
+        "std": 0.0,
+        "min": 31731.2,
+        "max": 31731.2,
+        "ci_95_low": 31731.2,
+        "ci_95_high": 31731.2,
+        "margin_of_error": 0.0
+      },
+      "mean_economic_regret_inr": {
+        "mean": 3173.12,
+        "median": 3173.12,
+        "std": 0.0,
+        "min": 3173.12,
+        "max": 3173.12,
+        "ci_95_low": 3173.12,
+        "ci_95_high": 3173.12,
+        "margin_of_error": 0.0
+      },
+      "oracle_capture_rate": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "stopping_accuracy": {
+        "mean": 0.1,
+        "median": 0.1,
+        "std": 0.0,
+        "min": 0.1,
+        "max": 0.1,
+        "ci_95_low": 0.1,
+        "ci_95_high": 0.1,
+        "margin_of_error": 0.0
+      },
+      "brier_score": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "ece": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      }
+    },
+    "NAIVE_RETRY": {
+      "net_recovered_value_inr": {
+        "mean": 152.25,
+        "median": 152.25,
+        "std": 0.0,
+        "min": 152.25,
+        "max": 152.25,
+        "ci_95_low": 152.25,
+        "ci_95_high": 152.25,
+        "margin_of_error": 0.0
+      },
+      "recovery_rate": {
+        "mean": 0.1,
+        "median": 0.1,
+        "std": 0.0,
+        "min": 0.1,
+        "max": 0.1,
+        "ci_95_low": 0.1,
+        "ci_95_high": 0.1,
+        "margin_of_error": 0.0
+      },
+      "gross_recovered_inr": {
+        "mean": 362.25,
+        "median": 362.25,
+        "std": 0.0,
+        "min": 362.25,
+        "max": 362.25,
+        "ci_95_low": 362.25,
+        "ci_95_high": 362.25,
+        "margin_of_error": 0.0
+      },
+      "total_costs_inr": {
+        "mean": 210.0,
+        "median": 210.0,
+        "std": 0.0,
+        "min": 210.0,
+        "max": 210.0,
+        "ci_95_low": 210.0,
+        "ci_95_high": 210.0,
+        "margin_of_error": 0.0
+      },
+      "false_interventions": {
+        "mean": 5.0,
+        "median": 5.0,
+        "std": 0.0,
+        "min": 5.0,
+        "max": 5.0,
+        "ci_95_low": 5.0,
+        "ci_95_high": 5.0,
+        "margin_of_error": 0.0
+      },
+      "unsafe_interventions": {
+        "mean": 5.0,
+        "median": 5.0,
+        "std": 0.0,
+        "min": 5.0,
+        "max": 5.0,
+        "ci_95_low": 5.0,
+        "ci_95_high": 5.0,
+        "margin_of_error": 0.0
+      },
+      "total_economic_regret_inr": {
+        "mean": 31578.95,
+        "median": 31578.95,
+        "std": 0.0,
+        "min": 31578.95,
+        "max": 31578.95,
+        "ci_95_low": 31578.95,
+        "ci_95_high": 31578.95,
+        "margin_of_error": 0.0
+      },
+      "mean_economic_regret_inr": {
+        "mean": 3157.89,
+        "median": 3157.89,
+        "std": 0.0,
+        "min": 3157.89,
+        "max": 3157.89,
+        "ci_95_low": 3157.89,
+        "ci_95_high": 3157.89,
+        "margin_of_error": 0.0
+      },
+      "oracle_capture_rate": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "stopping_accuracy": {
+        "mean": 0.9,
+        "median": 0.9,
+        "std": 0.0,
+        "min": 0.9,
+        "max": 0.9,
+        "ci_95_low": 0.9,
+        "ci_95_high": 0.9,
+        "margin_of_error": 0.0
+      },
+      "brier_score": {
+        "mean": 0.25,
+        "median": 0.25,
+        "std": 0.0,
+        "min": 0.25,
+        "max": 0.25,
+        "ci_95_low": 0.25,
+        "ci_95_high": 0.25,
+        "margin_of_error": 0.0
+      },
+      "ece": {
+        "mean": 0.4,
+        "median": 0.4,
+        "std": 0.0,
+        "min": 0.4,
+        "max": 0.4,
+        "ci_95_low": 0.4,
+        "ci_95_high": 0.4,
+        "margin_of_error": 0.0
+      }
+    },
+    "BASELINE": {
+      "net_recovered_value_inr": {
+        "mean": 19811.7,
+        "median": 19811.7,
+        "std": 0.0,
+        "min": 19811.7,
+        "max": 19811.7,
+        "ci_95_low": 19811.7,
+        "ci_95_high": 19811.7,
+        "margin_of_error": 0.0
+      },
+      "recovery_rate": {
+        "mean": 0.6,
+        "median": 0.6,
+        "std": 0.0,
+        "min": 0.6,
+        "max": 0.6,
+        "ci_95_low": 0.6,
+        "ci_95_high": 0.6,
+        "margin_of_error": 0.0
+      },
+      "gross_recovered_inr": {
+        "mean": 19931.7,
+        "median": 19931.7,
+        "std": 0.0,
+        "min": 19931.7,
+        "max": 19931.7,
+        "ci_95_low": 19931.7,
+        "ci_95_high": 19931.7,
+        "margin_of_error": 0.0
+      },
+      "total_costs_inr": {
+        "mean": 120.0,
+        "median": 120.0,
+        "std": 0.0,
+        "min": 120.0,
+        "max": 120.0,
+        "ci_95_low": 120.0,
+        "ci_95_high": 120.0,
+        "margin_of_error": 0.0
+      },
+      "false_interventions": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "unsafe_interventions": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "total_economic_regret_inr": {
+        "mean": 11919.5,
+        "median": 11919.5,
+        "std": 0.0,
+        "min": 11919.5,
+        "max": 11919.5,
+        "ci_95_low": 11919.5,
+        "ci_95_high": 11919.5,
+        "margin_of_error": 0.0
+      },
+      "mean_economic_regret_inr": {
+        "mean": 1191.95,
+        "median": 1191.95,
+        "std": 0.0,
+        "min": 1191.95,
+        "max": 1191.95,
+        "ci_95_low": 1191.95,
+        "ci_95_high": 1191.95,
+        "margin_of_error": 0.0
+      },
+      "oracle_capture_rate": {
+        "mean": 0.62,
+        "median": 0.62,
+        "std": 0.0,
+        "min": 0.62,
+        "max": 0.62,
+        "ci_95_low": 0.62,
+        "ci_95_high": 0.62,
+        "margin_of_error": 0.0
+      },
+      "stopping_accuracy": {
+        "mean": 0.9,
+        "median": 0.9,
+        "std": 0.0,
+        "min": 0.9,
+        "max": 0.9,
+        "ci_95_low": 0.9,
+        "ci_95_high": 0.9,
+        "margin_of_error": 0.0
+      },
+      "brier_score": {
+        "mean": 0.25,
+        "median": 0.25,
+        "std": 0.0,
+        "min": 0.25,
+        "max": 0.25,
+        "ci_95_low": 0.25,
+        "ci_95_high": 0.25,
+        "margin_of_error": 0.0
+      },
+      "ece": {
+        "mean": 0.25,
+        "median": 0.25,
+        "std": 0.0,
+        "min": 0.25,
+        "max": 0.25,
+        "ci_95_low": 0.25,
+        "ci_95_high": 0.25,
+        "margin_of_error": 0.0
+      }
+    },
+    "ECONOMIC": {
+      "net_recovered_value_inr": {
+        "mean": 27217.22,
+        "median": 27217.22,
+        "std": 0.0,
+        "min": 27217.22,
+        "max": 27217.22,
+        "ci_95_low": 27217.22,
+        "ci_95_high": 27217.22,
+        "margin_of_error": 0.0
+      },
+      "recovery_rate": {
+        "mean": 0.7,
+        "median": 0.7,
+        "std": 0.0,
+        "min": 0.7,
+        "max": 0.7,
+        "ci_95_low": 0.7,
+        "ci_95_high": 0.7,
+        "margin_of_error": 0.0
+      },
+      "gross_recovered_inr": {
+        "mean": 27352.22,
+        "median": 27352.22,
+        "std": 0.0,
+        "min": 27352.22,
+        "max": 27352.22,
+        "ci_95_low": 27352.22,
+        "ci_95_high": 27352.22,
+        "margin_of_error": 0.0
+      },
+      "total_costs_inr": {
+        "mean": 135.0,
+        "median": 135.0,
+        "std": 0.0,
+        "min": 135.0,
+        "max": 135.0,
+        "ci_95_low": 135.0,
+        "ci_95_high": 135.0,
+        "margin_of_error": 0.0
+      },
+      "false_interventions": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "unsafe_interventions": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "total_economic_regret_inr": {
+        "mean": 4513.98,
+        "median": 4513.98,
+        "std": 0.0,
+        "min": 4513.98,
+        "max": 4513.98,
+        "ci_95_low": 4513.98,
+        "ci_95_high": 4513.98,
+        "margin_of_error": 0.0
+      },
+      "mean_economic_regret_inr": {
+        "mean": 451.4,
+        "median": 451.4,
+        "std": 0.0,
+        "min": 451.4,
+        "max": 451.4,
+        "ci_95_low": 451.4,
+        "ci_95_high": 451.4,
+        "margin_of_error": 0.0
+      },
+      "oracle_capture_rate": {
+        "mean": 0.86,
+        "median": 0.86,
+        "std": 0.0,
+        "min": 0.86,
+        "max": 0.86,
+        "ci_95_low": 0.86,
+        "ci_95_high": 0.86,
+        "margin_of_error": 0.0
+      },
+      "stopping_accuracy": {
+        "mean": 1.0,
+        "median": 1.0,
+        "std": 0.0,
+        "min": 1.0,
+        "max": 1.0,
+        "ci_95_low": 1.0,
+        "ci_95_high": 1.0,
+        "margin_of_error": 0.0
+      },
+      "brier_score": {
+        "mean": 0.2,
+        "median": 0.2,
+        "std": 0.0,
+        "min": 0.2,
+        "max": 0.2,
+        "ci_95_low": 0.2,
+        "ci_95_high": 0.2,
+        "margin_of_error": 0.0
+      },
+      "ece": {
+        "mean": 0.18,
+        "median": 0.18,
+        "std": 0.0,
+        "min": 0.18,
+        "max": 0.18,
+        "ci_95_low": 0.18,
+        "ci_95_high": 0.18,
+        "margin_of_error": 0.0
+      }
+    },
+    "AI_PLUS_ECONOMIC": {
+      "net_recovered_value_inr": {
+        "mean": 24295.68,
+        "median": 24295.68,
+        "std": 0.0,
+        "min": 24295.68,
+        "max": 24295.68,
+        "ci_95_low": 24295.68,
+        "ci_95_high": 24295.68,
+        "margin_of_error": 0.0
+      },
+      "recovery_rate": {
+        "mean": 0.7,
+        "median": 0.7,
+        "std": 0.0,
+        "min": 0.7,
+        "max": 0.7,
+        "ci_95_low": 0.7,
+        "ci_95_high": 0.7,
+        "margin_of_error": 0.0
+      },
+      "gross_recovered_inr": {
+        "mean": 24430.68,
+        "median": 24430.68,
+        "std": 0.0,
+        "min": 24430.68,
+        "max": 24430.68,
+        "ci_95_low": 24430.68,
+        "ci_95_high": 24430.68,
+        "margin_of_error": 0.0
+      },
+      "total_costs_inr": {
+        "mean": 135.0,
+        "median": 135.0,
+        "std": 0.0,
+        "min": 135.0,
+        "max": 135.0,
+        "ci_95_low": 135.0,
+        "ci_95_high": 135.0,
+        "margin_of_error": 0.0
+      },
+      "false_interventions": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "unsafe_interventions": {
+        "mean": 0.0,
+        "median": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0,
+        "ci_95_low": 0.0,
+        "ci_95_high": 0.0,
+        "margin_of_error": 0.0
+      },
+      "total_economic_regret_inr": {
+        "mean": 7435.52,
+        "median": 7435.52,
+        "std": 0.0,
+        "min": 7435.52,
+        "max": 7435.52,
+        "ci_95_low": 7435.52,
+        "ci_95_high": 7435.52,
+        "margin_of_error": 0.0
+      },
+      "mean_economic_regret_inr": {
+        "mean": 743.55,
+        "median": 743.55,
+        "std": 0.0,
+        "min": 743.55,
+        "max": 743.55,
+        "ci_95_low": 743.55,
+        "ci_95_high": 743.55,
+        "margin_of_error": 0.0
+      },
+      "oracle_capture_rate": {
+        "mean": 0.77,
+        "median": 0.77,
+        "std": 0.0,
+        "min": 0.77,
+        "max": 0.77,
+        "ci_95_low": 0.77,
+        "ci_95_high": 0.77,
+        "margin_of_error": 0.0
+      },
+      "stopping_accuracy": {
+        "mean": 1.0,
+        "median": 1.0,
+        "std": 0.0,
+        "min": 1.0,
+        "max": 1.0,
+        "ci_95_low": 1.0,
+        "ci_95_high": 1.0,
+        "margin_of_error": 0.0
+      },
+      "brier_score": {
+        "mean": 0.2,
+        "median": 0.2,
+        "std": 0.0,
+        "min": 0.2,
+        "max": 0.2,
+        "ci_95_low": 0.2,
+        "ci_95_high": 0.2,
+        "margin_of_error": 0.0
+      },
+      "ece": {
+        "mean": 0.18,
+        "median": 0.18,
+        "std": 0.0,
+        "min": 0.18,
+        "max": 0.18,
+        "ci_95_low": 0.18,
+        "ci_95_high": 0.18,
+        "margin_of_error": 0.0
+      }
+    },
+    "uplifts": {
+      "ai_vs_economic_inr": {
+        "mean": -2921.54,
+        "median": -2921.54,
+        "std": 0.0,
+        "min": -2921.54,
+        "max": -2921.54,
+        "ci_95_low": -2921.54,
+        "ci_95_high": -2921.54,
+        "margin_of_error": 0.0
+      },
+      "ai_vs_baseline_inr": {
+        "mean": 4483.98,
+        "median": 4483.98,
+        "std": 0.0,
+        "min": 4483.98,
+        "max": 4483.98,
+        "ci_95_low": 4483.98,
+        "ci_95_high": 4483.98,
+        "margin_of_error": 0.0
+      }
+    }
+  },
+  "cross_seed_win_rates": {
+    "ai_vs_economic": {
+      "wins": 0,
+      "ties": 0,
+      "total_seeds": 1,
+      "win_fraction": "0/1"
+    },
+    "ai_vs_baseline": {
+      "wins": 1,
+      "ties": 0,
+      "total_seeds": 1,
+      "win_fraction": "1/1"
+    }
+  },
+  "per_seed_results": [
+    {
+      "seed": 42,
+      "amount_at_risk_inr": 41552.83,
+      "oracle_ceiling": {
+        "oracle_gross_inr": 31851.2,
+        "oracle_net_inr": 31731.2,
+        "oracle_recovery_rate": 0.8
+      },
+      "strategies": {
+        "NO_ACTION": {
+          "total_cases": 10,
+          "recovered_count": 0,
+          "recovery_rate": 0.0,
+          "gross_recovered_inr": 0.0,
+          "operational_costs_inr": 0.0,
+          "risk_penalties_inr": 0.0,
+          "total_costs_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "avg_net_per_case_inr": 0.0,
+          "policy_violations": 0,
+          "false_interventions": 0,
+          "unsafe_interventions": 0,
+          "unnecessary_retries_avoided": 3,
+          "stopping_accuracy": 0.1,
+          "total_economic_regret_inr": 31731.2,
+          "mean_economic_regret_inr": 3173.12,
+          "oracle_capture_rate": 0.0,
+          "action_distribution": {
+            "STOP_RECOVERY": 10
+          },
+          "action_metrics": {
+            "STOP_RECOVERY": {
+              "count": 10,
+              "percentage": 100.0,
+              "gross_recovered_inr": 0.0,
+              "total_cost_inr": 0.0,
+              "total_regret_inr": 31731.2
+            }
+          },
+          "calibration": {
+            "brier_score": 0.0,
+            "ece": 0.0,
+            "bins": []
+          }
+        },
+        "NAIVE_RETRY": {
+          "total_cases": 10,
+          "recovered_count": 1,
+          "recovery_rate": 0.1,
+          "gross_recovered_inr": 362.25,
+          "operational_costs_inr": 100.0,
+          "risk_penalties_inr": 110.0,
+          "total_costs_inr": 210.0,
+          "net_recovered_value_inr": 152.25,
+          "avg_net_per_case_inr": 15.22,
+          "policy_violations": 5,
+          "false_interventions": 5,
+          "unsafe_interventions": 5,
+          "unnecessary_retries_avoided": 0,
+          "stopping_accuracy": 0.9,
+          "total_economic_regret_inr": 31578.95,
+          "mean_economic_regret_inr": 3157.89,
+          "oracle_capture_rate": 0.0048,
+          "action_distribution": {
+            "RETRY_NOW": 10
+          },
+          "action_metrics": {
+            "RETRY_NOW": {
+              "count": 10,
+              "percentage": 100.0,
+              "gross_recovered_inr": 362.25,
+              "total_cost_inr": 210.0,
+              "total_regret_inr": 31578.95
+            }
+          },
+          "calibration": {
+            "brier_score": 0.25,
+            "ece": 0.4,
+            "bins": [
+              {
+                "bin": "0.0-0.1",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.1-0.2",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.2-0.3",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.3-0.4",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.4-0.5",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.5-0.6",
+                "count": 10,
+                "mean_predicted": 0.5,
+                "observed_rate": 0.1,
+                "calibration_gap": 0.4
+              },
+              {
+                "bin": "0.6-0.7",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.7-0.8",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.8-0.9",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.9-1.0",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              }
+            ]
+          }
+        },
+        "BASELINE": {
+          "total_cases": 10,
+          "recovered_count": 6,
+          "recovery_rate": 0.6,
+          "gross_recovered_inr": 19931.7,
+          "operational_costs_inr": 80.0,
+          "risk_penalties_inr": 40.0,
+          "total_costs_inr": 120.0,
+          "net_recovered_value_inr": 19811.7,
+          "avg_net_per_case_inr": 1981.17,
+          "policy_violations": 1,
+          "false_interventions": 0,
+          "unsafe_interventions": 0,
+          "unnecessary_retries_avoided": 3,
+          "stopping_accuracy": 0.9,
+          "total_economic_regret_inr": 11919.5,
+          "mean_economic_regret_inr": 1191.95,
+          "oracle_capture_rate": 0.6244,
+          "action_distribution": {
+            "RETRY_LATER": 5,
+            "GENERATE_PAYMENT_LINK": 2,
+            "REQUEST_PAYMENT_METHOD_UPDATE": 1,
+            "STOP_RECOVERY": 2
+          },
+          "action_metrics": {
+            "RETRY_LATER": {
+              "count": 5,
+              "percentage": 50.0,
+              "gross_recovered_inr": 9751.52,
+              "total_cost_inr": 75.0,
+              "total_regret_inr": 4498.98
+            },
+            "GENERATE_PAYMENT_LINK": {
+              "count": 2,
+              "percentage": 20.0,
+              "gross_recovered_inr": 10180.18,
+              "total_cost_inr": 30.0,
+              "total_regret_inr": 0.0
+            },
+            "REQUEST_PAYMENT_METHOD_UPDATE": {
+              "count": 1,
+              "percentage": 10.0,
+              "gross_recovered_inr": 0.0,
+              "total_cost_inr": 15.0,
+              "total_regret_inr": 15.0
+            },
+            "STOP_RECOVERY": {
+              "count": 2,
+              "percentage": 20.0,
+              "gross_recovered_inr": 0.0,
+              "total_cost_inr": 0.0,
+              "total_regret_inr": 7405.52
+            }
+          },
+          "calibration": {
+            "brier_score": 0.25,
+            "ece": 0.25,
+            "bins": [
+              {
+                "bin": "0.0-0.1",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.1-0.2",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.2-0.3",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.3-0.4",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.4-0.5",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.5-0.6",
+                "count": 8,
+                "mean_predicted": 0.5,
+                "observed_rate": 0.75,
+                "calibration_gap": 0.25
+              },
+              {
+                "bin": "0.6-0.7",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.7-0.8",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.8-0.9",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.9-1.0",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              }
+            ]
+          }
+        },
+        "ECONOMIC": {
+          "total_cases": 10,
+          "recovered_count": 7,
+          "recovery_rate": 0.7,
+          "gross_recovered_inr": 27352.22,
+          "operational_costs_inr": 90.0,
+          "risk_penalties_inr": 45.0,
+          "total_costs_inr": 135.0,
+          "net_recovered_value_inr": 27217.22,
+          "avg_net_per_case_inr": 2721.72,
+          "policy_violations": 0,
+          "false_interventions": 0,
+          "unsafe_interventions": 0,
+          "unnecessary_retries_avoided": 3,
+          "stopping_accuracy": 1.0,
+          "total_economic_regret_inr": 4513.98,
+          "mean_economic_regret_inr": 451.4,
+          "oracle_capture_rate": 0.8577,
+          "action_distribution": {
+            "RETRY_LATER": 5,
+            "GENERATE_PAYMENT_LINK": 2,
+            "REQUEST_PAYMENT_METHOD_UPDATE": 1,
+            "SEND_REMINDER": 1,
+            "STOP_RECOVERY": 1
+          },
+          "action_metrics": {
+            "RETRY_LATER": {
+              "count": 5,
+              "percentage": 50.0,
+              "gross_recovered_inr": 9751.52,
+              "total_cost_inr": 75.0,
+              "total_regret_inr": 4498.98
+            },
+            "GENERATE_PAYMENT_LINK": {
+              "count": 2,
+              "percentage": 20.0,
+              "gross_recovered_inr": 10180.18,
+              "total_cost_inr": 30.0,
+              "total_regret_inr": 0.0
+            },
+            "REQUEST_PAYMENT_METHOD_UPDATE": {
+              "count": 1,
+              "percentage": 10.0,
+              "gross_recovered_inr": 0.0,
+              "total_cost_inr": 15.0,
+              "total_regret_inr": 15.0
+            },
+            "SEND_REMINDER": {
+              "count": 1,
+              "percentage": 10.0,
+              "gross_recovered_inr": 7420.52,
+              "total_cost_inr": 15.0,
+              "total_regret_inr": 0.0
+            },
+            "STOP_RECOVERY": {
+              "count": 1,
+              "percentage": 10.0,
+              "gross_recovered_inr": 0.0,
+              "total_cost_inr": 0.0,
+              "total_regret_inr": 0.0
+            }
+          },
+          "calibration": {
+            "brier_score": 0.20444,
+            "ece": 0.17778,
+            "bins": [
+              {
+                "bin": "0.0-0.1",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.1-0.2",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.2-0.3",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.3-0.4",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.4-0.5",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.5-0.6",
+                "count": 9,
+                "mean_predicted": 0.6,
+                "observed_rate": 0.7778,
+                "calibration_gap": 0.1778
+              },
+              {
+                "bin": "0.6-0.7",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.7-0.8",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.8-0.9",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.9-1.0",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              }
+            ]
+          }
+        },
+        "AI_PLUS_ECONOMIC": {
+          "total_cases": 10,
+          "recovered_count": 7,
+          "recovery_rate": 0.7,
+          "gross_recovered_inr": 24430.68,
+          "operational_costs_inr": 90.0,
+          "risk_penalties_inr": 45.0,
+          "total_costs_inr": 135.0,
+          "net_recovered_value_inr": 24295.68,
+          "avg_net_per_case_inr": 2429.57,
+          "policy_violations": 0,
+          "false_interventions": 0,
+          "unsafe_interventions": 0,
+          "unnecessary_retries_avoided": 3,
+          "stopping_accuracy": 1.0,
+          "total_economic_regret_inr": 7435.52,
+          "mean_economic_regret_inr": 743.55,
+          "oracle_capture_rate": 0.7657,
+          "action_distribution": {
+            "RETRY_LATER": 4,
+            "GENERATE_PAYMENT_LINK": 4,
+            "ESCALATE_TO_HUMAN": 1,
+            "STOP_RECOVERY": 1
+          },
+          "action_metrics": {
+            "RETRY_LATER": {
+              "count": 4,
+              "percentage": 40.0,
+              "gross_recovered_inr": 9751.52,
+              "total_cost_inr": 60.0,
+              "total_regret_inr": 0.0
+            },
+            "GENERATE_PAYMENT_LINK": {
+              "count": 4,
+              "percentage": 40.0,
+              "gross_recovered_inr": 14679.16,
+              "total_cost_inr": 60.0,
+              "total_regret_inr": 15.0
+            },
+            "ESCALATE_TO_HUMAN": {
+              "count": 1,
+              "percentage": 10.0,
+              "gross_recovered_inr": 0.0,
+              "total_cost_inr": 15.0,
+              "total_regret_inr": 7420.52
+            },
+            "STOP_RECOVERY": {
+              "count": 1,
+              "percentage": 10.0,
+              "gross_recovered_inr": 0.0,
+              "total_cost_inr": 0.0,
+              "total_regret_inr": 0.0
+            }
+          },
+          "calibration": {
+            "brier_score": 0.20444,
+            "ece": 0.17778,
+            "bins": [
+              {
+                "bin": "0.0-0.1",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.1-0.2",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.2-0.3",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.3-0.4",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.4-0.5",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.5-0.6",
+                "count": 9,
+                "mean_predicted": 0.6,
+                "observed_rate": 0.7778,
+                "calibration_gap": 0.1778
+              },
+              {
+                "bin": "0.6-0.7",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.7-0.8",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.8-0.9",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              },
+              {
+                "bin": "0.9-1.0",
+                "count": 0,
+                "mean_predicted": 0.0,
+                "observed_rate": 0.0,
+                "calibration_gap": 0.0
+              }
+            ]
+          }
+        }
+      },
+      "uplifts": {
+        "ai_vs_economic_inr": -2921.54,
+        "ai_vs_economic_pct": -10.73,
+        "ai_vs_baseline_inr": 4483.98,
+        "ai_vs_baseline_pct": 22.63,
+        "economic_vs_baseline_inr": 7405.52,
+        "baseline_vs_naive_inr": 19659.45
+      }
+    }
+  ],
+  "distribution_shift_analysis": {},
+  "sensitivity_analysis": {},
+  "forensic_traces": [
+    {
+      "case_index": 1,
+      "public_inputs": {
+        "case_id": "syn-case-0001",
+        "tenant_id": "tenant-judge-eval",
+        "amount_inr": 362.25,
+        "currency": "INR",
+        "domain": "B2B",
+        "failure_category": "TRANSIENT_TECHNICAL",
+        "retryability": "LATER_RETRY_POSSIBLE",
+        "recoverability": "HIGH",
+        "corridor": "razorpay:card:b2b",
+        "corridor_status": "OPERATIONAL",
+        "baseline_recommended_action": "RETRY_LATER",
+        "ai_recommended_action": "RETRY_LATER",
+        "ai_candidate_actions": [
+          "RETRY_LATER",
+          "RETRY_NOW",
+          "SEND_REMINDER"
+        ],
+        "ai_confidence": 0.8,
+        "ai_reason": "AI selected delayed retry to allow gateway recovery."
+      },
+      "strategy_decisions": {
+        "NO_ACTION": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 347.25
+        },
+        "NAIVE_RETRY": {
+          "selected_action": "RETRY_NOW",
+          "passed_policy": false,
+          "recovered": true,
+          "recovered_amount_inr": 362.25,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 347.25,
+          "economic_regret_inr": 0.0
+        },
+        "BASELINE": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 362.25,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 347.25,
+          "economic_regret_inr": 0.0
+        },
+        "ECONOMIC": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 362.25,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 347.25,
+          "economic_regret_inr": 0.0
+        },
+        "AI_PLUS_ECONOMIC": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 362.25,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 347.25,
+          "economic_regret_inr": 0.0
+        }
+      },
+      "hidden_evaluator_data": {
+        "latent_incident": "transient_gateway_timeout",
+        "is_systemic": false,
+        "outcome_roll": 0.24489,
+        "true_conversions": {
+          "RETRY_LATER": 0.85,
+          "RETRY_NOW": 0.4,
+          "GENERATE_PAYMENT_LINK": 0.45,
+          "SEND_REMINDER": 0.3,
+          "STOP_RECOVERY": 0.0
+        },
+        "oracle_best_action": "RETRY_NOW",
+        "oracle_net_value_inr": 347.25
+      }
+    },
+    {
+      "case_index": 2,
+      "public_inputs": {
+        "case_id": "syn-case-0002",
+        "tenant_id": "tenant-judge-eval",
+        "amount_inr": 7822.46,
+        "currency": "INR",
+        "domain": "B2C",
+        "failure_category": "CUSTOMER_ACTION_REQUIRED",
+        "retryability": "REQUIRES_NEW_METHOD",
+        "recoverability": "HIGH",
+        "corridor": "razorpay:card:b2c",
+        "corridor_status": "OPERATIONAL",
+        "baseline_recommended_action": "GENERATE_PAYMENT_LINK",
+        "ai_recommended_action": "GENERATE_PAYMENT_LINK",
+        "ai_candidate_actions": [
+          "GENERATE_PAYMENT_LINK",
+          "SEND_REMINDER",
+          "REQUEST_PAYMENT_METHOD_UPDATE"
+        ],
+        "ai_confidence": 0.85,
+        "ai_reason": "AI selected customer-driven payment link for payment method issue."
+      },
+      "strategy_decisions": {
+        "NO_ACTION": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 7807.46
+        },
+        "NAIVE_RETRY": {
+          "selected_action": "RETRY_NOW",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": -15.0,
+          "economic_regret_inr": 7822.46
+        },
+        "BASELINE": {
+          "selected_action": "GENERATE_PAYMENT_LINK",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 7822.46,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 7807.46,
+          "economic_regret_inr": 0.0
+        },
+        "ECONOMIC": {
+          "selected_action": "GENERATE_PAYMENT_LINK",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 7822.46,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 7807.46,
+          "economic_regret_inr": 0.0
+        },
+        "AI_PLUS_ECONOMIC": {
+          "selected_action": "GENERATE_PAYMENT_LINK",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 7822.46,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 7807.46,
+          "economic_regret_inr": 0.0
+        }
+      },
+      "hidden_evaluator_data": {
+        "latent_incident": "expired_card_credentials",
+        "is_systemic": false,
+        "outcome_roll": 0.6767,
+        "true_conversions": {
+          "GENERATE_PAYMENT_LINK": 0.75,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 0.7,
+          "SEND_REMINDER": 0.5,
+          "RETRY_NOW": 0.0,
+          "RETRY_LATER": 0.0,
+          "STOP_RECOVERY": 0.0
+        },
+        "oracle_best_action": "GENERATE_PAYMENT_LINK",
+        "oracle_net_value_inr": 7807.46
+      }
+    },
+    {
+      "case_index": 3,
+      "public_inputs": {
+        "case_id": "syn-case-0003",
+        "tenant_id": "tenant-judge-eval",
+        "amount_inr": 1011.61,
+        "currency": "INR",
+        "domain": "EMPLOYEE",
+        "failure_category": "TRANSIENT_TECHNICAL",
+        "retryability": "LATER_RETRY_POSSIBLE",
+        "recoverability": "MEDIUM",
+        "corridor": "razorpay:card:employee",
+        "corridor_status": "DEGRADED",
+        "baseline_recommended_action": "RETRY_LATER",
+        "ai_recommended_action": "GENERATE_PAYMENT_LINK",
+        "ai_candidate_actions": [
+          "GENERATE_PAYMENT_LINK",
+          "RETRY_LATER",
+          "SEND_REMINDER",
+          "STOP_RECOVERY"
+        ],
+        "ai_confidence": 0.86,
+        "ai_reason": "Corridor degraded; avoiding direct gateway retries in favor of customer payment link."
+      },
+      "strategy_decisions": {
+        "NO_ACTION": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 996.61
+        },
+        "NAIVE_RETRY": {
+          "selected_action": "RETRY_NOW",
+          "passed_policy": false,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 25.0,
+          "net_recovered_value_inr": -35.0,
+          "economic_regret_inr": 1031.61
+        },
+        "BASELINE": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 1011.61,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 996.61,
+          "economic_regret_inr": 0.0
+        },
+        "ECONOMIC": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 1011.61,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 996.61,
+          "economic_regret_inr": 0.0
+        },
+        "AI_PLUS_ECONOMIC": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 1011.61,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 996.61,
+          "economic_regret_inr": 0.0
+        }
+      },
+      "hidden_evaluator_data": {
+        "latent_incident": "systemic_bank_corridor_outage",
+        "is_systemic": true,
+        "outcome_roll": 0.03178,
+        "true_conversions": {
+          "GENERATE_PAYMENT_LINK": 0.7,
+          "RETRY_LATER": 0.35,
+          "SEND_REMINDER": 0.4,
+          "RETRY_NOW": 0.0,
+          "STOP_RECOVERY": 0.0
+        },
+        "oracle_best_action": "RETRY_LATER",
+        "oracle_net_value_inr": 996.61
+      }
+    },
+    {
+      "case_index": 4,
+      "public_inputs": {
+        "case_id": "syn-case-0004",
+        "tenant_id": "tenant-judge-eval",
+        "amount_inr": 2392.58,
+        "currency": "INR",
+        "domain": "B2C",
+        "failure_category": "TRANSIENT_TECHNICAL",
+        "retryability": "LATER_RETRY_POSSIBLE",
+        "recoverability": "HIGH",
+        "corridor": "razorpay:card:b2c",
+        "corridor_status": "OPERATIONAL",
+        "baseline_recommended_action": "RETRY_LATER",
+        "ai_recommended_action": "RETRY_LATER",
+        "ai_candidate_actions": [
+          "RETRY_LATER",
+          "RETRY_NOW",
+          "SEND_REMINDER"
+        ],
+        "ai_confidence": 0.8,
+        "ai_reason": "AI selected delayed retry to allow gateway recovery."
+      },
+      "strategy_decisions": {
+        "NO_ACTION": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 2377.58
+        },
+        "NAIVE_RETRY": {
+          "selected_action": "RETRY_NOW",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": -15.0,
+          "economic_regret_inr": 2392.58
+        },
+        "BASELINE": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 2392.58,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 2377.58,
+          "economic_regret_inr": 0.0
+        },
+        "ECONOMIC": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 2392.58,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 2377.58,
+          "economic_regret_inr": 0.0
+        },
+        "AI_PLUS_ECONOMIC": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 2392.58,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 2377.58,
+          "economic_regret_inr": 0.0
+        }
+      },
+      "hidden_evaluator_data": {
+        "latent_incident": "transient_gateway_timeout",
+        "is_systemic": false,
+        "outcome_roll": 0.50536,
+        "true_conversions": {
+          "RETRY_LATER": 0.85,
+          "RETRY_NOW": 0.4,
+          "GENERATE_PAYMENT_LINK": 0.45,
+          "SEND_REMINDER": 0.3,
+          "STOP_RECOVERY": 0.0
+        },
+        "oracle_best_action": "RETRY_LATER",
+        "oracle_net_value_inr": 2377.58
+      }
+    },
+    {
+      "case_index": 5,
+      "public_inputs": {
+        "case_id": "syn-case-0005",
+        "tenant_id": "tenant-judge-eval",
+        "amount_inr": 5985.08,
+        "currency": "INR",
+        "domain": "B2C",
+        "failure_category": "TRANSIENT_TECHNICAL",
+        "retryability": "LATER_RETRY_POSSIBLE",
+        "recoverability": "HIGH",
+        "corridor": "razorpay:card:b2c",
+        "corridor_status": "OPERATIONAL",
+        "baseline_recommended_action": "RETRY_LATER",
+        "ai_recommended_action": "RETRY_LATER",
+        "ai_candidate_actions": [
+          "RETRY_LATER",
+          "RETRY_NOW",
+          "SEND_REMINDER"
+        ],
+        "ai_confidence": 0.8,
+        "ai_reason": "AI selected delayed retry to allow gateway recovery."
+      },
+      "strategy_decisions": {
+        "NO_ACTION": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 5970.08
+        },
+        "NAIVE_RETRY": {
+          "selected_action": "RETRY_NOW",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": -15.0,
+          "economic_regret_inr": 5985.08
+        },
+        "BASELINE": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 5985.08,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 5970.08,
+          "economic_regret_inr": 0.0
+        },
+        "ECONOMIC": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 5985.08,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 5970.08,
+          "economic_regret_inr": 0.0
+        },
+        "AI_PLUS_ECONOMIC": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 5985.08,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 5970.08,
+          "economic_regret_inr": 0.0
+        }
+      },
+      "hidden_evaluator_data": {
+        "latent_incident": "transient_gateway_timeout",
+        "is_systemic": false,
+        "outcome_roll": 0.71602,
+        "true_conversions": {
+          "RETRY_LATER": 0.85,
+          "RETRY_NOW": 0.4,
+          "GENERATE_PAYMENT_LINK": 0.45,
+          "SEND_REMINDER": 0.3,
+          "STOP_RECOVERY": 0.0
+        },
+        "oracle_best_action": "RETRY_LATER",
+        "oracle_net_value_inr": 5970.08
+      }
+    },
+    {
+      "case_index": 6,
+      "public_inputs": {
+        "case_id": "syn-case-0006",
+        "tenant_id": "tenant-judge-eval",
+        "amount_inr": 4498.98,
+        "currency": "INR",
+        "domain": "B2C",
+        "failure_category": "TRANSIENT_TECHNICAL",
+        "retryability": "LATER_RETRY_POSSIBLE",
+        "recoverability": "MEDIUM",
+        "corridor": "razorpay:card:b2c",
+        "corridor_status": "DEGRADED",
+        "baseline_recommended_action": "RETRY_LATER",
+        "ai_recommended_action": "GENERATE_PAYMENT_LINK",
+        "ai_candidate_actions": [
+          "GENERATE_PAYMENT_LINK",
+          "RETRY_LATER",
+          "SEND_REMINDER",
+          "STOP_RECOVERY"
+        ],
+        "ai_confidence": 0.86,
+        "ai_reason": "Corridor degraded; avoiding direct gateway retries in favor of customer payment link."
+      },
+      "strategy_decisions": {
+        "NO_ACTION": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 4483.98
+        },
+        "NAIVE_RETRY": {
+          "selected_action": "RETRY_NOW",
+          "passed_policy": false,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 25.0,
+          "net_recovered_value_inr": -35.0,
+          "economic_regret_inr": 4518.98
+        },
+        "BASELINE": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": -15.0,
+          "economic_regret_inr": 4498.98
+        },
+        "ECONOMIC": {
+          "selected_action": "RETRY_LATER",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": -15.0,
+          "economic_regret_inr": 4498.98
+        },
+        "AI_PLUS_ECONOMIC": {
+          "selected_action": "GENERATE_PAYMENT_LINK",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 4498.98,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 4483.98,
+          "economic_regret_inr": 0.0
+        }
+      },
+      "hidden_evaluator_data": {
+        "latent_incident": "systemic_bank_corridor_outage",
+        "is_systemic": true,
+        "outcome_roll": 0.44921,
+        "true_conversions": {
+          "GENERATE_PAYMENT_LINK": 0.7,
+          "RETRY_LATER": 0.35,
+          "SEND_REMINDER": 0.4,
+          "RETRY_NOW": 0.0,
+          "STOP_RECOVERY": 0.0
+        },
+        "oracle_best_action": "GENERATE_PAYMENT_LINK",
+        "oracle_net_value_inr": 4483.98
+      }
+    },
+    {
+      "case_index": 7,
+      "public_inputs": {
+        "case_id": "syn-case-0007",
+        "tenant_id": "tenant-judge-eval",
+        "amount_inr": 8587.49,
+        "currency": "INR",
+        "domain": "B2C",
+        "failure_category": "PAYMENT_METHOD_PROBLEM",
+        "retryability": "REQUIRES_NEW_METHOD",
+        "recoverability": "HIGH",
+        "corridor": "razorpay:card:b2c",
+        "corridor_status": "OPERATIONAL",
+        "baseline_recommended_action": "REQUEST_PAYMENT_METHOD_UPDATE",
+        "ai_recommended_action": "GENERATE_PAYMENT_LINK",
+        "ai_candidate_actions": [
+          "GENERATE_PAYMENT_LINK",
+          "SEND_REMINDER",
+          "REQUEST_PAYMENT_METHOD_UPDATE"
+        ],
+        "ai_confidence": 0.85,
+        "ai_reason": "AI selected customer-driven payment link for payment method issue."
+      },
+      "strategy_decisions": {
+        "NO_ACTION": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 0.0
+        },
+        "NAIVE_RETRY": {
+          "selected_action": "RETRY_NOW",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": -15.0,
+          "economic_regret_inr": 15.0
+        },
+        "BASELINE": {
+          "selected_action": "REQUEST_PAYMENT_METHOD_UPDATE",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": -15.0,
+          "economic_regret_inr": 15.0
+        },
+        "ECONOMIC": {
+          "selected_action": "REQUEST_PAYMENT_METHOD_UPDATE",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": -15.0,
+          "economic_regret_inr": 15.0
+        },
+        "AI_PLUS_ECONOMIC": {
+          "selected_action": "GENERATE_PAYMENT_LINK",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": -15.0,
+          "economic_regret_inr": 15.0
+        }
+      },
+      "hidden_evaluator_data": {
+        "latent_incident": "insufficient_funds_soft",
+        "is_systemic": false,
+        "outcome_roll": 0.75881,
+        "true_conversions": {
+          "GENERATE_PAYMENT_LINK": 0.65,
+          "SEND_REMINDER": 0.55,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 0.45,
+          "RETRY_LATER": 0.25,
+          "RETRY_NOW": 0.1,
+          "STOP_RECOVERY": 0.0
+        },
+        "oracle_best_action": "STOP_RECOVERY",
+        "oracle_net_value_inr": 0.0
+      }
+    },
+    {
+      "case_index": 8,
+      "public_inputs": {
+        "case_id": "syn-case-0008",
+        "tenant_id": "tenant-judge-eval",
+        "amount_inr": 7420.52,
+        "currency": "INR",
+        "domain": "EMPLOYEE",
+        "failure_category": "CUSTOMER_ACTION_REQUIRED",
+        "retryability": "REQUIRES_NEW_METHOD",
+        "recoverability": "HIGH",
+        "corridor": "razorpay:card:employee",
+        "corridor_status": "OPERATIONAL",
+        "baseline_recommended_action": "GENERATE_PAYMENT_LINK",
+        "ai_recommended_action": "ESCALATE_TO_HUMAN",
+        "ai_candidate_actions": [
+          "ESCALATE_TO_HUMAN",
+          "SEND_REMINDER",
+          "STOP_RECOVERY"
+        ],
+        "ai_confidence": 0.88,
+        "ai_reason": "AI identified payroll internal domain requiring human approval."
+      },
+      "strategy_decisions": {
+        "NO_ACTION": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 7405.52
+        },
+        "NAIVE_RETRY": {
+          "selected_action": "RETRY_NOW",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": -15.0,
+          "economic_regret_inr": 7420.52
+        },
+        "BASELINE": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": false,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 7405.52
+        },
+        "ECONOMIC": {
+          "selected_action": "SEND_REMINDER",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 7420.52,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 7405.52,
+          "economic_regret_inr": 0.0
+        },
+        "AI_PLUS_ECONOMIC": {
+          "selected_action": "ESCALATE_TO_HUMAN",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": -15.0,
+          "economic_regret_inr": 7420.52
+        }
+      },
+      "hidden_evaluator_data": {
+        "latent_incident": "expired_card_credentials",
+        "is_systemic": false,
+        "outcome_roll": 0.34025,
+        "true_conversions": {
+          "GENERATE_PAYMENT_LINK": 0.75,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 0.7,
+          "SEND_REMINDER": 0.5,
+          "RETRY_NOW": 0.0,
+          "RETRY_LATER": 0.0,
+          "STOP_RECOVERY": 0.0
+        },
+        "oracle_best_action": "SEND_REMINDER",
+        "oracle_net_value_inr": 7405.52
+      }
+    },
+    {
+      "case_index": 9,
+      "public_inputs": {
+        "case_id": "syn-case-0009",
+        "tenant_id": "tenant-judge-eval",
+        "amount_inr": 2357.72,
+        "currency": "INR",
+        "domain": "B2B",
+        "failure_category": "CUSTOMER_ACTION_REQUIRED",
+        "retryability": "REQUIRES_NEW_METHOD",
+        "recoverability": "HIGH",
+        "corridor": "razorpay:card:b2b",
+        "corridor_status": "OPERATIONAL",
+        "baseline_recommended_action": "GENERATE_PAYMENT_LINK",
+        "ai_recommended_action": "GENERATE_PAYMENT_LINK",
+        "ai_candidate_actions": [
+          "GENERATE_PAYMENT_LINK",
+          "SEND_REMINDER",
+          "REQUEST_PAYMENT_METHOD_UPDATE"
+        ],
+        "ai_confidence": 0.85,
+        "ai_reason": "AI selected customer-driven payment link for payment method issue."
+      },
+      "strategy_decisions": {
+        "NO_ACTION": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 2342.72
+        },
+        "NAIVE_RETRY": {
+          "selected_action": "RETRY_NOW",
+          "passed_policy": false,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": -15.0,
+          "economic_regret_inr": 2357.72
+        },
+        "BASELINE": {
+          "selected_action": "GENERATE_PAYMENT_LINK",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 2357.72,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 2342.72,
+          "economic_regret_inr": 0.0
+        },
+        "ECONOMIC": {
+          "selected_action": "GENERATE_PAYMENT_LINK",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 2357.72,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 2342.72,
+          "economic_regret_inr": 0.0
+        },
+        "AI_PLUS_ECONOMIC": {
+          "selected_action": "GENERATE_PAYMENT_LINK",
+          "passed_policy": true,
+          "recovered": true,
+          "recovered_amount_inr": 2357.72,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 5.0,
+          "net_recovered_value_inr": 2342.72,
+          "economic_regret_inr": 0.0
+        }
+      },
+      "hidden_evaluator_data": {
+        "latent_incident": "expired_card_credentials",
+        "is_systemic": false,
+        "outcome_roll": 0.10221,
+        "true_conversions": {
+          "GENERATE_PAYMENT_LINK": 0.75,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 0.7,
+          "SEND_REMINDER": 0.5,
+          "RETRY_NOW": 0.0,
+          "RETRY_LATER": 0.0,
+          "STOP_RECOVERY": 0.0
+        },
+        "oracle_best_action": "GENERATE_PAYMENT_LINK",
+        "oracle_net_value_inr": 2342.72
+      }
+    },
+    {
+      "case_index": 10,
+      "public_inputs": {
+        "case_id": "syn-case-0010",
+        "tenant_id": "tenant-judge-eval",
+        "amount_inr": 1114.14,
+        "currency": "INR",
+        "domain": "B2B",
+        "failure_category": "NON_RETRIABLE",
+        "retryability": "BLOCKED",
+        "recoverability": "LOW",
+        "corridor": "razorpay:card:b2b",
+        "corridor_status": "OPERATIONAL",
+        "baseline_recommended_action": "STOP_RECOVERY",
+        "ai_recommended_action": "STOP_RECOVERY",
+        "ai_candidate_actions": [
+          "STOP_RECOVERY"
+        ],
+        "ai_confidence": 0.95,
+        "ai_reason": "AI identified terminal failure; halting recovery to prevent customer friction."
+      },
+      "strategy_decisions": {
+        "NO_ACTION": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 0.0
+        },
+        "NAIVE_RETRY": {
+          "selected_action": "RETRY_NOW",
+          "passed_policy": false,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 10.0,
+          "risk_incurred_inr": 25.0,
+          "net_recovered_value_inr": -35.0,
+          "economic_regret_inr": 35.0
+        },
+        "BASELINE": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 0.0
+        },
+        "ECONOMIC": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 0.0
+        },
+        "AI_PLUS_ECONOMIC": {
+          "selected_action": "STOP_RECOVERY",
+          "passed_policy": true,
+          "recovered": false,
+          "recovered_amount_inr": 0.0,
+          "cost_incurred_inr": 0.0,
+          "risk_incurred_inr": 0.0,
+          "net_recovered_value_inr": 0.0,
+          "economic_regret_inr": 0.0
+        }
+      },
+      "hidden_evaluator_data": {
+        "latent_incident": "hard_fraud_block",
+        "is_systemic": false,
+        "outcome_roll": 0.84749,
+        "true_conversions": {
+          "STOP_RECOVERY": 0.0,
+          "ESCALATE_TO_HUMAN": 0.05,
+          "RETRY_NOW": 0.0,
+          "RETRY_LATER": 0.0,
+          "GENERATE_PAYMENT_LINK": 0.0
+        },
+        "oracle_best_action": "STOP_RECOVERY",
+        "oracle_net_value_inr": 0.0
+      }
+    }
+  ],
+  "visualizations": [
+    "artifacts/benchmarks/plots/net_recovered_value_by_strategy.svg",
+    "artifacts/benchmarks/plots/recovery_rate_by_strategy.svg",
+    "artifacts/benchmarks/plots/ai_uplift_vs_economic.svg",
+    "artifacts/benchmarks/plots/per_seed_ai_uplift.svg",
+    "artifacts/benchmarks/plots/economic_regret_by_strategy.svg",
+    "artifacts/benchmarks/plots/index.html"
+  ]
+}

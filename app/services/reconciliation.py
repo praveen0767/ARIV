@@ -123,7 +123,7 @@ class ReconciliationService:
         }
 
         if result.status == ProviderOutcomeStatus.SUCCEEDED:
-            logger.info("Reconciliation confirmed SUCCESS for Action %s", action.id)
+            logger.info("Reconciliation confirmed provider resource state for Action %s", action.id)
             attempt.status = ExecutionStatus.SUCCEEDED
             attempt.finished_at = datetime.now(timezone.utc)
             action.status = ActionStatus.SUCCEEDED
@@ -131,14 +131,12 @@ class ReconciliationService:
             outbox.dispatched = True
             outbox.dispatched_at = datetime.now(timezone.utc)
 
-            # Reconcile Case state via State Machine if not already terminal
-            if case.status in (CaseStatus.OPEN, CaseStatus.RISK_ASSESSED, CaseStatus.PENDING_APPROVAL):
-                try:
-                    CaseStateMachine.transition_to(case, CaseStatus.RECOVERED)
-                except Exception as exc:
-                    logger.warning("Could not transition case %s to RECOVERED: %s", case.id, exc)
-
-            audit_details["reconciliation_result"] = "CONFIRMED_SUCCESS"
+            # A successful GET proves only that the requested provider resource
+            # exists.  It is not sufficient evidence of a recovered payment.
+            # Recovery, attribution, and measurement remain exclusively in the
+            # provider-confirmed success webhook path.
+            audit_details["reconciliation_result"] = "RESOURCE_CONFIRMED_AWAITING_PAYMENT_CONFIRMATION"
+            audit_details["payment_confirmed"] = result.provider_status in ("paid", "captured")
 
         elif result.status == ProviderOutcomeStatus.FAILED:
             logger.warning("Reconciliation confirmed FAILURE for Action %s", action.id)

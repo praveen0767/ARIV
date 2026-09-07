@@ -254,7 +254,9 @@ async def test_4d_2_payment_link_reconciliation_routes_to_fetch_payment_link(bas
     # Must query payment_links endpoint specifically!
     assert called_paths[0] == "/v1/payment_links/plink_spec_1"
     assert action.status == ActionStatus.SUCCEEDED
-    assert base_context["case"].status == CaseStatus.RECOVERED
+    # An unpaid link resource exists, but no provider-confirmed payment has
+    # occurred.  Recovery is left to the paid webhook path.
+    assert base_context["case"].status == CaseStatus.RISK_ASSESSED
 
 
 @pytest.mark.asyncio
@@ -436,7 +438,7 @@ async def test_4d_5_window_d_provider_request_sent_worker_crashes_reconciles(bas
 
     assert result.status == ProviderOutcomeStatus.SUCCEEDED
     assert action.status == ActionStatus.SUCCEEDED
-    assert base_context["case"].status == CaseStatus.RECOVERED
+    assert base_context["case"].status == CaseStatus.RISK_ASSESSED
 
 
 @pytest.mark.asyncio

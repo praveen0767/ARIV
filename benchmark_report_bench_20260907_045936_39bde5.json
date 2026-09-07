@@ -1,0 +1,663 @@
+{
+  "benchmark_id": "bench_20260907_045936_39bde5",
+  "mode": "TEST_MODE",
+  "start_time": "2026-09-07T04:59:36Z",
+  "end_time": "2026-09-07T04:59:56Z",
+  "cases_requested": 18,
+  "cases_observed": 18,
+  "total_cases": 18,
+  "total_amount_at_risk_minor": 14540000,
+  "total_amount_at_risk_inr": 145400.0,
+  "decision_engine_cases": 18,
+  "policy_approved": 16,
+  "policy_blocked": 0,
+  "execution_attempts": 5,
+  "execution_failures": 0,
+  "verified_recoveries": 0,
+  "attributed_recoveries": 0,
+  "revenue_recovered_minor": 0,
+  "revenue_recovered_inr": 0.0,
+  "recovery_rate": 0.0,
+  "human_escalations": 2,
+  "delivery": [
+    {
+      "index": 0,
+      "event_id": "evt_bench_20260907_045936_39bde5_0",
+      "payment_id": "pay_bench_20260907_045936_39bde5_0",
+      "amount_minor": 6000000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 1,
+      "event_id": "evt_bench_20260907_045936_39bde5_1",
+      "payment_id": "pay_bench_20260907_045936_39bde5_1",
+      "amount_minor": 7500000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 2,
+      "event_id": "evt_bench_20260907_045936_39bde5_2",
+      "payment_id": "pay_bench_20260907_045936_39bde5_2",
+      "amount_minor": 50000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 3,
+      "event_id": "evt_bench_20260907_045936_39bde5_3",
+      "payment_id": "pay_bench_20260907_045936_39bde5_3",
+      "amount_minor": 120000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 4,
+      "event_id": "evt_bench_20260907_045936_39bde5_4",
+      "payment_id": "pay_bench_20260907_045936_39bde5_4",
+      "amount_minor": 25000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 5,
+      "event_id": "evt_bench_20260907_045936_39bde5_5",
+      "payment_id": "pay_bench_20260907_045936_39bde5_5",
+      "amount_minor": 40000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 6,
+      "event_id": "evt_bench_20260907_045936_39bde5_6",
+      "payment_id": "pay_bench_20260907_045936_39bde5_6",
+      "amount_minor": 150000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 7,
+      "event_id": "evt_bench_20260907_045936_39bde5_7",
+      "payment_id": "pay_bench_20260907_045936_39bde5_7",
+      "amount_minor": 30000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 8,
+      "event_id": "evt_bench_20260907_045936_39bde5_8",
+      "payment_id": "pay_bench_20260907_045936_39bde5_8",
+      "amount_minor": 80000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 9,
+      "event_id": "evt_bench_20260907_045936_39bde5_9",
+      "payment_id": "pay_bench_20260907_045936_39bde5_9",
+      "amount_minor": 10000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 10,
+      "event_id": "evt_bench_20260907_045936_39bde5_10",
+      "payment_id": "pay_bench_20260907_045936_39bde5_10",
+      "amount_minor": 60000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 11,
+      "event_id": "evt_bench_20260907_045936_39bde5_11",
+      "payment_id": "pay_bench_20260907_045936_39bde5_11",
+      "amount_minor": 15000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 12,
+      "event_id": "evt_bench_20260907_045936_39bde5_12",
+      "payment_id": "pay_bench_20260907_045936_39bde5_12",
+      "amount_minor": 45000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 13,
+      "event_id": "evt_bench_20260907_045936_39bde5_13",
+      "payment_id": "pay_bench_20260907_045936_39bde5_13",
+      "amount_minor": 20000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 14,
+      "event_id": "evt_bench_20260907_045936_39bde5_14",
+      "payment_id": "pay_bench_20260907_045936_39bde5_14",
+      "amount_minor": 35000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 15,
+      "event_id": "evt_bench_20260907_045936_39bde5_15",
+      "payment_id": "pay_bench_20260907_045936_39bde5_15",
+      "amount_minor": 70000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 16,
+      "event_id": "evt_bench_20260907_045936_39bde5_16",
+      "payment_id": "pay_bench_20260907_045936_39bde5_16",
+      "amount_minor": 90000,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 17,
+      "event_id": "evt_bench_20260907_045936_39bde5_17",
+      "payment_id": "pay_bench_20260907_045936_39bde5_17",
+      "amount_minor": 200000,
+      "http_status": 200,
+      "accepted": true
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "439467bf-78a3-45bb-bd6e-b24afad2c5b1",
+      "payment_id": "pay_bench_20260907_045936_39bde5_0",
+      "amount_minor": 6000000,
+      "scenario": "TRANSIENT_TECHNICAL/B2B-ESCALATION",
+      "error_code": "GATEWAY_ERROR",
+      "error_reason": "Bank gateway timeout",
+      "route_status_at_decision": "OPERATIONAL",
+      "final_status": "PENDING_APPROVAL",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "RETRY_NOW"
+      ],
+      "policy_statuses": [
+        "NEEDS_REVIEW"
+      ],
+      "autonomy_levels": [
+        "HUMAN_APPROVAL"
+      ],
+      "action_statuses": [],
+      "attempt_statuses": [],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": true
+    },
+    {
+      "case_id": "55a04985-0c93-4a46-8283-ba412b453622",
+      "payment_id": "pay_bench_20260907_045936_39bde5_1",
+      "amount_minor": 7500000,
+      "scenario": "TRANSIENT_TECHNICAL/B2B-ESCALATION",
+      "error_code": "GATEWAY_ERROR",
+      "error_reason": "Bank gateway timeout",
+      "route_status_at_decision": "OPERATIONAL",
+      "final_status": "PENDING_APPROVAL",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "RETRY_NOW"
+      ],
+      "policy_statuses": [
+        "NEEDS_REVIEW"
+      ],
+      "autonomy_levels": [
+        "HUMAN_APPROVAL"
+      ],
+      "action_statuses": [],
+      "attempt_statuses": [],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": true
+    },
+    {
+      "case_id": "9b71155a-5cab-4b25-b571-cf615329afe8",
+      "payment_id": "pay_bench_20260907_045936_39bde5_2",
+      "amount_minor": 50000,
+      "scenario": "TRANSIENT_TECHNICAL/B2C-RETRY_NOW",
+      "error_code": "BAD_REQUEST_ERROR",
+      "error_reason": "Transaction declined by bank",
+      "route_status_at_decision": "OPERATIONAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "RETRY_NOW"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "CANCELLED"
+      ],
+      "attempt_statuses": [],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "a1f44dd3-bcc6-491c-8d25-5e3cf94a01a8",
+      "payment_id": "pay_bench_20260907_045936_39bde5_3",
+      "amount_minor": 120000,
+      "scenario": "TRANSIENT_TECHNICAL/B2C-RETRY_NOW",
+      "error_code": "BAD_REQUEST_ERROR",
+      "error_reason": "Transaction declined by bank",
+      "route_status_at_decision": "OPERATIONAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "RETRY_NOW"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "CANCELLED"
+      ],
+      "attempt_statuses": [],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "042618a9-2393-41cf-8bf0-7db82f57b30d",
+      "payment_id": "pay_bench_20260907_045936_39bde5_4",
+      "amount_minor": 25000,
+      "scenario": "CUSTOMER_ACTION_REQUIRED/PAYMENT_LINK",
+      "error_code": "BAD_REQUEST_ERROR",
+      "error_reason": "Insufficient balance",
+      "route_status_at_decision": "DEGRADED",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "a8515cd3-5f02-40ba-9aeb-c58d893b165e",
+      "payment_id": "pay_bench_20260907_045936_39bde5_5",
+      "amount_minor": 40000,
+      "scenario": "CUSTOMER_ACTION_REQUIRED/PAYMENT_LINK",
+      "error_code": "BAD_REQUEST_ERROR",
+      "error_reason": "Insufficient balance",
+      "route_status_at_decision": "DEGRADED",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "70e738d4-fe86-49db-96b7-943e029740e7",
+      "payment_id": "pay_bench_20260907_045936_39bde5_6",
+      "amount_minor": 150000,
+      "scenario": "CUSTOMER_ACTION_REQUIRED/PAYMENT_LINK",
+      "error_code": "BAD_REQUEST_ERROR",
+      "error_reason": "Insufficient balance",
+      "route_status_at_decision": "CRITICAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "06972cc0-8715-4022-8aa6-854747d1bd87",
+      "payment_id": "pay_bench_20260907_045936_39bde5_7",
+      "amount_minor": 30000,
+      "scenario": "CUSTOMER_ACTION_REQUIRED/PAYMENT_LINK-AUTH",
+      "error_code": "AUTHENTICATION_FAILED",
+      "error_reason": "Authentication failed",
+      "route_status_at_decision": "CRITICAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "e17492f6-caed-46a1-9945-18022069ed59",
+      "payment_id": "pay_bench_20260907_045936_39bde5_8",
+      "amount_minor": 80000,
+      "scenario": "CUSTOMER_ACTION_REQUIRED/PAYMENT_LINK-AUTH",
+      "error_code": "AUTHENTICATION_FAILED",
+      "error_reason": "Authentication failed",
+      "route_status_at_decision": "CRITICAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "577e76f3-c77b-4e4f-8c11-88b267272505",
+      "payment_id": "pay_bench_20260907_045936_39bde5_9",
+      "amount_minor": 10000,
+      "scenario": "NON_RETRIABLE/STOP",
+      "error_code": "NON_RETRIABLE",
+      "error_reason": "Token expired",
+      "route_status_at_decision": "CRITICAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "STOP_RECOVERY"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [],
+      "attempt_statuses": [],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "185f8b3c-a76e-4f0f-a4c8-5f9564c05b5a",
+      "payment_id": "pay_bench_20260907_045936_39bde5_10",
+      "amount_minor": 60000,
+      "scenario": "NON_RETRIABLE/STOP",
+      "error_code": "NON_RETRIABLE",
+      "error_reason": "Token expired",
+      "route_status_at_decision": "CRITICAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "STOP_RECOVERY"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [],
+      "attempt_statuses": [],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "793df5c7-ec3b-45ea-b2aa-27b6dbc6597c",
+      "payment_id": "pay_bench_20260907_045936_39bde5_11",
+      "amount_minor": 15000,
+      "scenario": "NON_RETRIABLE/STOP-EXPIRED",
+      "error_code": "BAD_REQUEST_ERROR",
+      "error_reason": "Card expired",
+      "route_status_at_decision": "CRITICAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "STOP_RECOVERY"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [],
+      "attempt_statuses": [],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "d35b7dd9-f858-42da-a7c2-9159513fb253",
+      "payment_id": "pay_bench_20260907_045936_39bde5_12",
+      "amount_minor": 45000,
+      "scenario": "NON_RETRIABLE/STOP-EXPIRED",
+      "error_code": "BAD_REQUEST_ERROR",
+      "error_reason": "Card expired",
+      "route_status_at_decision": "CRITICAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "STOP_RECOVERY"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [],
+      "attempt_statuses": [],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "6ecdc7d2-35ba-45d1-b88c-3c34284cf4b6",
+      "payment_id": "pay_bench_20260907_045936_39bde5_13",
+      "amount_minor": 20000,
+      "scenario": "UNKNOWN/ESCALATE",
+      "error_code": "DO_NOT_HONOR",
+      "error_reason": "Card was declined",
+      "route_status_at_decision": "CRITICAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "STOP_RECOVERY"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [],
+      "attempt_statuses": [],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "70ef9940-f6f4-4664-95cb-0686bb78cf9a",
+      "payment_id": "pay_bench_20260907_045936_39bde5_14",
+      "amount_minor": 35000,
+      "scenario": "UNKNOWN/ESCALATE",
+      "error_code": "DO_NOT_HONOR",
+      "error_reason": "Card was declined",
+      "route_status_at_decision": "CRITICAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "STOP_RECOVERY"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [],
+      "attempt_statuses": [],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "98539fa5-e446-4fcf-85b2-c7b3ef790920",
+      "payment_id": "pay_bench_20260907_045936_39bde5_15",
+      "amount_minor": 70000,
+      "scenario": "UNKNOWN/ESCALATE",
+      "error_code": "DO_NOT_HONOR",
+      "error_reason": "Card was declined",
+      "route_status_at_decision": "CRITICAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "STOP_RECOVERY"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [],
+      "attempt_statuses": [],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "33d8eab9-62ad-46ea-bd54-bce90633fef8",
+      "payment_id": "pay_bench_20260907_045936_39bde5_16",
+      "amount_minor": 90000,
+      "scenario": "UNKNOWN/ESCALATE",
+      "error_code": "DO_NOT_HONOR",
+      "error_reason": "Card was declined",
+      "route_status_at_decision": "CRITICAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "STOP_RECOVERY"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [],
+      "attempt_statuses": [],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "813d4ec2-2d44-4e81-a4c3-9a4ff01975b0",
+      "payment_id": "pay_bench_20260907_045936_39bde5_17",
+      "amount_minor": 200000,
+      "scenario": "UNKNOWN/ESCALATE",
+      "error_code": "DO_NOT_HONOR",
+      "error_reason": "Card was declined",
+      "route_status_at_decision": "CRITICAL",
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "STOP_RECOVERY"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [],
+      "attempt_statuses": [],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    }
+  ],
+  "supported_metrics_note": "human_escalations reflects persisted HUMAN_APPROVAL/NEEDS_REVIEW decision records; all other required metrics are computed from actual persisted rows."
+}

@@ -20,7 +20,9 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://ariv_user:ariv_pass@localhost:5432/ariv_db"
     REDIS_URL: str = "redis://localhost:6379/0"
     QDRANT_URL: str = "http://localhost:6333"
-    QDRANT_COLLECTION_NAME: str = "recovery_measurements"
+    # Canonical non-authoritative recovery-memory collection.  Decisioning and
+    # measurement indexing must use the same collection contract.
+    QDRANT_COLLECTION_NAME: str = "historical_cases"
     QDRANT_DISTANCE_METRIC: str = "Cosine"
     EMBEDDING_PROVIDER: str = "deterministic"
     EMBEDDING_MODEL_NAME: str = "BAAI/bge-base-en-v1.5"

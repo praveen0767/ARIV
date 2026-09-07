@@ -40,7 +40,7 @@ class EconomicOptimizer:
         cls,
         candidates: Iterable[Any],
         context: Any,
-        probability_provider: Any,
+        probability_provider: Any = None,
         operational_cost: float = None,
         risk_penalty: float = None,
     ) -> List[Dict[str, Any]]:

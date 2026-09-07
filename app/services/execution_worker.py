@@ -208,10 +208,24 @@ class ExecutionPreflightValidator:
         if existing_attempt is not None and isinstance(existing_attempt, ExecutionAttempt):
             return False, "An execution attempt for this action has already succeeded.", ActionStatus.SUCCEEDED
 
-        # 16. Provider capability check
-        if action.action_type == RecoveryAction.GENERATE_PAYMENT_LINK:
-            # Requires CREATE_PAYMENT_LINK capability
-            pass
+        # 16. Provider capability check.  ARIV currently has one implemented
+        # financial mutation: generating a Razorpay payment link.  Every other
+        # RecoveryAction remains a valid decision concept but has no execution
+        # adapter, scheduler, or communication provider behind it and must not
+        # be represented as a successful no-op.
+        if action.action_type != RecoveryAction.GENERATE_PAYMENT_LINK:
+            return (
+                False,
+                f"Unsupported execution action: {action.action_type.value}. No provider capability is implemented.",
+                ActionStatus.CANCELLED,
+            )
+
+        if provider_adapter is None:
+            return (
+                False,
+                "Payment-link provider adapter is unavailable.",
+                ActionStatus.CANCELLED,
+            )
 
         return True, None, action.status
 
@@ -367,7 +381,7 @@ class ExecutionWorker:
         except Exception as exc:
             logger.warning("Telegram action started alert failed (non-fatal): %s", type(exc).__name__)
 
-        # 4. Dispatch Provider Mutation only for GENERATE_PAYMENT_LINK
+        # 4. Dispatch the only implemented provider mutation.
         if action.action_type == RecoveryAction.GENERATE_PAYMENT_LINK:
             # Prepare stable business idempotency identity (stable across retries of the same Action)
             idempotency_key = f"ariv:action:{action.id}"
@@ -384,18 +398,12 @@ class ExecutionWorker:
             )
 
             result: ProviderExecutionResult = await self.provider_adapter.create_payment_link(req)
-        else:
-            # No provider mutation needed for actions like STOP_RECOVERY.
-            # provider="none" means no external provider was contacted.
+        else:  # Defensive fallback; preflight must reject this branch.
             result = ProviderExecutionResult(
-                status=ProviderOutcomeStatus.SUCCEEDED,
+                status=ProviderOutcomeStatus.FAILED,
                 provider="none",
-                provider_status="no_action",
-                provider_resource_id=None,
-                provider_request_id=None,
-                raw_metadata={},
-                error_code=None,
-                error_reason=None,
+                error_code="UNSUPPORTED_CAPABILITY",
+                error_reason=f"No execution capability is implemented for {action.action_type.value}",
                 retry_safety=RetrySafety.NOT_RETRIABLE,
             )
 

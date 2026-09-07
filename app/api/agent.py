@@ -436,7 +436,11 @@ async def _agent_stream(
                     plink_url = att_meta.get("short_url") or ""
                     req_id = attempt.provider_request_id if attempt else "N/A"
 
-                    ctx["recovery_stage"] = "WAITING_FOR_PAYMENT" if plink_url else "EXECUTED"
+                    ctx["recovery_stage"] = (
+                        "WAITING_FOR_PAYMENT"
+                        if plink_url and action.status == ActionStatus.SUCCEEDED
+                        else (action.status.value if hasattr(action.status, "value") else str(action.status))
+                    )
                     if plink_url:
                         ctx["payment_link_url"] = plink_url
                     if req_id and req_id != "N/A":
@@ -445,12 +449,12 @@ async def _agent_stream(
                     await db.commit()
 
                     meta["action_type"] = action_type.value
-                    meta["status"] = "SUCCEEDED"
+                    meta["status"] = action.status.value if hasattr(action.status, "value") else str(action.status)
                     meta["payment_link_url"] = plink_url or None
                     if plink_url:
                         meta["links"].append({"label": "Open Razorpay Payment Link", "href": plink_url, "is_external": true})
 
-                    lines.append(f"Case {cid_short}… authorized recovery action executed.")
+                    lines.append(f"Case {cid_short}… authorized recovery action processed.")
                     lines.append("")
                     lines.append("Execution:")
                     lines.append(f"  Action:       {action_type.value}")
@@ -461,8 +465,12 @@ async def _agent_stream(
                     if plink_url:
                         lines.append(f"  Payment Link: {plink_url}")
                     lines.append("")
-                    lines.append("Recovery stage updated to WAITING_FOR_PAYMENT.")
-                    lines.append("System is monitoring for payment_link.paid webhook to confirm and attribute recovery.")
+                    if action.status == ActionStatus.SUCCEEDED:
+                        lines.append("Recovery stage updated to WAITING_FOR_PAYMENT.")
+                        lines.append("System is monitoring for payment_link.paid webhook to confirm and attribute recovery.")
+                    else:
+                        lines.append("Recovery action did not succeed; no payment link was generated.")
+                        lines.append("Inspect the case timeline for the deterministic execution audit trail.")
 
     # -----------------------------------------------------------------------
     # BRANCH 2: Global Operational Snapshot — "What is happening right now?"

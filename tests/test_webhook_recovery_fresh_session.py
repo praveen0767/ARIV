@@ -93,6 +93,7 @@ async def test_handle_payment_success_event_transitions_case_and_records_measure
     action = Action(
         id=action_id,
         case_id=case.id,
+        tenant_id=tenant.id,
         action_type=RecoveryAction.GENERATE_PAYMENT_LINK,
         status=ActionStatus.AUTHORIZED,
     )
@@ -192,6 +193,7 @@ async def test_idempotent_replay_of_persisted_event():
     action = Action(
         id=action_id,
         case_id=case.id,
+        tenant_id=tenant.id,
         action_type=RecoveryAction.GENERATE_PAYMENT_LINK,
         status=ActionStatus.SUCCEEDED,
     )
@@ -207,6 +209,7 @@ async def test_idempotent_replay_of_persisted_event():
                     "entity": {
                         "id": "plink_test_replay",
                         "amount": 10000,
+                        "status": "paid",
                         "notes": {"case_id": str(case_id), "action_id": str(action_id)},
                     }
                 }

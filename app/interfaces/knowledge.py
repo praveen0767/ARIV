@@ -3,6 +3,7 @@ from typing import List, Dict, Any
 from qdrant_client import AsyncQdrantClient
 from qdrant_client.http import models as rest
 from app.infrastructure.qdrant import get_qdrant
+from app.core.config import settings
 
 logger = logging.getLogger("ariv.interfaces.knowledge")
 
@@ -56,7 +57,7 @@ class TenantAwareKnowledgeRetriever:
         
         try:
             results = await client.search(
-                collection_name="historical_cases",
+                collection_name=settings.QDRANT_COLLECTION_NAME,
                 query_vector=query_vector,
                 query_filter=tenant_filter,
                 limit=limit

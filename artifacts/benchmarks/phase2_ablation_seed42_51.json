@@ -1,0 +1,1038 @@
+{
+  "metadata": {
+    "cases_per_seed": 10000,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "total_cases_evaluated": 500000,
+    "total_transaction_volume_inr": 504995639.89,
+    "elapsed_seconds": 180.04,
+    "timestamp": "2026-09-06T10:25:43Z"
+  },
+  "per_seed_results": {
+    "42": {
+      "A0_BASELINE": {
+        "gross_recovered": 22191284.36999997,
+        "net_recovered": 22079354.369999975,
+        "cost": 74620.0,
+        "risk": 37310.0,
+        "regret": 6911520.770000007,
+        "oracle_net": 28990875.140000004,
+        "recovered_cases": 4413,
+        "policy_violations": 505,
+        "action_counts": {
+          "RETRY_LATER": 3987,
+          "GENERATE_PAYMENT_LINK": 1490,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 1985,
+          "STOP_RECOVERY": 2538
+        }
+      },
+      "A1_ECONOMIC": {
+        "gross_recovered": 23544462.859999992,
+        "net_recovered": 23424957.859999996,
+        "cost": 79670.0,
+        "risk": 39835.0,
+        "regret": 5565917.280000004,
+        "oracle_net": 28990875.140000004,
+        "recovered_cases": 4665,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 3987,
+          "GENERATE_PAYMENT_LINK": 1490,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 1985,
+          "SEND_REMINDER": 505,
+          "STOP_RECOVERY": 2033
+        }
+      },
+      "A2_AI_ECONOMIC": {
+        "gross_recovered": 22953709.500000007,
+        "net_recovered": 22834204.500000015,
+        "cost": 79670.0,
+        "risk": 39835.0,
+        "regret": 6156670.640000006,
+        "oracle_net": 28990875.140000004,
+        "recovered_cases": 4540,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 1970,
+          "GENERATE_PAYMENT_LINK": 4480,
+          "ESCALATE_TO_HUMAN": 1517,
+          "STOP_RECOVERY": 2033
+        }
+      },
+      "A3_AI_ECONOMIC_MEMORY": {
+        "gross_recovered": 21213381.560000036,
+        "net_recovered": 21084056.56000004,
+        "cost": 89490.0,
+        "risk": 39835.0,
+        "regret": 7906818.580000001,
+        "oracle_net": 28990875.140000004,
+        "recovered_cases": 4201,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 2998,
+          "GENERATE_PAYMENT_LINK": 4434,
+          "ESCALATE_TO_HUMAN": 1517,
+          "STOP_RECOVERY": 1051
+        }
+      },
+      "A4_FULL_ARIV": {
+        "gross_recovered": 23128364.13999999,
+        "net_recovered": 22999039.13999999,
+        "cost": 89490.0,
+        "risk": 39835.0,
+        "regret": 5991836.000000005,
+        "oracle_net": 28990875.140000004,
+        "recovered_cases": 4577,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 4039,
+          "GENERATE_PAYMENT_LINK": 4908,
+          "ESCALATE_TO_HUMAN": 2,
+          "STOP_RECOVERY": 1051
+        }
+      }
+    },
+    "43": {
+      "A0_BASELINE": {
+        "gross_recovered": 22296038.610000025,
+        "net_recovered": 22182998.610000025,
+        "cost": 75360.0,
+        "risk": 37680.0,
+        "regret": 6931605.180000009,
+        "oracle_net": 29114603.79000005,
+        "recovered_cases": 4393,
+        "policy_violations": 536,
+        "action_counts": {
+          "RETRY_LATER": 4089,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 1996,
+          "STOP_RECOVERY": 2464,
+          "GENERATE_PAYMENT_LINK": 1451
+        }
+      },
+      "A1_ECONOMIC": {
+        "gross_recovered": 23695975.630000036,
+        "net_recovered": 23574895.630000032,
+        "cost": 80720.0,
+        "risk": 40360.0,
+        "regret": 5539708.1600000085,
+        "oracle_net": 29114603.79000005,
+        "recovered_cases": 4672,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 4089,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 1996,
+          "STOP_RECOVERY": 1928,
+          "GENERATE_PAYMENT_LINK": 1451,
+          "SEND_REMINDER": 536
+        }
+      },
+      "A2_AI_ECONOMIC": {
+        "gross_recovered": 23227092.600000005,
+        "net_recovered": 23106012.60000001,
+        "cost": 80720.0,
+        "risk": 40360.0,
+        "regret": 6008591.1899999995,
+        "oracle_net": 29114603.79000005,
+        "recovered_cases": 4567,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 2050,
+          "GENERATE_PAYMENT_LINK": 4492,
+          "STOP_RECOVERY": 1928,
+          "ESCALATE_TO_HUMAN": 1530
+        }
+      },
+      "A3_AI_ECONOMIC_MEMORY": {
+        "gross_recovered": 21582323.430000022,
+        "net_recovered": 21451813.430000015,
+        "cost": 90150.0,
+        "risk": 40360.0,
+        "regret": 7662790.360000008,
+        "oracle_net": 29114603.79000005,
+        "recovered_cases": 4234,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 3079,
+          "GENERATE_PAYMENT_LINK": 4406,
+          "STOP_RECOVERY": 985,
+          "ESCALATE_TO_HUMAN": 1530
+        }
+      },
+      "A4_FULL_ARIV": {
+        "gross_recovered": 23418187.77000001,
+        "net_recovered": 23287677.770000007,
+        "cost": 90150.0,
+        "risk": 40360.0,
+        "regret": 5826926.020000007,
+        "oracle_net": 29114603.79000005,
+        "recovered_cases": 4592,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 4119,
+          "GENERATE_PAYMENT_LINK": 4891,
+          "ESCALATE_TO_HUMAN": 5,
+          "STOP_RECOVERY": 985
+        }
+      }
+    },
+    "44": {
+      "A0_BASELINE": {
+        "gross_recovered": 22781971.09,
+        "net_recovered": 22669456.08999999,
+        "cost": 75010.0,
+        "risk": 37505.0,
+        "regret": 6994214.550000006,
+        "oracle_net": 29663670.639999986,
+        "recovered_cases": 4489,
+        "policy_violations": 512,
+        "action_counts": {
+          "STOP_RECOVERY": 2499,
+          "GENERATE_PAYMENT_LINK": 1538,
+          "RETRY_LATER": 4023,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 1940
+        }
+      },
+      "A1_ECONOMIC": {
+        "gross_recovered": 24032164.839999974,
+        "net_recovered": 23911969.839999985,
+        "cost": 80130.0,
+        "risk": 40065.0,
+        "regret": 5751700.800000004,
+        "oracle_net": 29663670.639999986,
+        "recovered_cases": 4734,
+        "policy_violations": 0,
+        "action_counts": {
+          "STOP_RECOVERY": 1987,
+          "GENERATE_PAYMENT_LINK": 1538,
+          "RETRY_LATER": 4023,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 1940,
+          "SEND_REMINDER": 512
+        }
+      },
+      "A2_AI_ECONOMIC": {
+        "gross_recovered": 23538809.25999998,
+        "net_recovered": 23418614.259999983,
+        "cost": 80130.0,
+        "risk": 40065.0,
+        "regret": 6245056.380000003,
+        "oracle_net": 29663670.639999986,
+        "recovered_cases": 4646,
+        "policy_violations": 0,
+        "action_counts": {
+          "STOP_RECOVERY": 1987,
+          "GENERATE_PAYMENT_LINK": 4481,
+          "RETRY_LATER": 2034,
+          "ESCALATE_TO_HUMAN": 1498
+        }
+      },
+      "A3_AI_ECONOMIC_MEMORY": {
+        "gross_recovered": 21925682.279999986,
+        "net_recovered": 21795697.27999998,
+        "cost": 89920.0,
+        "risk": 40065.0,
+        "regret": 7867973.360000009,
+        "oracle_net": 29663670.639999986,
+        "recovered_cases": 4332,
+        "policy_violations": 0,
+        "action_counts": {
+          "GENERATE_PAYMENT_LINK": 4502,
+          "RETRY_LATER": 2992,
+          "STOP_RECOVERY": 1008,
+          "ESCALATE_TO_HUMAN": 1498
+        }
+      },
+      "A4_FULL_ARIV": {
+        "gross_recovered": 23634142.67999999,
+        "net_recovered": 23504157.679999992,
+        "cost": 89920.0,
+        "risk": 40065.0,
+        "regret": 6159512.9600000065,
+        "oracle_net": 29663670.639999986,
+        "recovered_cases": 4669,
+        "policy_violations": 0,
+        "action_counts": {
+          "GENERATE_PAYMENT_LINK": 4993,
+          "RETRY_LATER": 3977,
+          "STOP_RECOVERY": 1008,
+          "ESCALATE_TO_HUMAN": 22
+        }
+      }
+    },
+    "45": {
+      "A0_BASELINE": {
+        "gross_recovered": 21943406.779999945,
+        "net_recovered": 21829916.77999995,
+        "cost": 75660.0,
+        "risk": 37830.0,
+        "regret": 7384628.93999999,
+        "oracle_net": 29214545.71999995,
+        "recovered_cases": 4408,
+        "policy_violations": 508,
+        "action_counts": {
+          "REQUEST_PAYMENT_METHOD_UPDATE": 2015,
+          "RETRY_LATER": 4009,
+          "STOP_RECOVERY": 2434,
+          "GENERATE_PAYMENT_LINK": 1542
+        }
+      },
+      "A1_ECONOMIC": {
+        "gross_recovered": 23315023.889999997,
+        "net_recovered": 23193913.889999997,
+        "cost": 80740.0,
+        "risk": 40370.0,
+        "regret": 6020631.829999998,
+        "oracle_net": 29214545.71999995,
+        "recovered_cases": 4667,
+        "policy_violations": 0,
+        "action_counts": {
+          "REQUEST_PAYMENT_METHOD_UPDATE": 2015,
+          "RETRY_LATER": 4009,
+          "SEND_REMINDER": 508,
+          "STOP_RECOVERY": 1926,
+          "GENERATE_PAYMENT_LINK": 1542
+        }
+      },
+      "A2_AI_ECONOMIC": {
+        "gross_recovered": 23244220.439999968,
+        "net_recovered": 23123110.439999968,
+        "cost": 80740.0,
+        "risk": 40370.0,
+        "regret": 6091435.280000007,
+        "oracle_net": 29214545.71999995,
+        "recovered_cases": 4644,
+        "policy_violations": 0,
+        "action_counts": {
+          "ESCALATE_TO_HUMAN": 1499,
+          "GENERATE_PAYMENT_LINK": 4639,
+          "RETRY_LATER": 1936,
+          "STOP_RECOVERY": 1926
+        }
+      },
+      "A3_AI_ECONOMIC_MEMORY": {
+        "gross_recovered": 21276710.80999997,
+        "net_recovered": 21146300.809999976,
+        "cost": 90040.0,
+        "risk": 40370.0,
+        "regret": 8068244.909999997,
+        "oracle_net": 29214545.71999995,
+        "recovered_cases": 4267,
+        "policy_violations": 0,
+        "action_counts": {
+          "ESCALATE_TO_HUMAN": 1499,
+          "GENERATE_PAYMENT_LINK": 4520,
+          "RETRY_LATER": 2985,
+          "STOP_RECOVERY": 996
+        }
+      },
+      "A4_FULL_ARIV": {
+        "gross_recovered": 23038673.799999967,
+        "net_recovered": 22908263.799999963,
+        "cost": 90040.0,
+        "risk": 40370.0,
+        "regret": 6306281.920000002,
+        "oracle_net": 29214545.71999995,
+        "recovered_cases": 4601,
+        "policy_violations": 0,
+        "action_counts": {
+          "ESCALATE_TO_HUMAN": 8,
+          "GENERATE_PAYMENT_LINK": 5041,
+          "RETRY_LATER": 3955,
+          "STOP_RECOVERY": 996
+        }
+      }
+    },
+    "46": {
+      "A0_BASELINE": {
+        "gross_recovered": 22720166.889999967,
+        "net_recovered": 22606796.88999997,
+        "cost": 75580.0,
+        "risk": 37790.0,
+        "regret": 6584126.609999992,
+        "oracle_net": 29190923.499999914,
+        "recovered_cases": 4512,
+        "policy_violations": 501,
+        "action_counts": {
+          "RETRY_LATER": 4039,
+          "GENERATE_PAYMENT_LINK": 1453,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 2066,
+          "STOP_RECOVERY": 2442
+        }
+      },
+      "A1_ECONOMIC": {
+        "gross_recovered": 24060374.959999945,
+        "net_recovered": 23939489.959999945,
+        "cost": 80590.0,
+        "risk": 40295.0,
+        "regret": 5251433.5399999935,
+        "oracle_net": 29190923.499999914,
+        "recovered_cases": 4770,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 4039,
+          "GENERATE_PAYMENT_LINK": 1453,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 2066,
+          "STOP_RECOVERY": 1941,
+          "SEND_REMINDER": 501
+        }
+      },
+      "A2_AI_ECONOMIC": {
+        "gross_recovered": 23443371.53999992,
+        "net_recovered": 23322486.539999917,
+        "cost": 80590.0,
+        "risk": 40295.0,
+        "regret": 5868436.960000003,
+        "oracle_net": 29190923.499999914,
+        "recovered_cases": 4688,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 2039,
+          "GENERATE_PAYMENT_LINK": 4533,
+          "ESCALATE_TO_HUMAN": 1487,
+          "STOP_RECOVERY": 1941
+        }
+      },
+      "A3_AI_ECONOMIC_MEMORY": {
+        "gross_recovered": 21749551.489999957,
+        "net_recovered": 21619006.489999954,
+        "cost": 90250.0,
+        "risk": 40295.0,
+        "regret": 7571917.009999997,
+        "oracle_net": 29190923.499999914,
+        "recovered_cases": 4329,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 3053,
+          "GENERATE_PAYMENT_LINK": 4485,
+          "ESCALATE_TO_HUMAN": 1487,
+          "STOP_RECOVERY": 975
+        }
+      },
+      "A4_FULL_ARIV": {
+        "gross_recovered": 23518864.75999993,
+        "net_recovered": 23388319.75999993,
+        "cost": 90250.0,
+        "risk": 40295.0,
+        "regret": 5802603.739999992,
+        "oracle_net": 29190923.499999914,
+        "recovered_cases": 4689,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 4006,
+          "GENERATE_PAYMENT_LINK": 4984,
+          "ESCALATE_TO_HUMAN": 35,
+          "STOP_RECOVERY": 975
+        }
+      }
+    },
+    "47": {
+      "A0_BASELINE": {
+        "gross_recovered": 22130610.49999995,
+        "net_recovered": 22017960.499999948,
+        "cost": 75100.0,
+        "risk": 37550.0,
+        "regret": 6766841.010000002,
+        "oracle_net": 28784801.50999992,
+        "recovered_cases": 4412,
+        "policy_violations": 505,
+        "action_counts": {
+          "REQUEST_PAYMENT_METHOD_UPDATE": 2036,
+          "RETRY_LATER": 4040,
+          "STOP_RECOVERY": 2490,
+          "GENERATE_PAYMENT_LINK": 1434
+        }
+      },
+      "A1_ECONOMIC": {
+        "gross_recovered": 23266974.009999953,
+        "net_recovered": 23146749.009999942,
+        "cost": 80150.0,
+        "risk": 40075.0,
+        "regret": 5638052.499999999,
+        "oracle_net": 28784801.50999992,
+        "recovered_cases": 4648,
+        "policy_violations": 0,
+        "action_counts": {
+          "REQUEST_PAYMENT_METHOD_UPDATE": 2036,
+          "RETRY_LATER": 4040,
+          "STOP_RECOVERY": 1985,
+          "GENERATE_PAYMENT_LINK": 1434,
+          "SEND_REMINDER": 505
+        }
+      },
+      "A2_AI_ECONOMIC": {
+        "gross_recovered": 22933865.059999913,
+        "net_recovered": 22813640.05999992,
+        "cost": 80150.0,
+        "risk": 40075.0,
+        "regret": 5971161.449999997,
+        "oracle_net": 28784801.50999992,
+        "recovered_cases": 4585,
+        "policy_violations": 0,
+        "action_counts": {
+          "ESCALATE_TO_HUMAN": 1551,
+          "GENERATE_PAYMENT_LINK": 4497,
+          "STOP_RECOVERY": 1985,
+          "RETRY_LATER": 1967
+        }
+      },
+      "A3_AI_ECONOMIC_MEMORY": {
+        "gross_recovered": 21002974.16999997,
+        "net_recovered": 20872609.169999965,
+        "cost": 90290.0,
+        "risk": 40075.0,
+        "regret": 7912192.339999997,
+        "oracle_net": 28784801.50999992,
+        "recovered_cases": 4221,
+        "policy_violations": 0,
+        "action_counts": {
+          "ESCALATE_TO_HUMAN": 1551,
+          "GENERATE_PAYMENT_LINK": 4501,
+          "RETRY_LATER": 2977,
+          "STOP_RECOVERY": 971
+        }
+      },
+      "A4_FULL_ARIV": {
+        "gross_recovered": 22769659.90999993,
+        "net_recovered": 22639294.90999993,
+        "cost": 90290.0,
+        "risk": 40075.0,
+        "regret": 6145506.6000000015,
+        "oracle_net": 28784801.50999992,
+        "recovered_cases": 4571,
+        "policy_violations": 0,
+        "action_counts": {
+          "ESCALATE_TO_HUMAN": 75,
+          "RETRY_LATER": 3976,
+          "GENERATE_PAYMENT_LINK": 4978,
+          "STOP_RECOVERY": 971
+        }
+      }
+    },
+    "48": {
+      "A0_BASELINE": {
+        "gross_recovered": 22260487.200000018,
+        "net_recovered": 22147687.20000002,
+        "cost": 75200.0,
+        "risk": 37600.0,
+        "regret": 6841153.469999995,
+        "oracle_net": 28988840.669999953,
+        "recovered_cases": 4366,
+        "policy_violations": 493,
+        "action_counts": {
+          "RETRY_LATER": 4052,
+          "STOP_RECOVERY": 2480,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 2032,
+          "GENERATE_PAYMENT_LINK": 1436
+        }
+      },
+      "A1_ECONOMIC": {
+        "gross_recovered": 23547827.800000057,
+        "net_recovered": 23427632.800000053,
+        "cost": 80130.0,
+        "risk": 40065.0,
+        "regret": 5561207.87,
+        "oracle_net": 28988840.669999953,
+        "recovered_cases": 4612,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 4052,
+          "STOP_RECOVERY": 1987,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 2032,
+          "GENERATE_PAYMENT_LINK": 1436,
+          "SEND_REMINDER": 493
+        }
+      },
+      "A2_AI_ECONOMIC": {
+        "gross_recovered": 22983295.66000002,
+        "net_recovered": 22863100.660000026,
+        "cost": 80130.0,
+        "risk": 40065.0,
+        "regret": 6125740.010000002,
+        "oracle_net": 28988840.669999953,
+        "recovered_cases": 4517,
+        "policy_violations": 0,
+        "action_counts": {
+          "GENERATE_PAYMENT_LINK": 4446,
+          "STOP_RECOVERY": 1987,
+          "RETRY_LATER": 2013,
+          "ESCALATE_TO_HUMAN": 1554
+        }
+      },
+      "A3_AI_ECONOMIC_MEMORY": {
+        "gross_recovered": 21307602.41000002,
+        "net_recovered": 21177437.410000004,
+        "cost": 90100.0,
+        "risk": 40065.0,
+        "regret": 7811403.260000001,
+        "oracle_net": 28988840.669999953,
+        "recovered_cases": 4172,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 3026,
+          "GENERATE_PAYMENT_LINK": 4430,
+          "ESCALATE_TO_HUMAN": 1554,
+          "STOP_RECOVERY": 990
+        }
+      },
+      "A4_FULL_ARIV": {
+        "gross_recovered": 23070081.650000036,
+        "net_recovered": 22939916.65000003,
+        "cost": 90100.0,
+        "risk": 40065.0,
+        "regret": 6048924.02,
+        "oracle_net": 28988840.669999953,
+        "recovered_cases": 4505,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 3989,
+          "GENERATE_PAYMENT_LINK": 4977,
+          "ESCALATE_TO_HUMAN": 44,
+          "STOP_RECOVERY": 990
+        }
+      }
+    },
+    "49": {
+      "A0_BASELINE": {
+        "gross_recovered": 21854944.780000012,
+        "net_recovered": 21742144.780000005,
+        "cost": 75200.0,
+        "risk": 37600.0,
+        "regret": 6857693.440000003,
+        "oracle_net": 28599838.220000044,
+        "recovered_cases": 4391,
+        "policy_violations": 477,
+        "action_counts": {
+          "RETRY_LATER": 4019,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 2030,
+          "GENERATE_PAYMENT_LINK": 1471,
+          "STOP_RECOVERY": 2480
+        }
+      },
+      "A1_ECONOMIC": {
+        "gross_recovered": 23067215.490000002,
+        "net_recovered": 22947260.490000002,
+        "cost": 79970.0,
+        "risk": 39985.0,
+        "regret": 5652577.729999995,
+        "oracle_net": 28599838.220000044,
+        "recovered_cases": 4630,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 4019,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 2030,
+          "GENERATE_PAYMENT_LINK": 1471,
+          "STOP_RECOVERY": 2003,
+          "SEND_REMINDER": 477
+        }
+      },
+      "A2_AI_ECONOMIC": {
+        "gross_recovered": 22881822.88999996,
+        "net_recovered": 22761867.88999996,
+        "cost": 79970.0,
+        "risk": 39985.0,
+        "regret": 5837970.330000003,
+        "oracle_net": 28599838.220000044,
+        "recovered_cases": 4557,
+        "policy_violations": 0,
+        "action_counts": {
+          "ESCALATE_TO_HUMAN": 1511,
+          "GENERATE_PAYMENT_LINK": 4500,
+          "STOP_RECOVERY": 2003,
+          "RETRY_LATER": 1986
+        }
+      },
+      "A3_AI_ECONOMIC_MEMORY": {
+        "gross_recovered": 20982453.339999985,
+        "net_recovered": 20852688.33999999,
+        "cost": 89780.0,
+        "risk": 39985.0,
+        "regret": 7747149.880000007,
+        "oracle_net": 28599838.220000044,
+        "recovered_cases": 4194,
+        "policy_violations": 0,
+        "action_counts": {
+          "ESCALATE_TO_HUMAN": 1511,
+          "GENERATE_PAYMENT_LINK": 4460,
+          "RETRY_LATER": 3007,
+          "STOP_RECOVERY": 1022
+        }
+      },
+      "A4_FULL_ARIV": {
+        "gross_recovered": 22699385.649999976,
+        "net_recovered": 22569620.64999999,
+        "cost": 89780.0,
+        "risk": 39985.0,
+        "regret": 6030217.5699999975,
+        "oracle_net": 28599838.220000044,
+        "recovered_cases": 4532,
+        "policy_violations": 0,
+        "action_counts": {
+          "ESCALATE_TO_HUMAN": 3,
+          "GENERATE_PAYMENT_LINK": 4938,
+          "RETRY_LATER": 4037,
+          "STOP_RECOVERY": 1022
+        }
+      }
+    },
+    "50": {
+      "A0_BASELINE": {
+        "gross_recovered": 22303835.77999999,
+        "net_recovered": 22191680.779999997,
+        "cost": 74770.0,
+        "risk": 37385.0,
+        "regret": 6950644.419999993,
+        "oracle_net": 29142325.200000066,
+        "recovered_cases": 4384,
+        "policy_violations": 496,
+        "action_counts": {
+          "STOP_RECOVERY": 2523,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 2005,
+          "RETRY_LATER": 4025,
+          "GENERATE_PAYMENT_LINK": 1447
+        }
+      },
+      "A1_ECONOMIC": {
+        "gross_recovered": 23540654.859999996,
+        "net_recovered": 23421059.86,
+        "cost": 79730.0,
+        "risk": 39865.0,
+        "regret": 5721265.339999997,
+        "oracle_net": 29142325.200000066,
+        "recovered_cases": 4629,
+        "policy_violations": 0,
+        "action_counts": {
+          "STOP_RECOVERY": 2027,
+          "SEND_REMINDER": 496,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 2005,
+          "RETRY_LATER": 4025,
+          "GENERATE_PAYMENT_LINK": 1447
+        }
+      },
+      "A2_AI_ECONOMIC": {
+        "gross_recovered": 23128813.72000006,
+        "net_recovered": 23009218.72000005,
+        "cost": 79730.0,
+        "risk": 39865.0,
+        "regret": 6133106.480000005,
+        "oracle_net": 29142325.200000066,
+        "recovered_cases": 4561,
+        "policy_violations": 0,
+        "action_counts": {
+          "STOP_RECOVERY": 2027,
+          "ESCALATE_TO_HUMAN": 1523,
+          "GENERATE_PAYMENT_LINK": 4436,
+          "RETRY_LATER": 2014
+        }
+      },
+      "A3_AI_ECONOMIC_MEMORY": {
+        "gross_recovered": 21376069.550000023,
+        "net_recovered": 21246754.55000002,
+        "cost": 89450.0,
+        "risk": 39865.0,
+        "regret": 7895570.649999991,
+        "oracle_net": 29142325.200000066,
+        "recovered_cases": 4201,
+        "policy_violations": 0,
+        "action_counts": {
+          "STOP_RECOVERY": 1055,
+          "ESCALATE_TO_HUMAN": 1523,
+          "GENERATE_PAYMENT_LINK": 4394,
+          "RETRY_LATER": 3028
+        }
+      },
+      "A4_FULL_ARIV": {
+        "gross_recovered": 23268989.060000025,
+        "net_recovered": 23139674.06000002,
+        "cost": 89450.0,
+        "risk": 39865.0,
+        "regret": 6002651.139999999,
+        "oracle_net": 29142325.200000066,
+        "recovered_cases": 4585,
+        "policy_violations": 0,
+        "action_counts": {
+          "STOP_RECOVERY": 1055,
+          "ESCALATE_TO_HUMAN": 8,
+          "GENERATE_PAYMENT_LINK": 4861,
+          "RETRY_LATER": 4076
+        }
+      }
+    },
+    "51": {
+      "A0_BASELINE": {
+        "gross_recovered": 22379961.589999985,
+        "net_recovered": 22266966.589999974,
+        "cost": 75330.0,
+        "risk": 37665.0,
+        "regret": 6803231.169999996,
+        "oracle_net": 29070197.760000028,
+        "recovered_cases": 4425,
+        "policy_violations": 496,
+        "action_counts": {
+          "GENERATE_PAYMENT_LINK": 1550,
+          "STOP_RECOVERY": 2467,
+          "RETRY_LATER": 4017,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 1966
+        }
+      },
+      "A1_ECONOMIC": {
+        "gross_recovered": 23546423.05999997,
+        "net_recovered": 23425988.059999973,
+        "cost": 80290.0,
+        "risk": 40145.0,
+        "regret": 5644209.699999998,
+        "oracle_net": 29070197.760000028,
+        "recovered_cases": 4663,
+        "policy_violations": 0,
+        "action_counts": {
+          "GENERATE_PAYMENT_LINK": 1550,
+          "STOP_RECOVERY": 1971,
+          "RETRY_LATER": 4017,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 1966,
+          "SEND_REMINDER": 496
+        }
+      },
+      "A2_AI_ECONOMIC": {
+        "gross_recovered": 23354474.129999988,
+        "net_recovered": 23234039.129999984,
+        "cost": 80290.0,
+        "risk": 40145.0,
+        "regret": 5836158.629999997,
+        "oracle_net": 29070197.760000028,
+        "recovered_cases": 4609,
+        "policy_violations": 0,
+        "action_counts": {
+          "GENERATE_PAYMENT_LINK": 4545,
+          "STOP_RECOVERY": 1971,
+          "RETRY_LATER": 2009,
+          "ESCALATE_TO_HUMAN": 1475
+        }
+      },
+      "A3_AI_ECONOMIC_MEMORY": {
+        "gross_recovered": 21633150.38999999,
+        "net_recovered": 21502795.389999986,
+        "cost": 90210.0,
+        "risk": 40145.0,
+        "regret": 7567402.369999994,
+        "oracle_net": 29070197.760000028,
+        "recovered_cases": 4273,
+        "policy_violations": 0,
+        "action_counts": {
+          "GENERATE_PAYMENT_LINK": 4500,
+          "STOP_RECOVERY": 979,
+          "RETRY_LATER": 3046,
+          "ESCALATE_TO_HUMAN": 1475
+        }
+      },
+      "A4_FULL_ARIV": {
+        "gross_recovered": 23448584.809999965,
+        "net_recovered": 23318229.80999997,
+        "cost": 90210.0,
+        "risk": 40145.0,
+        "regret": 5751967.949999999,
+        "oracle_net": 29070197.760000028,
+        "recovered_cases": 4620,
+        "policy_violations": 0,
+        "action_counts": {
+          "GENERATE_PAYMENT_LINK": 4979,
+          "STOP_RECOVERY": 979,
+          "RETRY_LATER": 4035,
+          "ESCALATE_TO_HUMAN": 7
+        }
+      }
+    }
+  },
+  "variants": {
+    "A0_BASELINE": {
+      "variant": "A0_BASELINE",
+      "total_cases": 100000,
+      "recovered_cases": 44193,
+      "case_recovery_rate": 44.19,
+      "value_recovery_rate": 44.13,
+      "gross_recovered_inr": 222862707.59,
+      "net_recovered_inr": 221734962.59,
+      "net_recovered_mean_per_seed": 22173496.26,
+      "net_recovered_ci95": [
+        21962819.11,
+        22384173.41
+      ],
+      "total_cost_inr": 751830.0,
+      "total_risk_penalty_inr": 375915.0,
+      "total_economic_regret_inr": 69025659.56,
+      "oracle_capture_rate": 76.26,
+      "policy_violations": 5029,
+      "action_counts": {
+        "RETRY_LATER": 40300,
+        "GENERATE_PAYMENT_LINK": 14812,
+        "REQUEST_PAYMENT_METHOD_UPDATE": 20071,
+        "STOP_RECOVERY": 24817
+      }
+    },
+    "A1_ECONOMIC": {
+      "variant": "A1_ECONOMIC",
+      "total_cases": 100000,
+      "recovered_cases": 46690,
+      "case_recovery_rate": 46.69,
+      "value_recovery_rate": 46.66,
+      "gross_recovered_inr": 235617097.4,
+      "net_recovered_inr": 234413917.4,
+      "net_recovered_mean_per_seed": 23441391.74,
+      "net_recovered_ci95": [
+        23217629.71,
+        23665153.77
+      ],
+      "total_cost_inr": 802120.0,
+      "total_risk_penalty_inr": 401060.0,
+      "total_economic_regret_inr": 56346704.75,
+      "oracle_capture_rate": 80.62,
+      "policy_violations": 0,
+      "action_counts": {
+        "RETRY_LATER": 40300,
+        "GENERATE_PAYMENT_LINK": 14812,
+        "REQUEST_PAYMENT_METHOD_UPDATE": 20071,
+        "SEND_REMINDER": 5029,
+        "STOP_RECOVERY": 19788
+      }
+    },
+    "A2_AI_ECONOMIC": {
+      "variant": "A2_AI_ECONOMIC",
+      "total_cases": 100000,
+      "recovered_cases": 45914,
+      "case_recovery_rate": 45.91,
+      "value_recovery_rate": 45.88,
+      "gross_recovered_inr": 231689474.8,
+      "net_recovered_inr": 230486294.8,
+      "net_recovered_mean_per_seed": 23048629.48,
+      "net_recovered_ci95": [
+        22884384.14,
+        23212874.82
+      ],
+      "total_cost_inr": 802120.0,
+      "total_risk_penalty_inr": 401060.0,
+      "total_economic_regret_inr": 60274327.35,
+      "oracle_capture_rate": 79.27,
+      "policy_violations": 0,
+      "action_counts": {
+        "RETRY_LATER": 20018,
+        "GENERATE_PAYMENT_LINK": 45049,
+        "ESCALATE_TO_HUMAN": 15145,
+        "STOP_RECOVERY": 19788
+      }
+    },
+    "A3_AI_ECONOMIC_MEMORY": {
+      "variant": "A3_AI_ECONOMIC_MEMORY",
+      "total_cases": 100000,
+      "recovered_cases": 42424,
+      "case_recovery_rate": 42.42,
+      "value_recovery_rate": 42.39,
+      "gross_recovered_inr": 214049899.43,
+      "net_recovered_inr": 212749159.43,
+      "net_recovered_mean_per_seed": 21274915.94,
+      "net_recovered_ci95": [
+        21051723.74,
+        21498108.15
+      ],
+      "total_cost_inr": 899680.0,
+      "total_risk_penalty_inr": 401060.0,
+      "total_economic_regret_inr": 78011462.72,
+      "oracle_capture_rate": 73.17,
+      "policy_violations": 0,
+      "action_counts": {
+        "RETRY_LATER": 30191,
+        "GENERATE_PAYMENT_LINK": 44632,
+        "ESCALATE_TO_HUMAN": 15145,
+        "STOP_RECOVERY": 10032
+      }
+    },
+    "A4_FULL_ARIV": {
+      "variant": "A4_FULL_ARIV",
+      "total_cases": 100000,
+      "recovered_cases": 45941,
+      "case_recovery_rate": 45.94,
+      "value_recovery_rate": 45.94,
+      "gross_recovered_inr": 231994934.23,
+      "net_recovered_inr": 230694194.23,
+      "net_recovered_mean_per_seed": 23069419.42,
+      "net_recovered_ci95": [
+        22844773.58,
+        23294065.27
+      ],
+      "total_cost_inr": 899680.0,
+      "total_risk_penalty_inr": 401060.0,
+      "total_economic_regret_inr": 60066427.92,
+      "oracle_capture_rate": 79.34,
+      "policy_violations": 0,
+      "action_counts": {
+        "RETRY_LATER": 40209,
+        "GENERATE_PAYMENT_LINK": 49550,
+        "ESCALATE_TO_HUMAN": 209,
+        "STOP_RECOVERY": 10032
+      }
+    }
+  },
+  "incremental_analysis": {
+    "ai_incremental_value": {
+      "comparison": "A2_AI_ECONOMIC vs A1_ECONOMIC",
+      "absolute_inr": -3927622.6,
+      "percentage": -1.68,
+      "mean_per_seed_diff": -392762.26,
+      "ci95": [
+        -528861.04,
+        -256663.48
+      ],
+      "win_rate": "0/10 (losses: 10, ties: 0)"
+    },
+    "memory_incremental_value": {
+      "comparison": "A3_AI_ECONOMIC_MEMORY vs A2_AI_ECONOMIC",
+      "absolute_inr": -17737135.37,
+      "percentage": -7.7,
+      "mean_per_seed_diff": -1773713.54,
+      "ci95": [
+        -1862860.64,
+        -1684566.43
+      ],
+      "win_rate": "0/10 (losses: 10, ties: 0)"
+    },
+    "systemic_incremental_value": {
+      "comparison": "A4_FULL_ARIV vs A3_AI_ECONOMIC_MEMORY",
+      "absolute_inr": 17945034.8,
+      "percentage": 8.43,
+      "mean_per_seed_diff": 1794503.48,
+      "ci95": [
+        1744909.27,
+        1844097.69
+      ],
+      "win_rate": "10/10 (losses: 0, ties: 0)"
+    },
+    "full_ariv_vs_economic": {
+      "comparison": "A4_FULL_ARIV vs A1_ECONOMIC",
+      "absolute_inr": -3719723.17,
+      "percentage": -1.59,
+      "mean_per_seed_diff": -371972.32,
+      "ci95": [
+        -467567.06,
+        -276377.58
+      ],
+      "win_rate": "0/10 (losses: 10, ties: 0)"
+    },
+    "full_ariv_vs_baseline": {
+      "comparison": "A4_FULL_ARIV vs A0_BASELINE",
+      "absolute_inr": 8959231.64,
+      "percentage": 4.04,
+      "mean_per_seed_diff": 895923.16,
+      "ci95": [
+        786155.71,
+        1005690.62
+      ],
+      "win_rate": "10/10 (losses: 0, ties: 0)"
+    }
+  }
+}

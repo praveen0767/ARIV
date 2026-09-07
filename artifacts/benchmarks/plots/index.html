@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ARIV Judge-Grade Scientific Benchmark Dashboard</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0b0f19; color: #f8fafc; margin: 0; padding: 24px; }
+    h1 { font-size: 26px; margin-bottom: 6px; color: #60a5fa; }
+    .subtitle { color: #94a3b8; font-size: 14px; margin-bottom: 24px; }
+    .badge-bar { display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+    .badge { background: #1e293b; border: 1px solid #334155; padding: 8px 14px; border-radius: 6px; font-size: 13px; font-weight: 500; }
+    .badge span { color: #34d399; font-weight: bold; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 24px; }
+    .card { background: #111827; border: 1px solid #1f2937; border-radius: 10px; padding: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
+    .card h3 { margin: 0 0 12px 0; font-size: 15px; color: #e2e8f0; }
+    img { width: 100%; height: auto; display: block; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>ARIV Judge-Grade Evaluation Suite</h1>
+  <div class="subtitle">Phase 1: Multi-Seed Scientific Benchmark (100,000 cases × 5 strategies = 500,000 evaluations)</div>
+  <div class="badge-bar">
+    <div class="badge">Cases / Seed: <span>10,000</span></div>
+    <div class="badge">Seeds: <span>10 (42..51)</span></div>
+    <div class="badge">Total Cases: <span>100,000</span></div>
+    <div class="badge">Strategies: <span>5</span></div>
+    <div class="badge">Hidden Truth Leakage: <span>NONE (0)</span></div>
+    <div class="badge">Live Network Calls: <span>0</span></div>
+    <div class="badge">DB Mutations: <span>0</span></div>
+  </div>
+  <div class="grid">
+    <div class="card"><h3>1. Mean Net Recovered Value by Strategy</h3><img src="net_recovered_value_by_strategy.svg" alt="Net Value"></div>
+    <div class="card"><h3>2. Recovery Rate by Strategy</h3><img src="recovery_rate_by_strategy.svg" alt="Recovery Rate"></div>
+    <div class="card"><h3>3. AI + Economic Incremental Uplift</h3><img src="ai_uplift_vs_economic.svg" alt="AI Uplift"></div>
+    <div class="card"><h3>4. Per-Seed AI Incremental Value</h3><img src="per_seed_ai_uplift.svg" alt="Per Seed Uplift"></div>
+    <div class="card"><h3>5. Economic Regret (Evaluator-Only)</h3><img src="economic_regret_by_strategy.svg" alt="Regret"></div>
+    <div class="card"><h3>6. Distribution-Shift Robustness</h3><img src="distribution_shift_robustness.svg" alt="Distribution Shift"></div>
+  </div>
+</body>
+</html>

@@ -52,6 +52,34 @@ def auth_headers(account_id: str = ACCOUNT_ID, key: str = settings.INTERNAL_API_
 client = TestClient(app)
 
 
+def _scalar_query(value):
+    result = MagicMock()
+    result.scalar_one_or_none.return_value = value
+    return result
+
+
+def make_mock_db():
+    mock_session = AsyncMock()
+    mock_result = MagicMock()
+    mock_result.scalars.return_value.all.return_value = []
+    mock_result.scalar_one_or_none.return_value = None
+    mock_session.execute = AsyncMock(return_value=mock_result)
+
+    async def _override():
+        yield mock_session
+
+    return _override
+
+
+@pytest.fixture(autouse=True)
+def override_db_dependency():
+    app.dependency_overrides[get_db_session] = make_mock_db()
+    try:
+        yield
+    finally:
+        app.dependency_overrides.pop(get_db_session, None)
+
+
 def test_agent_query_missing_auth_returns_422():
     resp = client.post("/v1/agent/query", json={"query": "Is ARIV healthy?"})
     assert resp.status_code == 422
@@ -126,3 +154,103 @@ def test_agent_query_recover_this_case_stream():
     assert resp.status_code == 200
     assert "text/event-stream" in resp.headers["content-type"]
     assert "data: [DONE]" in resp.text
+
+
+def test_agent_execution_meta_status_reflects_blocked_action():
+    """
+    Regression: when the concrete action is blocked by the execution pipeline
+    (e.g. unsupported action), the chat metadata must NOT claim SUCCEEDED.
+    """
+    mock_tenant = Tenant(id=TENANT_ID, type=TenantType.CONSUMER, name="Test Tenant")
+    case = RecoveryCase(
+        id=uuid.uuid4(),
+        tenant_id=TENANT_ID,
+        domain=RecoveryDomain.B2C,
+        case_type=CaseType.PAYMENT_FAILED,
+        status=CaseStatus.RISK_ASSESSED,
+        amount_minor=10000,
+        context={"currency": "INR"},
+    )
+    classification = RecoveryClassification(
+        case_id=case.id,
+        failure_category=FailureCategory.CUSTOMER_ACTION_REQUIRED,
+        retryability=Retryability.REQUIRES_NEW_METHOD,
+        recoverability=Recoverability.HIGH,
+    )
+    decision = DecisionRecord(
+        case_id=case.id,
+        tenant_id=TENANT_ID,
+        proposed_action=RecoveryAction.RETRY_LATER,
+        baseline_action=RecoveryAction.RETRY_LATER,
+        policy_status=PolicyStatus.APPROVED,
+        autonomy_level=AutonomyLevel.FULL_AUTO,
+        ai_confidence=0.8,
+    )
+    # The outbox item exists but the concrete execution is blocked (CANCELLED).
+    blocked_action = Action(
+        id=uuid.uuid4(),
+        case_id=case.id,
+        tenant_id=TENANT_ID,
+        action_type=RecoveryAction.RETRY_LATER,
+        status=ActionStatus.CANCELLED,
+    )
+    attempt = MagicMock()
+    attempt.attempt_metadata = {}
+    attempt.provider_request_id = "N/A"
+
+    mock_session = AsyncMock()
+    mock_case_result = MagicMock()
+    mock_case_result.scalars.return_value.all.return_value = [case]
+    mock_class_result = _scalar_query(classification)
+    mock_dec_result = _scalar_query(decision)
+    mock_att_result = _scalar_query(attempt)
+    mock_none_result = MagicMock()
+    mock_none_result.scalars.return_value.all.return_value = []
+    mock_none_result.scalar_one_or_none.return_value = None
+
+    async def mock_execute(query, *args, **kwargs):
+        q = str(query)
+        if "recovery_classification" in q:
+            return mock_class_result
+        if "decision_record" in q:
+            return mock_dec_result
+        if "execution_attempt" in q:
+            return mock_att_result
+        if "action" in q and "FROM action" in q:
+            return _scalar_query(blocked_action)
+        if "recovery_case" in q:
+            return mock_case_result
+        return mock_none_result
+
+    mock_session.execute = AsyncMock(side_effect=mock_execute)
+    mock_session.commit = AsyncMock()
+
+    async def _override():
+        yield mock_session
+
+    from app.infrastructure.adapters import get_razorpay_adapter
+    from app.services.outbox import OutboxService
+    from app.services.execution_worker import ExecutionWorker
+
+    with patch("app.api.agent.resolve_tenant", new_callable=AsyncMock, return_value=mock_tenant), \
+         patch("app.api.agent.get_razorpay_adapter", return_value=MagicMock()), \
+         patch.object(OutboxService, "create_authorized_action", new_callable=AsyncMock) as mock_create, \
+         patch.object(ExecutionWorker, "process_outbox_item", new_callable=AsyncMock) as mock_process:
+        mock_create.return_value = (blocked_action, MagicMock())
+        app.dependency_overrides[get_db_session] = _override
+        try:
+            resp = client.post(
+                "/v1/agent/query",
+                json={"query": "Recover this case."},
+                headers=auth_headers(),
+            )
+        finally:
+            app.dependency_overrides.pop(get_db_session, None)
+
+    assert resp.status_code == 200
+    assert "data: [DONE]" in resp.text
+    # Meta status must be the action's real status, not a fabricated SUCCEEDED.
+    assert '"status": "CANCELLED"' in resp.text
+    assert '"status": "SUCCEEDED"' not in resp.text
+    assert "did not succeed" in resp.text
+    mock_process.assert_awaited_once()

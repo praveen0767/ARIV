@@ -1,0 +1,129 @@
+{
+  "benchmark_id": "bench_20260907_041657_61886f",
+  "mode": "TEST_MODE",
+  "start_time": "2026-09-07T04:16:57Z",
+  "end_time": "2026-09-07T04:18:04Z",
+  "cases_requested": 3,
+  "cases_observed": 3,
+  "total_cases": 3,
+  "total_amount_at_risk_minor": 318948,
+  "total_amount_at_risk_inr": 3189.48,
+  "decision_engine_cases": 3,
+  "policy_approved": 3,
+  "policy_blocked": 0,
+  "execution_attempts": 3,
+  "execution_failures": 0,
+  "verified_recoveries": 0,
+  "attributed_recoveries": 0,
+  "revenue_recovered_minor": 0,
+  "revenue_recovered_inr": 0.0,
+  "recovery_rate": 0.0,
+  "human_escalations": 0,
+  "delivery": [
+    {
+      "index": 0,
+      "event_id": "evt_bench_20260907_041657_61886f_0",
+      "payment_id": "pay_bench_20260907_041657_61886f_0",
+      "amount_minor": 114214,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 1,
+      "event_id": "evt_bench_20260907_041657_61886f_1",
+      "payment_id": "pay_bench_20260907_041657_61886f_1",
+      "amount_minor": 197069,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 2,
+      "event_id": "evt_bench_20260907_041657_61886f_2",
+      "payment_id": "pay_bench_20260907_041657_61886f_2",
+      "amount_minor": 7665,
+      "http_status": 200,
+      "accepted": true
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "d1bfd928-5f53-48b6-a279-32ac8bd68e59",
+      "payment_id": "pay_bench_20260907_041657_61886f_0",
+      "amount_minor": 114214,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "8ea5e07d-7c03-4b33-9263-00b6338b184d",
+      "payment_id": "pay_bench_20260907_041657_61886f_1",
+      "amount_minor": 197069,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "f6c33014-42d3-43bb-8e52-54125a01862a",
+      "payment_id": "pay_bench_20260907_041657_61886f_2",
+      "amount_minor": 7665,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    }
+  ],
+  "supported_metrics_note": "human_escalations reflects persisted HUMAN_APPROVAL/NEEDS_REVIEW decision records; all other required metrics are computed from actual persisted rows."
+}

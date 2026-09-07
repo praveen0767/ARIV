@@ -714,7 +714,9 @@ async def test_18_reconciliation_confirms_success(mock_entities):
     assert action.status == ActionStatus.SUCCEEDED
     assert attempt.status == ExecutionStatus.SUCCEEDED
     assert outbox.status == OutboxStatus.COMPLETED
-    assert mock_entities["case"].status == CaseStatus.RECOVERED
+    # A successful resource lookup confirms the action state, not a captured
+    # payment.  Recovery remains webhook-confirmed and attribution-backed.
+    assert mock_entities["case"].status == CaseStatus.RISK_ASSESSED
 
 
 @pytest.mark.asyncio

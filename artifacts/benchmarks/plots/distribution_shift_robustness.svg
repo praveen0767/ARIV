@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="800" height="450">
+<rect width="800" height="450" fill="#0f172a" rx="8"/>
+<text x="400" y="40" fill="#f8fafc" font-size="20" font-weight="bold" font-family="system-ui, sans-serif" text-anchor="middle">Distribution Shift Robustness: In-Distribution vs Shifted</text>
+<text x="400" y="65" fill="#94a3b8" font-size="12" font-family="system-ui, sans-serif" text-anchor="middle">Higher amount distribution, hostile failure mix, and elevated corridor degradation</text>
+<line x1="80" y1="360" x2="740" y2="360" stroke="#334155" stroke-width="1"/>
+<rect x="100" y="360.0" width="40" height="0.0" fill="#3b82f6" rx="3"/>
+<rect x="145" y="360.0" width="40" height="0.0" fill="#ec4899" rx="3"/>
+<text x="142" y="380" fill="#cbd5e1" font-size="10" font-family="system-ui, sans-serif" text-anchor="middle">NO ACTION</text>
+<rect x="230" y="349.4" width="40" height="10.6" fill="#3b82f6" rx="3"/>
+<rect x="275" y="304.8" width="40" height="55.2" fill="#ec4899" rx="3"/>
+<text x="272" y="380" fill="#cbd5e1" font-size="10" font-family="system-ui, sans-serif" text-anchor="middle">NAIVE RETRY</text>
+<rect x="360" y="311.2" width="40" height="48.8" fill="#3b82f6" rx="3"/>
+<rect x="405" y="113.8" width="40" height="246.2" fill="#ec4899" rx="3"/>
+<text x="402" y="380" fill="#cbd5e1" font-size="10" font-family="system-ui, sans-serif" text-anchor="middle">BASELINE</text>
+<rect x="490" y="308.2" width="40" height="51.8" fill="#3b82f6" rx="3"/>
+<rect x="535" y="100.0" width="40" height="260.0" fill="#ec4899" rx="3"/>
+<text x="532" y="380" fill="#cbd5e1" font-size="10" font-family="system-ui, sans-serif" text-anchor="middle">ECONOMIC</text>
+<rect x="620" y="309.5" width="40" height="50.5" fill="#3b82f6" rx="3"/>
+<rect x="665" y="107.2" width="40" height="252.8" fill="#ec4899" rx="3"/>
+<text x="662" y="380" fill="#cbd5e1" font-size="10" font-family="system-ui, sans-serif" text-anchor="middle">AI PLUS ECONOMIC</text>
+<rect x="560" y="90" width="16" height="16" fill="#3b82f6" rx="2"/>
+<text x="585" y="103" fill="#cbd5e1" font-size="12" font-family="system-ui, sans-serif">In-Distribution</text>
+<rect x="560" y="115" width="16" height="16" fill="#ec4899" rx="2"/>
+<text x="585" y="128" fill="#cbd5e1" font-size="12" font-family="system-ui, sans-serif">Shifted Cohort</text>
+</svg>

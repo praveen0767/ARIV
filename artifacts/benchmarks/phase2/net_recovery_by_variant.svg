@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="100%" height="100%" style="background:#0f172a; font-family:sans-serif;">
+<text x="400" y="35" text-anchor="middle" fill="#f8fafc" font-size="18" font-weight="bold">Phase 2 Ablation: Net Recovered Value (INR)</text>
+<rect x="100" y="107" width="80" height="213" rx="6" fill="#64748b"/>
+<text x="140" y="97" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="bold">₹22.17Cr</text>
+<text x="140" y="345" text-anchor="middle" fill="#94a3b8" font-size="11">A0</text>
+<rect x="230" y="94" width="80" height="226" rx="6" fill="#3b82f6"/>
+<text x="270" y="84" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="bold">₹23.44Cr</text>
+<text x="270" y="345" text-anchor="middle" fill="#94a3b8" font-size="11">A1</text>
+<rect x="360" y="98" width="80" height="222" rx="6" fill="#ef4444"/>
+<text x="400" y="88" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="bold">₹23.05Cr</text>
+<text x="400" y="345" text-anchor="middle" fill="#94a3b8" font-size="11">A2</text>
+<rect x="490" y="115" width="80" height="205" rx="6" fill="#f59e0b"/>
+<text x="530" y="105" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="bold">₹21.27Cr</text>
+<text x="530" y="345" text-anchor="middle" fill="#94a3b8" font-size="11">A3</text>
+<rect x="620" y="98" width="80" height="222" rx="6" fill="#10b981"/>
+<text x="660" y="88" text-anchor="middle" fill="#f8fafc" font-size="12" font-weight="bold">₹23.07Cr</text>
+<text x="660" y="345" text-anchor="middle" fill="#94a3b8" font-size="11">A4</text>
+</svg>

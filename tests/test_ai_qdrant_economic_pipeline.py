@@ -426,6 +426,9 @@ async def test_llm_adapter_missing_api_key_raises_controlled():
 
 @pytest.mark.asyncio
 async def test_llm_adapter_success_with_mocked_openai():
+    # The live OpenAI adapter is an intentionally optional runtime path; skip
+    # when the library is not installed instead of faking the module.
+    pytest.importorskip("openai")
     from app.infrastructure.adapters.llm_adapter import LLMAdapter
 
     with patch("app.infrastructure.adapters.llm_adapter.settings") as mock_settings:

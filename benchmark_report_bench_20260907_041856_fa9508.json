@@ -1,0 +1,877 @@
+{
+  "benchmark_id": "bench_20260907_041856_fa9508",
+  "mode": "TEST_MODE",
+  "start_time": "2026-09-07T04:18:56Z",
+  "end_time": "2026-09-07T04:24:36Z",
+  "cases_requested": 25,
+  "cases_observed": 25,
+  "total_cases": 25,
+  "total_amount_at_risk_minor": 3523260,
+  "total_amount_at_risk_inr": 35232.6,
+  "decision_engine_cases": 25,
+  "policy_approved": 25,
+  "policy_blocked": 0,
+  "execution_attempts": 25,
+  "execution_failures": 1,
+  "verified_recoveries": 0,
+  "attributed_recoveries": 0,
+  "revenue_recovered_minor": 0,
+  "revenue_recovered_inr": 0.0,
+  "recovery_rate": 0.0,
+  "human_escalations": 0,
+  "delivery": [
+    {
+      "index": 0,
+      "event_id": "evt_bench_20260907_041856_fa9508_0",
+      "payment_id": "pay_bench_20260907_041856_fa9508_0",
+      "amount_minor": 65118,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 1,
+      "event_id": "evt_bench_20260907_041856_fa9508_1",
+      "payment_id": "pay_bench_20260907_041856_fa9508_1",
+      "amount_minor": 121875,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 2,
+      "event_id": "evt_bench_20260907_041856_fa9508_2",
+      "payment_id": "pay_bench_20260907_041856_fa9508_2",
+      "amount_minor": 121810,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 3,
+      "event_id": "evt_bench_20260907_041856_fa9508_3",
+      "payment_id": "pay_bench_20260907_041856_fa9508_3",
+      "amount_minor": 101625,
+      "http_status": 0,
+      "accepted": false
+    },
+    {
+      "index": 4,
+      "event_id": "evt_bench_20260907_041856_fa9508_4",
+      "payment_id": "pay_bench_20260907_041856_fa9508_4",
+      "amount_minor": 155866,
+      "http_status": 0,
+      "accepted": false
+    },
+    {
+      "index": 5,
+      "event_id": "evt_bench_20260907_041856_fa9508_5",
+      "payment_id": "pay_bench_20260907_041856_fa9508_5",
+      "amount_minor": 75735,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 6,
+      "event_id": "evt_bench_20260907_041856_fa9508_6",
+      "payment_id": "pay_bench_20260907_041856_fa9508_6",
+      "amount_minor": 222938,
+      "http_status": 0,
+      "accepted": false
+    },
+    {
+      "index": 7,
+      "event_id": "evt_bench_20260907_041856_fa9508_7",
+      "payment_id": "pay_bench_20260907_041856_fa9508_7",
+      "amount_minor": 93118,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 8,
+      "event_id": "evt_bench_20260907_041856_fa9508_8",
+      "payment_id": "pay_bench_20260907_041856_fa9508_8",
+      "amount_minor": 145950,
+      "http_status": 0,
+      "accepted": false
+    },
+    {
+      "index": 9,
+      "event_id": "evt_bench_20260907_041856_fa9508_9",
+      "payment_id": "pay_bench_20260907_041856_fa9508_9",
+      "amount_minor": 202215,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 10,
+      "event_id": "evt_bench_20260907_041856_fa9508_10",
+      "payment_id": "pay_bench_20260907_041856_fa9508_10",
+      "amount_minor": 15479,
+      "http_status": 0,
+      "accepted": false
+    },
+    {
+      "index": 11,
+      "event_id": "evt_bench_20260907_041856_fa9508_11",
+      "payment_id": "pay_bench_20260907_041856_fa9508_11",
+      "amount_minor": 246878,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 12,
+      "event_id": "evt_bench_20260907_041856_fa9508_12",
+      "payment_id": "pay_bench_20260907_041856_fa9508_12",
+      "amount_minor": 121835,
+      "http_status": 0,
+      "accepted": false
+    },
+    {
+      "index": 13,
+      "event_id": "evt_bench_20260907_041856_fa9508_13",
+      "payment_id": "pay_bench_20260907_041856_fa9508_13",
+      "amount_minor": 244141,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 14,
+      "event_id": "evt_bench_20260907_041856_fa9508_14",
+      "payment_id": "pay_bench_20260907_041856_fa9508_14",
+      "amount_minor": 180107,
+      "http_status": 0,
+      "accepted": false
+    },
+    {
+      "index": 15,
+      "event_id": "evt_bench_20260907_041856_fa9508_15",
+      "payment_id": "pay_bench_20260907_041856_fa9508_15",
+      "amount_minor": 168117,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 16,
+      "event_id": "evt_bench_20260907_041856_fa9508_16",
+      "payment_id": "pay_bench_20260907_041856_fa9508_16",
+      "amount_minor": 148466,
+      "http_status": 0,
+      "accepted": false
+    },
+    {
+      "index": 17,
+      "event_id": "evt_bench_20260907_041856_fa9508_17",
+      "payment_id": "pay_bench_20260907_041856_fa9508_17",
+      "amount_minor": 107129,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 18,
+      "event_id": "evt_bench_20260907_041856_fa9508_18",
+      "payment_id": "pay_bench_20260907_041856_fa9508_18",
+      "amount_minor": 162677,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 19,
+      "event_id": "evt_bench_20260907_041856_fa9508_19",
+      "payment_id": "pay_bench_20260907_041856_fa9508_19",
+      "amount_minor": 80750,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 20,
+      "event_id": "evt_bench_20260907_041856_fa9508_20",
+      "payment_id": "pay_bench_20260907_041856_fa9508_20",
+      "amount_minor": 234823,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 21,
+      "event_id": "evt_bench_20260907_041856_fa9508_21",
+      "payment_id": "pay_bench_20260907_041856_fa9508_21",
+      "amount_minor": 36678,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 22,
+      "event_id": "evt_bench_20260907_041856_fa9508_22",
+      "payment_id": "pay_bench_20260907_041856_fa9508_22",
+      "amount_minor": 248589,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 23,
+      "event_id": "evt_bench_20260907_041856_fa9508_23",
+      "payment_id": "pay_bench_20260907_041856_fa9508_23",
+      "amount_minor": 34949,
+      "http_status": 200,
+      "accepted": true
+    },
+    {
+      "index": 24,
+      "event_id": "evt_bench_20260907_041856_fa9508_24",
+      "payment_id": "pay_bench_20260907_041856_fa9508_24",
+      "amount_minor": 186392,
+      "http_status": 200,
+      "accepted": true
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "7e7a594e-32eb-43cc-a909-07f83e2e0b75",
+      "payment_id": "pay_bench_20260907_041856_fa9508_0",
+      "amount_minor": 65118,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "02dc4dae-2895-4506-bd4d-a31b0c606143",
+      "payment_id": "pay_bench_20260907_041856_fa9508_1",
+      "amount_minor": 121875,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "e9747d18-cb47-4394-b668-86fe8e7a8f3d",
+      "payment_id": "pay_bench_20260907_041856_fa9508_2",
+      "amount_minor": 121810,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "0995c74a-f06e-4b49-9287-27713765ff86",
+      "payment_id": "pay_bench_20260907_041856_fa9508_3",
+      "amount_minor": 101625,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "67b5e12d-f707-44cf-9da4-0a74a8e69661",
+      "payment_id": "pay_bench_20260907_041856_fa9508_4",
+      "amount_minor": 155866,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "b9270a0c-b99d-4f17-be39-443c2097c602",
+      "payment_id": "pay_bench_20260907_041856_fa9508_5",
+      "amount_minor": 75735,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "4acb9bd5-0e2d-4db6-84d3-806512d4967a",
+      "payment_id": "pay_bench_20260907_041856_fa9508_6",
+      "amount_minor": 222938,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "6e8d41af-d42e-4ee8-bec4-348d7eb7fee1",
+      "payment_id": "pay_bench_20260907_041856_fa9508_7",
+      "amount_minor": 93118,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "44c2abb3-7253-470c-bcbb-613d24d7707b",
+      "payment_id": "pay_bench_20260907_041856_fa9508_8",
+      "amount_minor": 145950,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "3a37db6d-673d-4633-aca8-6cfdd24db62e",
+      "payment_id": "pay_bench_20260907_041856_fa9508_9",
+      "amount_minor": 202215,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "7564c7a6-4f67-4318-9e22-cb54cbf725b1",
+      "payment_id": "pay_bench_20260907_041856_fa9508_10",
+      "amount_minor": 15479,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": null,
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "FAILED"
+      ],
+      "attempt_statuses": [
+        "FAILED"
+      ],
+      "outcome_status": "FAILED",
+      "recovered_amount_minor": 0,
+      "recovery_source": "UNKNOWN_ATTRIBUTION",
+      "human_escalation": false
+    },
+    {
+      "case_id": "7804eabe-202f-4d50-b026-ab55d1f34030",
+      "payment_id": "pay_bench_20260907_041856_fa9508_11",
+      "amount_minor": 246878,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "68f02943-5460-4e53-b259-645d10dbd378",
+      "payment_id": "pay_bench_20260907_041856_fa9508_12",
+      "amount_minor": 121835,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "d4c4cd30-a063-48cd-bd7d-1f4c31779c0c",
+      "payment_id": "pay_bench_20260907_041856_fa9508_13",
+      "amount_minor": 244141,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "92e1ed9e-0a97-4ae0-bb16-9fdd3cf8ef17",
+      "payment_id": "pay_bench_20260907_041856_fa9508_14",
+      "amount_minor": 180107,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "d4aab7d7-8558-4c9b-94e4-996f830e8570",
+      "payment_id": "pay_bench_20260907_041856_fa9508_15",
+      "amount_minor": 168117,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "e31a5479-7c2c-40ec-bc75-8ffa43082d8c",
+      "payment_id": "pay_bench_20260907_041856_fa9508_16",
+      "amount_minor": 148466,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "c0bf3aa4-783f-4428-9494-2a65d7381e9e",
+      "payment_id": "pay_bench_20260907_041856_fa9508_17",
+      "amount_minor": 107129,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "0121314f-89ca-4cf7-b7d4-11d6c6b2d14a",
+      "payment_id": "pay_bench_20260907_041856_fa9508_18",
+      "amount_minor": 162677,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "cd988d98-206b-4df3-84b0-72f14650d422",
+      "payment_id": "pay_bench_20260907_041856_fa9508_19",
+      "amount_minor": 80750,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "ace62afc-7291-4683-92d8-f4a6b7877fe1",
+      "payment_id": "pay_bench_20260907_041856_fa9508_20",
+      "amount_minor": 234823,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "da282c50-da3a-417b-bd02-bc8aec188636",
+      "payment_id": "pay_bench_20260907_041856_fa9508_21",
+      "amount_minor": 36678,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "44b450ad-64dc-4ace-8c3c-7edacb393928",
+      "payment_id": "pay_bench_20260907_041856_fa9508_22",
+      "amount_minor": 248589,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "407c4262-7824-419e-a8a4-2d15937e911f",
+      "payment_id": "pay_bench_20260907_041856_fa9508_23",
+      "amount_minor": 34949,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    },
+    {
+      "case_id": "d77ec791-bf88-4e5c-adbd-930670901705",
+      "payment_id": "pay_bench_20260907_041856_fa9508_24",
+      "amount_minor": 186392,
+      "final_status": "RISK_ASSESSED",
+      "recovery_stage": "WAITING_FOR_PAYMENT",
+      "proposed_actions": [
+        "GENERATE_PAYMENT_LINK"
+      ],
+      "policy_statuses": [
+        "APPROVED"
+      ],
+      "autonomy_levels": [
+        "FULL_AUTO"
+      ],
+      "action_statuses": [
+        "SUCCEEDED"
+      ],
+      "attempt_statuses": [
+        "SUCCEEDED"
+      ],
+      "outcome_status": null,
+      "recovered_amount_minor": 0,
+      "recovery_source": null,
+      "human_escalation": false
+    }
+  ],
+  "supported_metrics_note": "human_escalations reflects persisted HUMAN_APPROVAL/NEEDS_REVIEW decision records; all other required metrics are computed from actual persisted rows."
+}

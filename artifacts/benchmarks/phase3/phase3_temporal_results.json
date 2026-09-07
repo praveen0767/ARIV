@@ -1,0 +1,633 @@
+{
+  "metadata": {
+    "cases_per_seed": 1000,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51
+    ],
+    "total_cases_evaluated": 30000,
+    "total_transaction_volume_inr": 50046331.79,
+    "elapsed_seconds": 2.08,
+    "timestamp": "2026-09-06T12:50:10Z"
+  },
+  "per_seed_results": {
+    "42": {
+      "T0": {
+        "gross_recovered": 2261318.9300000016,
+        "net_recovered": 2249513.9300000016,
+        "cost": 7870.0,
+        "risk": 3935.0,
+        "regret": 511966.3400000001,
+        "oracle_net": 2761480.2700000014,
+        "recovered_cases": 457,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 394,
+          "GENERATE_PAYMENT_LINK": 143,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 199,
+          "SEND_REMINDER": 51,
+          "STOP_RECOVERY": 213
+        }
+      },
+      "T1": {
+        "gross_recovered": 2261318.9300000016,
+        "net_recovered": 2249513.9300000016,
+        "cost": 7870.0,
+        "risk": 3935.0,
+        "regret": 511966.3400000001,
+        "oracle_net": 2761480.2700000014,
+        "recovered_cases": 457,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 394,
+          "GENERATE_PAYMENT_LINK": 143,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 199,
+          "SEND_REMINDER": 51,
+          "STOP_RECOVERY": 213
+        }
+      },
+      "T2": {
+        "gross_recovered": 2261318.9300000016,
+        "net_recovered": 2249513.9300000016,
+        "cost": 7870.0,
+        "risk": 3935.0,
+        "regret": 511966.3400000001,
+        "oracle_net": 2761480.2700000014,
+        "recovered_cases": 457,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 394,
+          "GENERATE_PAYMENT_LINK": 143,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 199,
+          "SEND_REMINDER": 51,
+          "STOP_RECOVERY": 213
+        }
+      }
+    },
+    "43": {
+      "T0": {
+        "gross_recovered": 2632849.18,
+        "net_recovered": 2620789.18,
+        "cost": 8040.0,
+        "risk": 4020.0,
+        "regret": 538059.0899999999,
+        "oracle_net": 3158848.2699999986,
+        "recovered_cases": 496,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 396,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 204,
+          "STOP_RECOVERY": 196,
+          "GENERATE_PAYMENT_LINK": 145,
+          "SEND_REMINDER": 59
+        }
+      },
+      "T1": {
+        "gross_recovered": 2632849.18,
+        "net_recovered": 2620789.18,
+        "cost": 8040.0,
+        "risk": 4020.0,
+        "regret": 538059.0899999999,
+        "oracle_net": 3158848.2699999986,
+        "recovered_cases": 496,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 396,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 204,
+          "STOP_RECOVERY": 196,
+          "GENERATE_PAYMENT_LINK": 145,
+          "SEND_REMINDER": 59
+        }
+      },
+      "T2": {
+        "gross_recovered": 2632849.18,
+        "net_recovered": 2620789.18,
+        "cost": 8040.0,
+        "risk": 4020.0,
+        "regret": 538059.0899999999,
+        "oracle_net": 3158848.2699999986,
+        "recovered_cases": 496,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 396,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 204,
+          "STOP_RECOVERY": 196,
+          "GENERATE_PAYMENT_LINK": 145,
+          "SEND_REMINDER": 59
+        }
+      }
+    },
+    "44": {
+      "T0": {
+        "gross_recovered": 2467149.900000002,
+        "net_recovered": 2455089.900000002,
+        "cost": 8040.0,
+        "risk": 4020.0,
+        "regret": 499165.2499999999,
+        "oracle_net": 2954255.15,
+        "recovered_cases": 496,
+        "policy_violations": 0,
+        "action_counts": {
+          "STOP_RECOVERY": 196,
+          "GENERATE_PAYMENT_LINK": 153,
+          "RETRY_LATER": 404,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 203,
+          "SEND_REMINDER": 44
+        }
+      },
+      "T1": {
+        "gross_recovered": 2467149.900000002,
+        "net_recovered": 2455089.900000002,
+        "cost": 8040.0,
+        "risk": 4020.0,
+        "regret": 499165.2499999999,
+        "oracle_net": 2954255.15,
+        "recovered_cases": 496,
+        "policy_violations": 0,
+        "action_counts": {
+          "STOP_RECOVERY": 196,
+          "GENERATE_PAYMENT_LINK": 153,
+          "RETRY_LATER": 404,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 203,
+          "SEND_REMINDER": 44
+        }
+      },
+      "T2": {
+        "gross_recovered": 2467149.900000002,
+        "net_recovered": 2455089.900000002,
+        "cost": 8040.0,
+        "risk": 4020.0,
+        "regret": 499165.2499999999,
+        "oracle_net": 2954255.15,
+        "recovered_cases": 496,
+        "policy_violations": 0,
+        "action_counts": {
+          "STOP_RECOVERY": 196,
+          "GENERATE_PAYMENT_LINK": 153,
+          "RETRY_LATER": 404,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 203,
+          "SEND_REMINDER": 44
+        }
+      }
+    },
+    "45": {
+      "T0": {
+        "gross_recovered": 2442551.329999998,
+        "net_recovered": 2430296.329999998,
+        "cost": 8170.0,
+        "risk": 4085.0,
+        "regret": 435708.74999999994,
+        "oracle_net": 2866005.079999997,
+        "recovered_cases": 502,
+        "policy_violations": 0,
+        "action_counts": {
+          "REQUEST_PAYMENT_METHOD_UPDATE": 195,
+          "RETRY_LATER": 390,
+          "SEND_REMINDER": 65,
+          "STOP_RECOVERY": 183,
+          "GENERATE_PAYMENT_LINK": 167
+        }
+      },
+      "T1": {
+        "gross_recovered": 2442551.329999998,
+        "net_recovered": 2430296.329999998,
+        "cost": 8170.0,
+        "risk": 4085.0,
+        "regret": 435708.74999999994,
+        "oracle_net": 2866005.079999997,
+        "recovered_cases": 502,
+        "policy_violations": 0,
+        "action_counts": {
+          "REQUEST_PAYMENT_METHOD_UPDATE": 195,
+          "RETRY_LATER": 390,
+          "SEND_REMINDER": 65,
+          "STOP_RECOVERY": 183,
+          "GENERATE_PAYMENT_LINK": 167
+        }
+      },
+      "T2": {
+        "gross_recovered": 2442551.329999998,
+        "net_recovered": 2430296.329999998,
+        "cost": 8170.0,
+        "risk": 4085.0,
+        "regret": 435708.74999999994,
+        "oracle_net": 2866005.079999997,
+        "recovered_cases": 502,
+        "policy_violations": 0,
+        "action_counts": {
+          "REQUEST_PAYMENT_METHOD_UPDATE": 195,
+          "RETRY_LATER": 390,
+          "SEND_REMINDER": 65,
+          "STOP_RECOVERY": 183,
+          "GENERATE_PAYMENT_LINK": 167
+        }
+      }
+    },
+    "46": {
+      "T0": {
+        "gross_recovered": 2486423.909999999,
+        "net_recovered": 2474393.909999999,
+        "cost": 8020.0,
+        "risk": 4010.0,
+        "regret": 486241.77000000025,
+        "oracle_net": 2960635.6799999992,
+        "recovered_cases": 490,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 414,
+          "GENERATE_PAYMENT_LINK": 151,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 188,
+          "STOP_RECOVERY": 198,
+          "SEND_REMINDER": 49
+        }
+      },
+      "T1": {
+        "gross_recovered": 2486423.909999999,
+        "net_recovered": 2474393.909999999,
+        "cost": 8020.0,
+        "risk": 4010.0,
+        "regret": 486241.77000000025,
+        "oracle_net": 2960635.6799999992,
+        "recovered_cases": 490,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 414,
+          "GENERATE_PAYMENT_LINK": 151,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 188,
+          "STOP_RECOVERY": 198,
+          "SEND_REMINDER": 49
+        }
+      },
+      "T2": {
+        "gross_recovered": 2486423.909999999,
+        "net_recovered": 2474393.909999999,
+        "cost": 8020.0,
+        "risk": 4010.0,
+        "regret": 486241.77000000025,
+        "oracle_net": 2960635.6799999992,
+        "recovered_cases": 490,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 414,
+          "GENERATE_PAYMENT_LINK": 151,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 188,
+          "STOP_RECOVERY": 198,
+          "SEND_REMINDER": 49
+        }
+      }
+    },
+    "47": {
+      "T0": {
+        "gross_recovered": 2325723.31,
+        "net_recovered": 2313903.309999999,
+        "cost": 7880.0,
+        "risk": 3940.0,
+        "regret": 641847.8999999999,
+        "oracle_net": 2955751.2100000014,
+        "recovered_cases": 470,
+        "policy_violations": 0,
+        "action_counts": {
+          "REQUEST_PAYMENT_METHOD_UPDATE": 216,
+          "RETRY_LATER": 388,
+          "STOP_RECOVERY": 212,
+          "GENERATE_PAYMENT_LINK": 133,
+          "SEND_REMINDER": 51
+        }
+      },
+      "T1": {
+        "gross_recovered": 2325723.31,
+        "net_recovered": 2313903.309999999,
+        "cost": 7880.0,
+        "risk": 3940.0,
+        "regret": 641847.8999999999,
+        "oracle_net": 2955751.2100000014,
+        "recovered_cases": 470,
+        "policy_violations": 0,
+        "action_counts": {
+          "REQUEST_PAYMENT_METHOD_UPDATE": 216,
+          "RETRY_LATER": 388,
+          "STOP_RECOVERY": 212,
+          "GENERATE_PAYMENT_LINK": 133,
+          "SEND_REMINDER": 51
+        }
+      },
+      "T2": {
+        "gross_recovered": 2325723.31,
+        "net_recovered": 2313903.309999999,
+        "cost": 7880.0,
+        "risk": 3940.0,
+        "regret": 641847.8999999999,
+        "oracle_net": 2955751.2100000014,
+        "recovered_cases": 470,
+        "policy_violations": 0,
+        "action_counts": {
+          "REQUEST_PAYMENT_METHOD_UPDATE": 216,
+          "RETRY_LATER": 388,
+          "STOP_RECOVERY": 212,
+          "GENERATE_PAYMENT_LINK": 133,
+          "SEND_REMINDER": 51
+        }
+      }
+    },
+    "48": {
+      "T0": {
+        "gross_recovered": 2339618.820000001,
+        "net_recovered": 2327468.8200000008,
+        "cost": 8100.0,
+        "risk": 4050.0,
+        "regret": 604458.2100000001,
+        "oracle_net": 2931927.0300000026,
+        "recovered_cases": 458,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 414,
+          "STOP_RECOVERY": 190,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 202,
+          "GENERATE_PAYMENT_LINK": 145,
+          "SEND_REMINDER": 49
+        }
+      },
+      "T1": {
+        "gross_recovered": 2339618.820000001,
+        "net_recovered": 2327468.8200000008,
+        "cost": 8100.0,
+        "risk": 4050.0,
+        "regret": 604458.2100000001,
+        "oracle_net": 2931927.0300000026,
+        "recovered_cases": 458,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 414,
+          "STOP_RECOVERY": 190,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 202,
+          "GENERATE_PAYMENT_LINK": 145,
+          "SEND_REMINDER": 49
+        }
+      },
+      "T2": {
+        "gross_recovered": 2339618.820000001,
+        "net_recovered": 2327468.8200000008,
+        "cost": 8100.0,
+        "risk": 4050.0,
+        "regret": 604458.2100000001,
+        "oracle_net": 2931927.0300000026,
+        "recovered_cases": 458,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 414,
+          "STOP_RECOVERY": 190,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 202,
+          "GENERATE_PAYMENT_LINK": 145,
+          "SEND_REMINDER": 49
+        }
+      }
+    },
+    "49": {
+      "T0": {
+        "gross_recovered": 2137065.0400000005,
+        "net_recovered": 2124960.0400000005,
+        "cost": 8070.0,
+        "risk": 4035.0,
+        "regret": 569394.3299999997,
+        "oracle_net": 2694354.3699999996,
+        "recovered_cases": 456,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 402,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 209,
+          "GENERATE_PAYMENT_LINK": 141,
+          "STOP_RECOVERY": 193,
+          "SEND_REMINDER": 55
+        }
+      },
+      "T1": {
+        "gross_recovered": 2137065.0400000005,
+        "net_recovered": 2124960.0400000005,
+        "cost": 8070.0,
+        "risk": 4035.0,
+        "regret": 569394.3299999997,
+        "oracle_net": 2694354.3699999996,
+        "recovered_cases": 456,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 402,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 209,
+          "GENERATE_PAYMENT_LINK": 141,
+          "STOP_RECOVERY": 193,
+          "SEND_REMINDER": 55
+        }
+      },
+      "T2": {
+        "gross_recovered": 2137065.0400000005,
+        "net_recovered": 2124960.0400000005,
+        "cost": 8070.0,
+        "risk": 4035.0,
+        "regret": 569394.3299999997,
+        "oracle_net": 2694354.3699999996,
+        "recovered_cases": 456,
+        "policy_violations": 0,
+        "action_counts": {
+          "RETRY_LATER": 402,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 209,
+          "GENERATE_PAYMENT_LINK": 141,
+          "STOP_RECOVERY": 193,
+          "SEND_REMINDER": 55
+        }
+      }
+    },
+    "50": {
+      "T0": {
+        "gross_recovered": 2248055.350000001,
+        "net_recovered": 2235950.350000001,
+        "cost": 8070.0,
+        "risk": 4035.0,
+        "regret": 472530.52,
+        "oracle_net": 2708480.8700000015,
+        "recovered_cases": 455,
+        "policy_violations": 0,
+        "action_counts": {
+          "STOP_RECOVERY": 193,
+          "SEND_REMINDER": 45,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 195,
+          "RETRY_LATER": 430,
+          "GENERATE_PAYMENT_LINK": 137
+        }
+      },
+      "T1": {
+        "gross_recovered": 2248055.350000001,
+        "net_recovered": 2235950.350000001,
+        "cost": 8070.0,
+        "risk": 4035.0,
+        "regret": 472530.52,
+        "oracle_net": 2708480.8700000015,
+        "recovered_cases": 455,
+        "policy_violations": 0,
+        "action_counts": {
+          "STOP_RECOVERY": 193,
+          "SEND_REMINDER": 45,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 195,
+          "RETRY_LATER": 430,
+          "GENERATE_PAYMENT_LINK": 137
+        }
+      },
+      "T2": {
+        "gross_recovered": 2248055.350000001,
+        "net_recovered": 2235950.350000001,
+        "cost": 8070.0,
+        "risk": 4035.0,
+        "regret": 472530.52,
+        "oracle_net": 2708480.8700000015,
+        "recovered_cases": 455,
+        "policy_violations": 0,
+        "action_counts": {
+          "STOP_RECOVERY": 193,
+          "SEND_REMINDER": 45,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 195,
+          "RETRY_LATER": 430,
+          "GENERATE_PAYMENT_LINK": 137
+        }
+      }
+    },
+    "51": {
+      "T0": {
+        "gross_recovered": 2368943.9899999998,
+        "net_recovered": 2356643.9899999998,
+        "cost": 8200.0,
+        "risk": 4100.0,
+        "regret": 468504.1599999999,
+        "oracle_net": 2825148.1500000004,
+        "recovered_cases": 476,
+        "policy_violations": 0,
+        "action_counts": {
+          "GENERATE_PAYMENT_LINK": 156,
+          "STOP_RECOVERY": 180,
+          "RETRY_LATER": 404,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 203,
+          "SEND_REMINDER": 57
+        }
+      },
+      "T1": {
+        "gross_recovered": 2368943.9899999998,
+        "net_recovered": 2356643.9899999998,
+        "cost": 8200.0,
+        "risk": 4100.0,
+        "regret": 468504.1599999999,
+        "oracle_net": 2825148.1500000004,
+        "recovered_cases": 476,
+        "policy_violations": 0,
+        "action_counts": {
+          "GENERATE_PAYMENT_LINK": 156,
+          "STOP_RECOVERY": 180,
+          "RETRY_LATER": 404,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 203,
+          "SEND_REMINDER": 57
+        }
+      },
+      "T2": {
+        "gross_recovered": 2368943.9899999998,
+        "net_recovered": 2356643.9899999998,
+        "cost": 8200.0,
+        "risk": 4100.0,
+        "regret": 468504.1599999999,
+        "oracle_net": 2825148.1500000004,
+        "recovered_cases": 476,
+        "policy_violations": 0,
+        "action_counts": {
+          "GENERATE_PAYMENT_LINK": 156,
+          "STOP_RECOVERY": 180,
+          "RETRY_LATER": 404,
+          "REQUEST_PAYMENT_METHOD_UPDATE": 203,
+          "SEND_REMINDER": 57
+        }
+      }
+    }
+  },
+  "variants": {
+    "T0": {
+      "variant": "T0",
+      "total_cases": 10000,
+      "recovered_cases": 4756,
+      "case_recovery_rate": 47.56,
+      "value_recovery_rate": 47.38,
+      "gross_recovered_inr": 23709699.76,
+      "net_recovered_inr": 23589009.76,
+      "net_recovered_mean_per_seed": 2358900.98,
+      "net_recovered_ci95": [
+        2257432.0,
+        2460369.95
+      ],
+      "total_cost_inr": 80460.0,
+      "total_risk_penalty_inr": 40230.0,
+      "total_economic_regret_inr": 5227876.32,
+      "oracle_capture_rate": 81.86,
+      "policy_violations": 0,
+      "action_counts": {
+        "RETRY_LATER": 4036,
+        "GENERATE_PAYMENT_LINK": 1471,
+        "REQUEST_PAYMENT_METHOD_UPDATE": 2014,
+        "SEND_REMINDER": 525,
+        "STOP_RECOVERY": 1954
+      }
+    },
+    "T1": {
+      "variant": "T1",
+      "total_cases": 10000,
+      "recovered_cases": 4756,
+      "case_recovery_rate": 47.56,
+      "value_recovery_rate": 47.38,
+      "gross_recovered_inr": 23709699.76,
+      "net_recovered_inr": 23589009.76,
+      "net_recovered_mean_per_seed": 2358900.98,
+      "net_recovered_ci95": [
+        2257432.0,
+        2460369.95
+      ],
+      "total_cost_inr": 80460.0,
+      "total_risk_penalty_inr": 40230.0,
+      "total_economic_regret_inr": 5227876.32,
+      "oracle_capture_rate": 81.86,
+      "policy_violations": 0,
+      "action_counts": {
+        "RETRY_LATER": 4036,
+        "GENERATE_PAYMENT_LINK": 1471,
+        "REQUEST_PAYMENT_METHOD_UPDATE": 2014,
+        "SEND_REMINDER": 525,
+        "STOP_RECOVERY": 1954
+      }
+    },
+    "T2": {
+      "variant": "T2",
+      "total_cases": 10000,
+      "recovered_cases": 4756,
+      "case_recovery_rate": 47.56,
+      "value_recovery_rate": 47.38,
+      "gross_recovered_inr": 23709699.76,
+      "net_recovered_inr": 23589009.76,
+      "net_recovered_mean_per_seed": 2358900.98,
+      "net_recovered_ci95": [
+        2257432.0,
+        2460369.95
+      ],
+      "total_cost_inr": 80460.0,
+      "total_risk_penalty_inr": 40230.0,
+      "total_economic_regret_inr": 5227876.32,
+      "oracle_capture_rate": 81.86,
+      "policy_violations": 0,
+      "action_counts": {
+        "RETRY_LATER": 4036,
+        "GENERATE_PAYMENT_LINK": 1471,
+        "REQUEST_PAYMENT_METHOD_UPDATE": 2014,
+        "SEND_REMINDER": 525,
+        "STOP_RECOVERY": 1954
+      }
+    }
+  }
+}

@@ -1,0 +1,110 @@
+[
+  {
+    "label": "TRANSIENT_TECHNICAL/B2B-ESCALATION",
+    "amount_minor": 6000000,
+    "error_code": "GATEWAY_ERROR",
+    "error_reason": "Bank gateway timeout"
+  },
+  {
+    "label": "TRANSIENT_TECHNICAL/B2B-ESCALATION",
+    "amount_minor": 7500000,
+    "error_code": "GATEWAY_ERROR",
+    "error_reason": "Bank gateway timeout"
+  },
+  {
+    "label": "TRANSIENT_TECHNICAL/B2C-RETRY_NOW",
+    "amount_minor": 50000,
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_reason": "Transaction declined by bank"
+  },
+  {
+    "label": "TRANSIENT_TECHNICAL/B2C-RETRY_NOW",
+    "amount_minor": 120000,
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_reason": "Transaction declined by bank"
+  },
+  {
+    "label": "CUSTOMER_ACTION_REQUIRED/PAYMENT_LINK",
+    "amount_minor": 25000,
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_reason": "Insufficient balance"
+  },
+  {
+    "label": "CUSTOMER_ACTION_REQUIRED/PAYMENT_LINK",
+    "amount_minor": 40000,
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_reason": "Insufficient balance"
+  },
+  {
+    "label": "CUSTOMER_ACTION_REQUIRED/PAYMENT_LINK",
+    "amount_minor": 150000,
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_reason": "Insufficient balance"
+  },
+  {
+    "label": "CUSTOMER_ACTION_REQUIRED/PAYMENT_LINK-AUTH",
+    "amount_minor": 30000,
+    "error_code": "AUTHENTICATION_FAILED",
+    "error_reason": "Authentication failed"
+  },
+  {
+    "label": "CUSTOMER_ACTION_REQUIRED/PAYMENT_LINK-AUTH",
+    "amount_minor": 80000,
+    "error_code": "AUTHENTICATION_FAILED",
+    "error_reason": "Authentication failed"
+  },
+  {
+    "label": "NON_RETRIABLE/STOP",
+    "amount_minor": 10000,
+    "error_code": "NON_RETRIABLE",
+    "error_reason": "Token expired"
+  },
+  {
+    "label": "NON_RETRIABLE/STOP",
+    "amount_minor": 60000,
+    "error_code": "NON_RETRIABLE",
+    "error_reason": "Token expired"
+  },
+  {
+    "label": "NON_RETRIABLE/STOP-EXPIRED",
+    "amount_minor": 15000,
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_reason": "Card expired"
+  },
+  {
+    "label": "NON_RETRIABLE/STOP-EXPIRED",
+    "amount_minor": 45000,
+    "error_code": "BAD_REQUEST_ERROR",
+    "error_reason": "Card expired"
+  },
+  {
+    "label": "UNKNOWN/ESCALATE",
+    "amount_minor": 20000,
+    "error_code": "DO_NOT_HONOR",
+    "error_reason": "Card was declined"
+  },
+  {
+    "label": "UNKNOWN/ESCALATE",
+    "amount_minor": 35000,
+    "error_code": "DO_NOT_HONOR",
+    "error_reason": "Card was declined"
+  },
+  {
+    "label": "UNKNOWN/ESCALATE",
+    "amount_minor": 70000,
+    "error_code": "DO_NOT_HONOR",
+    "error_reason": "Card was declined"
+  },
+  {
+    "label": "UNKNOWN/ESCALATE",
+    "amount_minor": 90000,
+    "error_code": "DO_NOT_HONOR",
+    "error_reason": "Card was declined"
+  },
+  {
+    "label": "UNKNOWN/ESCALATE",
+    "amount_minor": 200000,
+    "error_code": "DO_NOT_HONOR",
+    "error_reason": "Card was declined"
+  }
+]

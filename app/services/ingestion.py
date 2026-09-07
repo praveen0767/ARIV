@@ -49,15 +49,68 @@ def resolve_domain_and_casetype(payload: dict) -> Tuple[RecoveryDomain, CaseType
     return RecoveryDomain.B2C, CaseType.PAYMENT_FAILED
 
 
-async def resolve_tenant(session: AsyncSession, account_id: str) -> Tenant:
-    """Resolves tenant for account_id, defaulting gracefully for test accounts."""
-    result = await session.execute(select(Tenant).limit(1))
+async def resolve_tenant(session: AsyncSession, account_id: str) -> Optional[Tenant]:
+    """Resolve a tenant by its configured provider account identity.
+
+    A caller must never be assigned an arbitrary existing tenant.  The one
+    bootstrap exception preserves the empty-database developer experience: a
+    first tenant is created only when *no* tenants exist and is bound to the
+    supplied account_id immediately.  Later unknown account IDs fail closed so
+    an operator must explicitly provision a tenant mapping.
+    """
+    normalized_account_id = (account_id or "").strip()
+    if not normalized_account_id:
+        logger.warning("Tenant resolution rejected an empty account_id")
+        return None
+
+    # account_id is tenant-owned configuration because the original schema has
+    # no dedicated provider-account column.  The mapping is exact and is never
+    # inferred from tenant ordering or display names.
+    result = await session.execute(
+        select(Tenant).where(
+            Tenant.config["account_id"].as_string() == normalized_account_id
+        )
+    )
     tenant = result.scalar_one_or_none()
-    if not tenant:
-        tenant = Tenant(type=TenantType.CONSUMER, name="Default Test Tenant")
-        session.add(tenant)
-        await session.flush()
+    if tenant:
+        return tenant
+
+    existing_result = await session.execute(select(Tenant.id).limit(1))
+    if existing_result.scalar_one_or_none() is not None:
+        logger.warning("No tenant mapping exists for provider account_id=%s", normalized_account_id)
+        return None
+
+    tenant = Tenant(
+        type=TenantType.CONSUMER,
+        name="Default Test Tenant",
+        config={"account_id": normalized_account_id},
+    )
+    session.add(tenant)
+    await session.flush()
+    logger.info("Bootstrapped initial tenant mapping for provider account_id=%s", normalized_account_id)
     return tenant
+
+
+def _is_confirmed_payment_event(event_type: str, payload: dict) -> bool:
+    """Return True only for a provider-confirmed successful payment state."""
+    sub_payload = payload.get("payload", {}) if isinstance(payload, dict) else {}
+    payment_status = str(
+        sub_payload.get("payment", {}).get("entity", {}).get("status", "")
+    ).lower()
+    payment_link_status = str(
+        sub_payload.get("payment_link", {}).get("entity", {}).get("status", "")
+    ).lower()
+    order_status = str(
+        sub_payload.get("order", {}).get("entity", {}).get("status", "")
+    ).lower()
+
+    if event_type == "payment_link.paid":
+        return payment_link_status == "paid" or payment_status == "captured"
+    if event_type == "payment.captured":
+        return payment_status == "captured"
+    if event_type == "order.paid":
+        return order_status == "paid" or payment_status == "captured"
+    return False
 
 
 async def _handle_payment_success_event(session: AsyncSession, event: ProviderEvent, tenant: Tenant):
@@ -68,6 +121,13 @@ async def _handle_payment_success_event(session: AsyncSession, event: ProviderEv
     """
     payload = event.payload or {}
     event_type = payload.get("event")
+    if not _is_confirmed_payment_event(event_type, payload):
+        logger.warning(
+            "Ignoring unconfirmed payment success event %s for provider event %s",
+            event_type,
+            event.external_id,
+        )
+        return
     sub_payload = payload.get("payload", {})
 
     # Extract payment entity or payment link entity
@@ -89,6 +149,9 @@ async def _handle_payment_success_event(session: AsyncSession, event: ProviderEv
             cid = uuid.UUID(case_id_str)
             case_r = await session.execute(select(RecoveryCase).where(RecoveryCase.id == cid))
             case = case_r.scalar_one_or_none()
+            if case and case.tenant_id != tenant.id:
+                logger.warning("Ignoring cross-tenant payment event case reference for event %s", event.external_id)
+                case = None
         except Exception:
             pass
 
@@ -97,6 +160,9 @@ async def _handle_payment_success_event(session: AsyncSession, event: ProviderEv
             aid = uuid.UUID(action_id_str)
             act_r = await session.execute(select(Action).where(Action.id == aid))
             action = act_r.scalar_one_or_none()
+            if action and action.tenant_id != tenant.id:
+                logger.warning("Ignoring cross-tenant payment event action reference for event %s", event.external_id)
+                action = None
         except Exception:
             pass
 
@@ -112,11 +178,15 @@ async def _handle_payment_success_event(session: AsyncSession, event: ProviderEv
         if att:
             act_r = await session.execute(select(Action).where(Action.id == att.action_id))
             action = act_r.scalar_one_or_none()
+            if action and action.tenant_id != tenant.id:
+                action = None
 
     # If action matched but not case, resolve case from action
     if action and not case:
         case_r = await session.execute(select(RecoveryCase).where(RecoveryCase.id == action.case_id))
         case = case_r.scalar_one_or_none()
+        if case and case.tenant_id != tenant.id:
+            case = None
 
     # If case matched but not action, resolve latest action from case
     if case and not action:
@@ -126,6 +196,10 @@ async def _handle_payment_success_event(session: AsyncSession, event: ProviderEv
             .order_by(Action.created_at.desc())
         )
         action = act_r.scalars().first()
+
+    if case and action and (case.tenant_id != tenant.id or action.case_id != case.id):
+        logger.warning("Ignoring inconsistent case/action correlation for event %s", event.external_id)
+        return
 
     if not case and not action:
         logger.info("Payment success event %s does not map to any active ARIV case.", event.external_id)
@@ -268,6 +342,11 @@ async def process_provider_event(session: AsyncSession, event: ProviderEvent):
 
         # 1. Resolve Tenant
         tenant = await resolve_tenant(session, account_id)
+        if tenant is None:
+            # The provider event remains durable but unprocessed until a tenant
+            # mapping is explicitly provisioned; no recovery case is created.
+            logger.warning("Provider event %s has no mapped tenant account", event.external_id)
+            return
 
         # 2. Check if this is a payment recovery / success event
         if event_type in ("payment_link.paid", "payment.captured", "order.paid"):
