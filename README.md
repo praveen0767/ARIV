@@ -159,6 +159,7 @@ Each stage is observable and auditable. **Creating an action is not recovering r
 ## Architecture
 
 ```mermaid
+
 flowchart TD
     RP[Razorpay Events] --> WH[Webhook Verification]
     WH --> PE[ProviderEvent Persistence]
@@ -197,68 +198,101 @@ flowchart TD
     UI --> ASK[ASK ARIV]
     ASK --> UI
 
-    %% =========================
-    %% ARIV SYSTEM COLOR PALETTE
-    %% =========================
+    %% ========================================
+    %% REDIS / QUEUE INFRASTRUCTURE
+    %% ========================================
 
-    classDef provider fill:#FFF4D6,stroke:#D4A72C,color:#3D3200,stroke-width:1.5px;
-    classDef ingestion fill:#E8F1FF,stroke:#5B8DEF,color:#172B4D,stroke-width:1.5px;
-    classDef database fill:#DCEBFF,stroke:#4A7BD0,color:#102A43,stroke-width:2px;
-    classDef intelligence fill:#E8E0FF,stroke:#8064C9,color:#29204A,stroke-width:1.5px;
-    classDef memory fill:#FCE4EC,stroke:#D46A86,color:#4A1725,stroke-width:1.5px;
-    classDef agentic fill:#E7DEFF,stroke:#7557C7,color:#26184B,stroke-width:1.5px;
-    classDef economics fill:#FFF0D5,stroke:#D79A32,color:#4A2E08,stroke-width:1.5px;
-    classDef policy fill:#E3F5EA,stroke:#4B9B69,color:#163B25,stroke-width:2px;
-    classDef execution fill:#DDF4F0,stroke:#42A69A,color:#123C37,stroke-width:1.5px;
-    classDef api fill:#E5EEFF,stroke:#527CC7,color:#152B50,stroke-width:1.5px;
-    classDef reconciliation fill:#DDF3F8,stroke:#4B9DB0,color:#12343C,stroke-width:1.5px;
-    classDef outcome fill:#E1F5E8,stroke:#43A86B,color:#153A25,stroke-width:2px;
-    classDef measurement fill:#E9E7FF,stroke:#736FC2,color:#25234A,stroke-width:1.5px;
-    classDef operator fill:#ECEEF2,stroke:#737A86,color:#252A31,stroke-width:1.5px;
-    classDef stop fill:#FDE2E2,stroke:#D55C5C,color:#4A1818,stroke-width:2px;
+    REDIS[Redis + BullMQ] --> WK
+    OUT --> REDIS
 
-    %% Provider boundary
+    %% ========================================
+    %% DARK ARIV COLOR PALETTE
+    %% ========================================
+
+    %% Razorpay / External Provider
+    classDef provider fill:#3B3518,stroke:#E0B93F,color:#FFF4C2,stroke-width:2px;
+
+    %% Event Ingestion / Persistence
+    classDef ingestion fill:#172B45,stroke:#5B9BFF,color:#DCEBFF,stroke-width:2px;
+
+    %% Recovery Case
+    classDef case fill:#162D49,stroke:#6FA8FF,color:#E4F0FF,stroke-width:2px;
+
+    %% Intelligence Layer
+    classDef intelligence fill:#292343,stroke:#9A87E8,color:#EEE9FF,stroke-width:2px;
+
+    %% Qdrant Semantic Memory
+    classDef memory fill:#452531,stroke:#E08AA5,color:#FFE8F0,stroke-width:2px;
+
+    %% AI / Agentic Reasoning
+    classDef agentic fill:#30244C,stroke:#A88BE8,color:#F1E9FF,stroke-width:2px;
+
+    %% Decision / Economics
+    classDef economics fill:#49371E,stroke:#D9A65A,color:#FFF0D2,stroke-width:2px;
+
+    %% Deterministic Safety Boundary
+    classDef policy fill:#193D2B,stroke:#68C28A,color:#DDF8E7,stroke-width:2.5px;
+
+    %% Durable Execution
+    classDef execution fill:#163D3A,stroke:#59BDB1,color:#D9F8F4,stroke-width:2px;
+
+    %% External API
+    classDef api fill:#1B3152,stroke:#6598E8,color:#DFEAFF,stroke-width:2px;
+
+    %% Provider Reconciliation
+    classDef reconciliation fill:#183D32,stroke:#65C69A,color:#DDF9EC,stroke-width:2px;
+
+    %% Financial Outcome
+    classDef outcome fill:#1B4228,stroke:#6BC982,color:#DDF9E2,stroke-width:2.5px;
+
+    %% Attribution / Measurement
+    classDef measurement fill:#2C2850,stroke:#9889DE,color:#EEE9FF,stroke-width:2px;
+
+    %% Operator Visibility
+    classDef operator fill:#303238,stroke:#9298A5,color:#F0F2F5,stroke-width:2px;
+
+    %% RED #1 — Redis / BullMQ
+    classDef redis fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:2.5px;
+
+    %% RED #2 — Recovery Safety Stop
+    classDef stop fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:2.5px;
+
+    %% ========================================
+    %% NODE COLOR ASSIGNMENTS
+    %% ========================================
+
     class RP provider;
 
-    %% Event ingestion / persistence
-    class WH ingestion;
-    class PE,C database;
+    class WH,PE ingestion;
 
-    %% Intelligence layer
+    class C case;
+
     class FI,SYS,DC intelligence;
 
-    %% Semantic memory
     class Q memory;
 
-    %% AI / reasoning
     class AI,PROP agentic;
 
-    %% Decision / economics
     class GEN,ECON economics;
 
-    %% Deterministic safety boundary
     class POL policy;
-    class STOP stop;
 
-    %% Durable execution
     class OUT,WK,AD execution;
 
-    %% External API boundary
     class RPI api;
 
-    %% Provider truth / reconciliation
     class RECON reconciliation;
 
-    %% Financial outcome
     class OC outcome;
 
-    %% Attribution / measurement
     class ATTR,MEAS measurement;
 
-    %% Operator surfaces
     class TG,UI,ASK operator;
-```
 
+    class REDIS redis;
+
+    class STOP stop;
+```
 
 > The systems-integration box is a **typed capability / tool boundary**: a declared interface offering controlled, authorized actions to the decision and control layers — not a fully-fledged MCP server or an unrestricted agent-execution gateway.
 
