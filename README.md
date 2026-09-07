@@ -27,14 +27,6 @@
 
 ARIV is a recovery control plane for Razorpay that turns failed payments into governed, observable, measurable workflows.
 
-## 🎥 Product Walkthrough
-
-A concise walkthrough of the ARIV recovery workflow: decisioning, policy enforcement, Razorpay integration, execution, provider confirmation, attribution, measurement, and operator experience.
-
-**▶ Watching the full product walkthrough is recommended:** [ARIV on YouTube](https://www.youtube.com/watch?v=vkv6G-Nq67s)
-
----
-
 ## 💻 Technology at a Glance
 
 | Technology | Role in ARIV |
@@ -448,6 +440,15 @@ docker compose exec web pytest -q
 | Measurement | ![](docs/screenshots/11-measurement.png) |
 
 ---
+
+## 🎥 Product Walkthrough
+
+A concise walkthrough of the ARIV recovery workflow: decisioning, policy enforcement, Razorpay integration, execution, provider confirmation, attribution, measurement, and operator experience.
+
+**▶ Watching the full product walkthrough is recommended:** [ARIV on YouTube](https://www.youtube.com/watch?v=vkv6G-Nq67s)
+
+---
+
 
 ## ✅ Final takeaway
 
