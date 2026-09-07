@@ -15,3 +15,8 @@ dist/
 
 *.log
 .DS_Store
+
+# Regenerated benchmark run outputs (recreated on every pytest / benchmark script run)
+artifacts/benchmarks/judge_benchmark_seed42_42.json
+artifacts/benchmarks/plots/
+pytest_output.txt
