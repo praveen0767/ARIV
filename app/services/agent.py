@@ -3,6 +3,7 @@ from typing import Optional, List, Any
 from app.domain.schemas import DecisionContext, DecisionProposal
 from app.domain.decision import RecoveryAction
 from app.infrastructure.adapters.llm_adapter import LLMAdapter
+from app.services.decision_authority import sanitize_llm_payload
 
 logger = logging.getLogger("ariv.services.agent")
 
@@ -37,6 +38,22 @@ class AgentRuntime:
         context: DecisionContext,
         adapter: Any = None,
     ) -> DecisionProposal:
+        proposal, _ = await cls._propose_decision_with_audit(context, adapter)
+        return proposal
+
+    @classmethod
+    async def _propose_decision_with_audit(
+        cls,
+        context: DecisionContext,
+        adapter: Any = None,
+    ) -> tuple[DecisionProposal, dict]:
+        """As ``propose_decision`` but also returns the advisory-boundary audit.
+
+        Returns ``(DecisionProposal, {"all": [...], "financial": [...]})`` where the
+        second element lists every non-advisory (and financial-authority) key that was
+        stripped from the raw LLM payload. Returns ``({...}, {"all": [], "financial": []})``
+        on failure with the deterministic fallback proposal.
+        """
         logger.info(f"Agent reasoning over context for Case {context.case_id}")
         llm_client = adapter or LLMAdapter
 
@@ -87,20 +104,24 @@ class AgentRuntime:
 
         try:
             llm_response = await llm_client.generate_decision(prompt=prompt)
-            if not isinstance(llm_response, dict):
-                raise ValueError("LLM response is not a valid JSON dictionary")
+
+            # Enforce the strict AI-authority boundary: only advisory fields are
+            # forwarded. Any financial/economic/authorization/provider-truth field
+            # the LLM may have produced is dropped and never reaches the
+            # deterministic economic/policy/execution layer.
+            advisory, stripped_all, stripped_financial = sanitize_llm_payload(llm_response)
 
             # Parse diagnosis
-            diagnosis = str(llm_response.get("diagnosis") or f"Payment failure ({context.failure_category}) analyzed.")
+            diagnosis = str(advisory.get("diagnosis") or f"Payment failure ({context.failure_category}) analyzed.")
 
             # Parse recommended action
-            raw_rec = llm_response.get("recommended_action")
+            raw_rec = advisory.get("recommended_action")
             rec_action = cls._parse_action(raw_rec)
             if rec_action is None:
                 raise ValueError(f"Invalid recommended_action returned by LLM: {raw_rec}")
 
             # Parse candidate actions
-            raw_candidates = llm_response.get("candidate_actions") or []
+            raw_candidates = advisory.get("candidate_actions") or []
             candidate_actions: List[RecoveryAction] = []
             if isinstance(raw_candidates, list):
                 for cand in raw_candidates:
@@ -113,16 +134,18 @@ class AgentRuntime:
                 candidate_actions.insert(0, rec_action)
 
             # Parse confidence
-            raw_conf = llm_response.get("confidence")
+            raw_conf = advisory.get("confidence")
             try:
                 conf = float(raw_conf)
                 conf = max(0.0, min(1.0, conf))
             except (TypeError, ValueError):
                 conf = 0.5
 
-            reason = str(llm_response.get("reason") or "AI decision proposal generated.")
-            raw_refs = llm_response.get("knowledge_refs")
+            reason = str(advisory.get("reason") or "AI decision proposal generated.")
+            raw_refs = advisory.get("knowledge_refs")
             knowledge_refs = [str(r) for r in raw_refs] if isinstance(raw_refs, list) else []
+
+            stripped = {"all": stripped_all, "financial": stripped_financial}
 
             return DecisionProposal(
                 diagnosis=diagnosis,
@@ -132,7 +155,7 @@ class AgentRuntime:
                 confidence=conf,
                 expected_irv=0.0,  # Never use LLM as economic authority
                 knowledge_refs=knowledge_refs,
-            )
+            ), stripped
 
         except Exception as e:
             logger.error(f"LLM decision generation failed: {e}")
@@ -145,4 +168,4 @@ class AgentRuntime:
                 confidence=0.0,
                 expected_irv=0.0,
                 knowledge_refs=[],
-            )
+            ), {"all": [], "financial": []}

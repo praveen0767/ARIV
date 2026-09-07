@@ -122,7 +122,8 @@ class DecisionEngineService:
         )
 
         # 5. Agentic Intelligence (Proposal with Diagnosis & Candidate Actions)
-        proposal: DecisionProposal = await AgentRuntime.propose_decision(context)
+        proposal: DecisionProposal
+        proposal, ai_stripped = await AgentRuntime._propose_decision_with_audit(context)
 
         await ActivityService.record_event(
             session=session,
@@ -142,6 +143,8 @@ class DecisionEngineService:
         candidates = CandidateGenerator.generate_candidates(context=context, ai_proposal=proposal)
 
         # 6. Economic Optimization & Multi-Candidate ENR Ranking
+        # Order-neutral tie-break: the AI cannot steer which candidate wins an ENR
+        # tie through recommendation/insertion order.
         ranked_candidates = EconomicOptimizer.rank_candidates(
             candidates=candidates,
             context=context,
@@ -224,6 +227,11 @@ class DecisionEngineService:
                 "confidence": proposal.confidence,
                 "reason": proposal.reason,
                 "knowledge_refs": proposal.knowledge_refs,
+                "authority_boundary": {
+                    "advisory_only": True,
+                    "financial_authority_fields_stripped": ai_stripped.get("financial", []) if isinstance(ai_stripped, dict) else [],
+                    "non_advisory_fields_stripped": ai_stripped.get("all", []) if isinstance(ai_stripped, dict) else [],
+                },
             },
             "qdrant": {
                 "query_vector_dimension": len(query_vector),

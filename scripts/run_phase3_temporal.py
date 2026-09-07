@@ -26,6 +26,7 @@ from app.domain.decision import RecoveryAction
 from app.services.economic_optimizer import EconomicOptimizer
 from app.services.candidate_generator import CandidateGenerator
 from app.services.probability_provider import ProbabilityProvider
+from app.services.economic_optimizer import EconomicOptimizer, LEGACY_TIE_BREAK
 from app.services.policy import PolicyEngine
 from app.services.temporal_layer import evaluate_temporal_decision, TemporalDecision
 from scripts.run_judge_benchmark import (
@@ -109,6 +110,7 @@ def run_phase3(
                 probability_provider=ProbabilityProvider,
                 operational_cost=op_cost,
                 risk_penalty=risk_penalty,
+                tie_break=LEGACY_TIE_BREAK,
             )
             # Select first policy‑approved candidate
             selected_action = RecoveryAction.STOP_RECOVERY

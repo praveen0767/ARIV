@@ -1,0 +1,74 @@
+{
+  "manifest_version": "1.0",
+  "created_at": "2026-09-07T00:00:00Z",
+  "purpose": "Phase 0 baseline freeze BEFORE any competitive-upgrade code changes. Records the exact pre-upgrade state, metrics, artifact lineage, and reproducibility of the existing ablation results.",
+  "git": {
+    "head_sha": "7c1b2264f423b694724c16e3079c32a5f9674749",
+    "branch": "main",
+    "status": "clean (except throwaway tmp_phase0_check.py / tmp_phase0_meta.py, removed after Phase 0)"
+  },
+  "test_suite_baseline": {
+    "container": {
+      "command": "docker compose exec -T web pytest -q",
+      "result": "222 passed, 1 skipped, 0 failed, 2 warnings",
+      "elapsed_seconds": 11.37
+    },
+    "skipped_test": "1 (pre-existing)"
+  },
+  "ablation_reproducibility_check": {
+    "method": "Re-ran scripts/run_phase2_ablation.run_phase2_ablation(cases_per_seed=10000, seeds=[42..51], save_artifacts=False) in the web container exactly as currently implemented.",
+    "reproducible": true,
+    "fresh_payload_hash_sha256_prefix16": "f71779530c8a5ff7",
+    "committed_payload_hash_sha256_prefix16": "f71779530c8a5ff7",
+    "note": "Payload hashes computed with metadata.elapsed_seconds and metadata.timestamp removed (volatile run metadata only). All variant aggregates, incremental analysis, and per-seed results are bit-for-bit identical.",
+    "confirms_reported": {
+      "A2_AI_ECONOMIC_vs_A1_ECONOMIC_pct": -1.68,
+      "A2_AI_ECONOMIC_win_rate": "0/10",
+      "A3_AI_ECONOMIC_MEMORY_vs_A2_pct": -7.7,
+      "A3_win_rate": "0/10",
+      "A4_FULL_ARIV_vs_A3_pct": 8.43,
+      "A4_win_rate": "10/10",
+      "A4_FULL_ARIV_vs_A1_ECONOMIC_pct": -1.59,
+      "A4_win_rate_vs_A1": "0/10"
+    }
+  },
+  "ablation_variant_aggregates": {
+    "seeds": [42, 43, 44, 45, 46, 47, 48, 49, 50, 51],
+    "cases_per_seed": 10000,
+    "total_cases_per_variant": 100000,
+    "variants": {
+      "A0_BASELINE": { "net_recovered_inr": 221734962.59, "case_recovery_rate_pct": 44.19, "oracle_capture_pct": 76.26, "total_cost_inr": 751830.0, "total_risk_inr": 375915.0, "economic_regret_inr": 69025659.56, "policy_violations": 5029 },
+      "A1_ECONOMIC": { "net_recovered_inr": 234413917.4, "case_recovery_rate_pct": 46.69, "oracle_capture_pct": 80.62, "total_cost_inr": 802120.0, "total_risk_inr": 401060.0, "economic_regret_inr": 56346704.75, "policy_violations": 0 },
+      "A2_AI_ECONOMIC": { "net_recovered_inr": 230486294.8, "case_recovery_rate_pct": 45.91, "oracle_capture_pct": 79.27, "total_cost_inr": 802120.0, "total_risk_inr": 401060.0, "economic_regret_inr": 60274327.35, "policy_violations": 0 },
+      "A3_AI_ECONOMIC_MEMORY": { "net_recovered_inr": 212749159.43, "case_recovery_rate_pct": 42.42, "oracle_capture_pct": 73.17, "total_cost_inr": 899680.0, "total_risk_inr": 401060.0, "economic_regret_inr": 78011462.72, "policy_violations": 0 },
+      "A4_FULL_ARIV": { "net_recovered_inr": 230694194.23, "case_recovery_rate_pct": 45.94, "oracle_capture_pct": 79.34, "total_cost_inr": 899680.0, "total_risk_inr": 401060.0, "economic_regret_inr": 60066427.92, "policy_violations": 0 }
+    },
+    "incremental_analysis": {
+      "ai_incremental_value": { "comparison": "A2_AI_ECONOMIC vs A1_ECONOMIC", "absolute_inr": -3927622.6, "percentage": -1.68, "win_rate": "0/10 (losses: 10, ties: 0)" },
+      "memory_incremental_value": { "comparison": "A3_AI_ECONOMIC_MEMORY vs A2_AI_ECONOMIC", "absolute_inr": -17737135.37, "percentage": -7.7, "win_rate": "0/10 (losses: 10, ties: 0)" },
+      "systemic_incremental_value": { "comparison": "A4_FULL_ARIV vs A3_AI_ECONOMIC_MEMORY", "absolute_inr": 17945034.8, "percentage": 8.43, "win_rate": "10/10 (losses: 0, ties: 0)" },
+      "full_ariv_vs_economic": { "comparison": "A4_FULL_ARIV vs A1_ECONOMIC", "absolute_inr": -3719723.17, "percentage": -1.59, "win_rate": "0/10 (losses: 10, ties: 0)" },
+      "full_ariv_vs_baseline": { "comparison": "A4_FULL_ARIV vs A0_BASELINE", "absolute_inr": 8959231.64, "percentage": 4.04, "win_rate": "10/10 (losses: 0, ties: 0)" }
+    }
+  },
+  "committed_benchmark_artifacts": {
+    "artifacts/benchmarks/phase2_ablation_seed42_51.json": { "sha256": "50e62254166ab5da939c3e87b7ba8e2bf74d85d118581a294ebd1a8ffca4ab34", "bytes": 32482 },
+    "artifacts/benchmarks/phase2_ablation_report.md": { "sha256": "83528bccdeab043500494a44e8fe44d183f5dec02a08d7fbd7295c8a85a8fa19", "bytes": 6795 },
+    "artifacts/benchmarks/judge_benchmark_seed42_51.json": { "sha256": "1c9d9fb95d88b8b2e9f310444b4e47b1a31335b4d0151b2878a679b311e557e6", "bytes": 272542 },
+    "artifacts/benchmarks/phase3/phase3_temporal_results.json": { "sha256": "023968e3042a9e65a10d2d4dcf421bbbf220fc4c09602ae01e2a0284a6f43f78", "bytes": 19054 },
+    "artifacts/benchmarks/phase3/phase3_report.md": { "sha256": "de3c10b2c4d1e12c714eb3e393b7d0e6886bedc583d67de0547bd2f900f16b36", "bytes": 294 }
+  },
+  "execution_scale_benchmark_reports": {
+    "benchmark_report_bench_20260907_041657_61886f.json": { "sha256": "d3bb75fe437a342ecbadd93926e7a701e47ce70d08e8e5606b38d484d5e82d91", "note": "smoke run" },
+    "benchmark_report_bench_20260907_041856_fa9508.json": { "sha256": "37884ddba914d59435081964bf973b95de7923b9d3748af6c134936bf52524d4", "note": "Benchmark A: 25 cases, Rs 35,232.60, 25/25 decisions, 24/25 provider actions, 1 real RATE_LIMIT_EXCEEDED, 0 verified recoveries" },
+    "benchmark_report_bench_20260907_045936_39bde5.json": { "sha256": "e0ada85883676a125bc7008b3e918de74c1ca333414cf5c415b89b9a4e45781d", "note": "Benchmark B: 18 cases, Rs 145,400, 18/18 decisioned, 16/2 approved/review, 5/5 provider actions, 0 verified recoveries" }
+  },
+  "phase3_temporal_baseline": {
+    "note": "PROB_IMPROVEMENT_PER_STEP = 0.0 in app/services/temporal_decision_engine.py:46. T0/T1/T2 collapse to the same economic selection (expected-value model has no wait probability uplift)."
+  },
+  "known_warnings": [
+    "RuntimeWarning: coroutine 'AsyncMockMixin._execute_mock_call' was never awaited (tests/test_phase1_production_correctness.py::test_resolve_tenant_bootstrap_binds_first_tenant_to_account_id)",
+    "host-only DeprecationWarning from starlette/anyio BlockingPortal"
+  ],
+  "constraints": "No secrets stored. All identifiers are file content hashes."
+}

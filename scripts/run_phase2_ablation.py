@@ -47,7 +47,7 @@ from app.domain.schemas import DecisionContext, DecisionProposal
 from app.services.baseline import DeterministicBaseline
 from app.services.candidate_generator import CandidateGenerator
 from app.services.probability_provider import ProbabilityProvider
-from app.services.economic_optimizer import EconomicOptimizer
+from app.services.economic_optimizer import EconomicOptimizer, LEGACY_TIE_BREAK
 from app.services.policy import PolicyEngine
 from app.services.systemic_intelligence import SystemicIntelligenceService
 
@@ -222,6 +222,7 @@ def execute_ablation_variant_decision(
             probability_provider=ProbabilityProvider,
             operational_cost=op_cost,
             risk_penalty=risk_penalty,
+            tie_break=LEGACY_TIE_BREAK,
         )
         selected_action = None
         selected_p = 0.0
@@ -276,6 +277,7 @@ def execute_ablation_variant_decision(
             probability_provider=ProbabilityProvider,
             operational_cost=op_cost,
             risk_penalty=risk_penalty,
+            tie_break=LEGACY_TIE_BREAK,
         )
         selected_action = None
         selected_p = 0.0

@@ -29,7 +29,7 @@ from app.domain.schemas import DecisionContext, DecisionProposal
 from app.services.baseline import DeterministicBaseline
 from app.services.candidate_generator import CandidateGenerator
 from app.services.probability_provider import ProbabilityProvider
-from app.services.economic_optimizer import EconomicOptimizer
+from app.services.economic_optimizer import EconomicOptimizer, LEGACY_TIE_BREAK
 from app.services.policy import PolicyEngine
 
 from scripts.run_economic_benchmark import generate_synthetic_benchmark_cases, BenchmarkAIAdapter
@@ -147,6 +147,7 @@ def get_traces(num_cases: int = 5, seed: int = 42):
             probability_provider=ProbabilityProvider,
             operational_cost=DEFAULT_OP_COST,
             risk_penalty=DEFAULT_RISK_PENALTY,
+            tie_break=LEGACY_TIE_BREAK,
         )
         econ_final, econ_p_status = _select_via_policy(ranked_econ, domain, category, route_health)
         print(f"\n  [ECONOMIC]")
@@ -183,6 +184,7 @@ def get_traces(num_cases: int = 5, seed: int = 42):
             probability_provider=ProbabilityProvider,
             operational_cost=DEFAULT_OP_COST,
             risk_penalty=DEFAULT_RISK_PENALTY,
+            tie_break=LEGACY_TIE_BREAK,
         )
         ai_final, ai_p_status = _select_via_policy(ranked_ai, domain, category, route_health)
         print(f"\n  [AI_PLUS_ECONOMIC]")
