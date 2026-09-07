@@ -1,5 +1,4 @@
-[ARIV_README.md](https://github.com/user-attachments/files/31899861/ARIV_README.md)
-<div align="center">
+[ARIV_README (2).md](https://github.com/user-attachments/files/31899970/ARIV_README.2.md)<div align="center">
 
 <img src="./logo.png" alt="ARIV Logo" width="150"/>
 
@@ -19,18 +18,13 @@
 
 ARIV is a recovery control plane for Razorpay that turns failed payments into governed, observable, measurable workflows. AI proposes; PolicyEngine authorizes; infrastructure executes; provider events establish truth.
 
-# 🎥 Product Walkthrough
+## 🎥 Product Walkthrough
 
-### Live ARIV product explanation
+A concise walkthrough of the ARIV recovery workflow, decisioning, policy enforcement, Razorpay integration, execution, provider confirmation, attribution, measurement, and operator experience.
 
-This walkthrough demonstrates the ARIV product, recovery workflow, decisioning, policy enforcement, Razorpay integration, execution, provider confirmation, attribution, measurement, and operator experience.
+**▶ Watch the full product walkthrough:** [YouTube](https://www.youtube.com/watch?v=vkv6G-Nq67s)
 
-[![ARIV Product Walkthrough](https://img.youtube.com/vi/vkv6G-Nq67s/maxresdefault.jpg)](https://www.youtube.com/watch?v=vkv6G-Nq67s)
-
-**▶ Watch the full product walkthrough:**  
-https://www.youtube.com/watch?v=vkv6G-Nq67s
-
----
+> The README is intentionally evidence-first: the benchmark and provider-confirmed evidence below are more important than a promotional hero image.
 
 ---
 
