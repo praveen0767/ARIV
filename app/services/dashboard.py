@@ -467,6 +467,18 @@ class DashboardService:
         except Exception as e:
             logger.warning("Case activities lookup skipped: %s", e)
 
+        # 12. Persisted economic ENR ranking (recorded at decision time by the
+        # decision engine). Purely surfaced here — never recomputed or inferred.
+        decision_prov = dict(decision.provenance or {}) if decision else {}
+        economic_prov = decision_prov.get("economic") or {}
+        policy_prov = decision_prov.get("policy") or {}
+        ranked_candidates = list(economic_prov.get("ranked_candidates") or [])
+        selected_enr = economic_prov.get("selected_enr")
+        selected_probability = economic_prov.get("selected_probability")
+        selected_provenance = list(economic_prov.get("selected_provenance") or [])
+        policy_evaluations = list(policy_prov.get("evaluated_candidates") or [])
+        economic_available = bool(ranked_candidates)
+
         return {
             "case": {
                 "id": str(case.id),
@@ -496,6 +508,16 @@ class DashboardService:
                 "rejection_reason": rejection_reason,
                 "structured_explanation": structured_explanation,
                 "policy_version": "v1.0.0-safety",
+            },
+            "economic": {
+                "available": economic_available,
+                "method": economic_prov.get("ranking_method") or "ENR",
+                "ranked_candidates": ranked_candidates,
+                "selected_enr": selected_enr,
+                "selected_probability": selected_probability,
+                "selected_provenance": selected_provenance,
+                "policy_evaluations": policy_evaluations,
+                "expected_irv": decision.expected_irv if decision else None,
             },
             "execution": {
                 "action_type": act_name,

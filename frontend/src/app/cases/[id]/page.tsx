@@ -6,15 +6,19 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   ArrowLeft, ArrowRight, Brain, Shield, Clock, CheckCircle2, AlertCircle,
-  Database, Zap, AlertTriangle, BarChart2, Layers, ExternalLink
+  Database, Zap, AlertTriangle, BarChart2, Layers, ExternalLink, TrendingUp
 } from "lucide-react";
 import Link from "next/link";
 import { use, useEffect } from "react";
 import { useLiveStatus } from "@/hooks/use-live-status";
 import { LiveStatusBadge } from "@/components/LiveIndicator";
+import type { EconomicRanking } from "@/lib/types";
 
 const formatCurrency = (minor: number) =>
   new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(minor / 100);
+
+const formatRupees = (major: number) =>
+  new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(major);
 
 function Section({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
@@ -65,6 +69,135 @@ function PolicyBadge({ status }: { status: string }) {
   );
 }
 
+const formatEnr = (value: number | string | null | undefined) =>
+  value != null && Number.isFinite(Number(value)) ? formatRupees(Number(value)) : "—";
+
+const formatProbability = (value: number | string | null | undefined) =>
+  value != null && Number.isFinite(Number(value)) ? `${(Number(value) * 100).toFixed(0)}%` : "—";
+
+function EconomicOptimization({ economic, proposedAction, amountMinor }: {
+  economic?: EconomicRanking;
+  proposedAction: string;
+  amountMinor: number;
+}) {
+  if (!economic?.available || !economic.ranked_candidates?.length) {
+    return (
+      <div className="flex flex-col gap-2">
+        <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <div className="text-xs font-bold text-amber-800 mb-1">NO ECONOMIC RANKING RECORDED</div>
+          <div className="text-xs text-amber-700 leading-relaxed">
+            No ENR candidate ranking was persisted for this case. ARIV shows no economic values rather than estimating or fabricating them.
+          </div>
+        </div>
+        {economic?.expected_irv != null && Number.isFinite(Number(economic.expected_irv)) && (
+          <div className="p-3 bg-white border border-slate-200 rounded-lg">
+            <DataRow
+              label="Selected Action Expected ENR"
+              value={<span className="tabular-nums text-emerald-700">{formatRupees(Number(economic.expected_irv))}</span>}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  const candidates = economic.ranked_candidates;
+  const maxEnr = Math.max(...candidates.map((c) => Number(c.expected_net_recovery) || 0), 0.0001);
+  const policyFor = (action: string) => economic.policy_evaluations?.find((p) => p.action === action);
+
+  return (
+    <div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+        <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+          <div className="text-[11px] text-emerald-600 font-semibold mb-1">SELECTED ENR</div>
+          <div className={`font-bold tabular-nums ${formatEnr(economic.selected_enr) === "—" ? "text-slate-400" : "text-emerald-800"}`}>
+            {formatEnr(economic.selected_enr)}
+          </div>
+        </div>
+        <div className="bg-white border border-slate-200 rounded-lg p-3">
+          <div className="text-[11px] text-slate-400 font-semibold mb-1">RECOVERY PROBABILITY</div>
+          <div className="font-bold text-slate-800 tabular-nums">{formatProbability(economic.selected_probability)}</div>
+        </div>
+        <div className="bg-white border border-slate-200 rounded-lg p-3">
+          <div className="text-[11px] text-slate-400 font-semibold mb-1">REFERENCE AMOUNT</div>
+          <div className="font-bold text-slate-800 tabular-nums">{formatCurrency(amountMinor)}</div>
+        </div>
+        <div className="bg-white border border-slate-200 rounded-lg p-3">
+          <div className="text-[11px] text-slate-400 font-semibold mb-1">RANKING METHOD</div>
+          <div className="font-bold text-slate-800">{economic.method}</div>
+          <div className="text-[10px] text-slate-400">Selects action with max ENR</div>
+        </div>
+      </div>
+
+      <div className="text-[11px] text-slate-400 font-mono border border-slate-200 rounded-lg px-3 py-2 bg-slate-50 mb-3">
+        ENR = P(recovery) × amount − operational cost − risk penalty
+      </div>
+
+      <div className="space-y-2">
+        {candidates.map((cand, i) => {
+          const enr = Number(cand.expected_net_recovery) || 0;
+          const pct = Math.max(0, Math.min(100, (enr / maxEnr) * 100));
+          const isSelected = cand.action === proposedAction;
+          const policy = policyFor(cand.action);
+          return (
+            <div
+              key={`${cand.action}-${i}`}
+              className={`p-3 rounded-lg border ${isSelected ? "bg-emerald-50/70 border-emerald-300" : "bg-white border-slate-200"}`}
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0">
+                  {isSelected && (
+                    <Badge className="bg-emerald-600 text-white text-[9px] font-semibold shrink-0">SELECTED</Badge>
+                  )}
+                  <span className={`text-xs font-semibold truncate ${isSelected ? "text-emerald-800" : "text-slate-700"}`}>
+                    {cand.action.replace(/_/g, " ")}
+                  </span>
+                  {policy && (
+                    <Badge
+                      variant="outline"
+                      className={`shrink-0 text-[9px] border ${
+                        policy.policy_status === "APPROVED"
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                          : "bg-red-50 text-red-700 border-red-200"
+                      }`}
+                    >
+                      POLICY {policy.policy_status.replace(/_/g, " ")}
+                    </Badge>
+                  )}
+                </div>
+                <span className={`text-xs font-bold tabular-nums shrink-0 ${isSelected ? "text-emerald-700" : "text-slate-800"}`}>
+                  {formatRupees(enr)}
+                </span>
+              </div>
+              <div className="flex items-center gap-2 mt-2">
+                <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full ${isSelected ? "bg-emerald-500" : "bg-blue-500"}`}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+                <span className="text-[10px] text-slate-400 tabular-nums w-16 text-right shrink-0">
+                  p={formatProbability(cand.recovery_probability)}
+                </span>
+              </div>
+              <div className="flex items-center gap-3 mt-1.5 text-[10px] text-slate-400 font-mono flex-wrap">
+                <span>Amount {formatRupees(Number(cand.recoverable_amount) || 0)}</span>
+                <span>− Cost {formatRupees(Number(cand.operational_cost) || 0)}</span>
+                <span>− Risk {formatRupees(Number(cand.risk_penalty) || 0)}</span>
+                <span className="text-[9px] bg-slate-100 border border-slate-200 rounded px-1 py-0.5 uppercase">
+                  {Array.isArray(cand.probability_provenance)
+                    ? cand.probability_provenance.join(", ")
+                    : String(cand.probability_provenance ?? "")}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function CaseDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
   const caseId = resolvedParams.id;
@@ -110,7 +243,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
     );
   }
 
-  const { case: c, classification, decision, execution, recovery, measurement, timeline, similar_cases, activities } = detail;
+  const { case: c, classification, decision, execution, recovery, measurement, timeline, similar_cases, activities, economic } = detail;
 
   const isWaitingForPayment =
     (execution?.recovery_stage === "WAITING_FOR_PAYMENT" ||
@@ -276,6 +409,11 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
                 <DataRow label="Rejection Reason" value={decision.rejection_reason} className="text-red-600" />
               )}
             </div>
+          </Section>
+
+          {/* Economic Optimization (ENR) */}
+          <Section title="Economic Optimization" icon={<TrendingUp className="w-4 h-4 text-emerald-600" />}>
+            <EconomicOptimization economic={economic} proposedAction={decision.proposed_action} amountMinor={c.amount_minor} />
           </Section>
 
           {/* Policy Firewall */}

@@ -82,6 +82,36 @@ export interface SimilarCase {
   time_to_recovery_bucket: string;
 }
 
+export interface EconomicCandidate {
+  action: string;
+  recovery_probability: number;
+  probability_provenance: string[];
+  recoverable_amount: number;
+  operational_cost: number;
+  risk_penalty: number;
+  expected_net_recovery: number;
+}
+
+export interface EconomicPolicyEvaluation {
+  action: string;
+  expected_net_recovery: number;
+  recovery_probability: number;
+  policy_status: string;
+  autonomy_level: string;
+  rejection_reason?: string | null;
+}
+
+export interface EconomicRanking {
+  available: boolean;
+  method: string;
+  ranked_candidates: EconomicCandidate[];
+  selected_enr?: number | null;
+  selected_probability?: number | null;
+  selected_provenance?: string[];
+  policy_evaluations?: EconomicPolicyEvaluation[];
+  expected_irv?: number | null;
+}
+
 export interface FullCaseDetail {
   case: {
     id: string;
@@ -112,6 +142,7 @@ export interface FullCaseDetail {
     structured_explanation: string;
     policy_version: string;
   };
+  economic?: EconomicRanking;
   execution: {
     action_type: string;
     status: string;
