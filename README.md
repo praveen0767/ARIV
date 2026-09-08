@@ -356,7 +356,9 @@ Attributed Recovery
 
 # 📸 Product Proof
 
-The screenshots below are intentionally displayed at **large desktop-friendly sizes** rather than being compressed into a Markdown table.
+The screenshots below are intentionally arranged so the most important product evidence is large and immediately readable on desktop, while supporting views remain compact.
+
+### Core Product Evidence
 
 <div align="center">
 
@@ -365,75 +367,98 @@ The screenshots below are intentionally displayed at **large desktop-friendly si
 **01 — Command Center**  
 Live command center and recovery system state.
 
-<br/><br/>
+<br/>
 
 <img src="docs/screenshots/02-failed-payment-case.png" width="100%" alt="Failed Payment Case"/>
 
 **02 — Failed Payment Case**  
 Failed payment converted into a recovery case.
 
-<br/><br/>
+<br/>
 
 <img src="docs/screenshots/03-ai-decision-policy.png" width="100%" alt="AI Decision and Policy"/>
 
 **03 — AI Decision + Policy**  
 AI proposal with deterministic authorization boundary.
 
-<br/><br/>
-
-<img src="docs/screenshots/04-recovery-action.png" width="100%" alt="Recovery Action"/>
-
-**04 — Recovery Action**  
-Governed recovery action selected for execution.
-
-<br/><br/>
+<br/>
 
 <img src="docs/screenshots/05-razorpay-test-payment.png" width="100%" alt="Razorpay Test Payment"/>
 
-**05 — Razorpay Test Payment**  
+**04 — Razorpay Test Payment**  
 Real Razorpay Test-Mode payment flow.
 
-<br/><br/>
+<br/>
 
 <img src="docs/screenshots/06-recovered-attribution.png" width="100%" alt="Recovered and Attributed"/>
 
-**06 — Recovered + Attributed**  
+**05 — Recovered + Attributed**  
 Provider-confirmed recovery and attribution.
 
-<br/><br/>
+</div>
 
-<img src="docs/screenshots/07-telegram-recovery.png" width="100%" alt="Telegram Recovery Notification"/>
+### Supporting Product Evidence
+
+<div align="center">
+
+<table>
+<tr>
+<td align="center" width="50%">
+
+<img src="docs/screenshots/04-recovery-action.png" width="100%" alt="Recovery Action"/>
+
+**06 — Recovery Action**  
+Governed recovery action.
+
+</td>
+<td align="center" width="50%">
+
+<img src="docs/screenshots/07-telegram-recovery.png" width="100%" alt="Telegram Recovery"/>
 
 **07 — Telegram Recovery**  
-Recovery notification after provider-confirmed outcome.
+Recovery notification.
 
-<br/><br/>
+</td>
+</tr>
+
+<tr>
+<td align="center" width="50%">
 
 <img src="docs/screenshots/08-ask-ariv.png" width="100%" alt="ASK ARIV"/>
 
 **08 — ASK ARIV**  
-Conversational operator control layer.
+Conversational operator control.
 
-<br/><br/>
+</td>
+<td align="center" width="50%">
 
 <img src="docs/screenshots/09-qdrant-memory.png" width="100%" alt="Qdrant Memory"/>
 
 **09 — Qdrant Memory**  
-Semantic recovery memory and contextual retrieval.
+Semantic recovery memory.
 
-<br/><br/>
+</td>
+</tr>
+
+<tr>
+<td align="center" width="50%">
 
 <img src="docs/screenshots/10-system-health.png" width="100%" alt="System Health"/>
 
-**10 — System Health**  
+**09 — System Health**  
 Infrastructure and service health.
 
-<br/><br/>
+</td>
+<td align="center" width="50%">
 
 <img src="docs/screenshots/11-measurement.png" width="100%" alt="Recovery Measurement"/>
 
-**11 — Measurement**  
+**10 — Measurement**  
 Recovery measurement and outcome visibility.
+
+</td>
+</tr>
+</table>
 
 </div>
 
@@ -442,15 +467,15 @@ Recovery measurement and outcome visibility.
 ```text
 01 Command Center
       ↓
-02 Failed Payment
+02 Failed Payment Case
       ↓
 03 AI Decision + Policy
       ↓
-04 Recovery Action
+04 Razorpay Test Payment
       ↓
-05 Razorpay Test Payment
+05 Recovered + Attributed
       ↓
-06 Recovered + Attributed
+06 Recovery Action
       ↓
 07 Telegram
       ↓
@@ -461,7 +486,6 @@ Recovery measurement and outcome visibility.
 10 System Health
       ↓
 11 Measurement
-```
 
 ---
 
