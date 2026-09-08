@@ -44,6 +44,9 @@ class Settings(BaseSettings):
     TELEGRAM_TIMEOUT_SECONDS: float = 5.0
 
     DEMO_MODE: bool = True
+    # Local/development demo account bound to a tenant at startup (DEMO_MODE only).
+    # This is the operator/tenant mapping seed; it never enables unauthenticated access.
+    DEMO_ACCOUNT_ID: str = "acc_demo_123"
 
     # Economic optimizer constants
     ECONOMIC_OPERATIONAL_COST: float = 10.0
