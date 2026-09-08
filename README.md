@@ -849,6 +849,47 @@ Run the backend and frontend according to the repository development configurati
 
 The system is designed to operate with deterministic fallback behavior when the LLM is unavailable.
 
+### 5. Run the complete local recovery demo (ONE command)
+
+```bash
+python scripts/run_test_recovery.py --amount 100
+```
+
+This is the recommended single demo command. It drives the **existing** pipeline
+end to end through a real webhook and never touches production auth:
+
+1. Creates a legitimate Razorpay `payment.failed` test event (`BAD_REQUEST_ERROR` /
+   "Insufficient balance") signed with the webhook secret, for the demo account
+   (`acc_demo_123`).
+2. The running backend ingests it through `POST /webhooks/razorpay` → ProviderEvent → **Recovery Case**.
+3. Decisioning runs the real AI/deterministic baseline → **Economic Optimization (ENR)** →
+   **PolicyEngine** gate → outbox → Execution Worker.
+4. When `GENERATE_PAYMENT_LINK` is approved (it is, for this scenario), the worker
+   creates a **real Razorpay Test-Mode payment link** tied to the case.
+5. The command prints: scenario/payment ID, case ID (with frontend URL), selected
+   decision, economic ranking summary, policy result, and the payment link.
+
+```bash
+python scripts/run_test_recovery.py --amount 250 --description "ARIV Test Recovery"
+```
+
+- The amount is specified in rupees (`--amount 100` = ₹100). `--description` labels the test event.
+- Nothing is fabricated: the case is **never marked RECOVERED** — a real `payment_link.paid`
+  webhook is still required before ARIV counts any recovery. You can verify the new case
+  immediately in the frontend at `http://localhost:3000/cases` (the demo-account proxy shows it).
+- Credentials remain server-side in `.env` and are reused by the existing Razorpay adapter;
+  the command never prints secrets.
+
+For just the low-level provider step (a standalone payment link with no Recovery Case),
+the building block is:
+
+```bash
+python scripts/create_test_payment_link.py --amount 100
+```
+
+That command only proves provider integration; use `run_test_recovery.py` when you want a
+Recovery Case + decision + policy gate + payment link in one shot.
+
 ---
 
 # 🧪 Reproduce the Benchmarks

@@ -30,6 +30,7 @@ from app.services.baseline import BaselineService
 from app.services.system_settings import SystemSettingsService
 from app.services.qdrant_memory import QdrantMemoryService
 from app.services.qdrant_indexer import QdrantIndexerWorker
+from app.infrastructure.database import async_session_factory as session_factory
 
 logger = logging.getLogger("ariv.services.recovery")
 
@@ -316,11 +317,17 @@ class RecoveryService:
         )
 
         # 7. Non-authoritative optimization trigger (background task)
-        # Never blocks or rolls back PostgreSQL if Qdrant is unavailable
+        # Never blocks or rolls back PostgreSQL if Qdrant is unavailable.
+        # Runs in a FRESH session so completing is independent of the lifespan of
+        # the request-scoped transaction. The durable claim-based drainer started
+        # by the application lifespan remains the backstop for items this trigger
+        # never gets to process (crash / shutdown / cancellation).
         try:
             loop = asyncio.get_running_loop()
             loop.create_task(
-                QdrantIndexerWorker.process_item(session, outbox_entry)
+                QdrantIndexerWorker.process_outbox_item_safe(
+                    session_factory, outbox_entry.id
+                )
             )
         except Exception as e:
             logger.debug("Background Qdrant indexing trigger skipped (handled by outbox worker): %s", e)

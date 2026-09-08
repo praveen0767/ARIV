@@ -170,58 +170,12 @@ async def get_recovery_metrics(
     """
     Aggregate recovery metrics for the authenticated tenant.
     Clearly distinguishes:
-    - OBSERVED RECOVERY (treatment and control observed sums)
-    - ESTIMATED COUNTERFACTUAL / BASELINE RECOVERY (heuristic estimate)
-    - INCREMENTAL RECOVERY ESTIMATE
+    - VERIFIED RECOVERIES (provider-confirmed, persisted outcomes)
+    - PIPELINE (actions/payment links dispatched, not yet recovered)
+    - AT RISK (outstanding revenue)
+    - OBSERVED vs ESTIMATED counterfactual recovery
     """
-    meas_res = await session.execute(
-        select(
-            func.sum(RecoveryMeasurement.incremental_recovery),
-            func.sum(RecoveryMeasurement.treatment_recovery),
-            func.sum(RecoveryMeasurement.control_recovery),
-            func.sum(RecoveryMeasurement.estimated_control_recovery),
-        )
-        .select_from(RecoveryMeasurement)
-        .join(RecoveryOutcome, RecoveryMeasurement.outcome_id == RecoveryOutcome.id)
-        .where(RecoveryOutcome.tenant_id == tenant.id)
-    )
-    total_incremental = 0
-    observed_treatment = 0
-    observed_control = 0
-    estimated_baseline = 0
-
-    try:
-        row = meas_res.one_or_none()
-        if row is not None and hasattr(row, "__getitem__"):
-            if isinstance(row[0], (int, float)):
-                total_incremental = int(row[0])
-            if len(row) > 1 and isinstance(row[1], (int, float)):
-                observed_treatment = int(row[1])
-            if len(row) > 2 and isinstance(row[2], (int, float)):
-                observed_control = int(row[2])
-            if len(row) > 3 and isinstance(row[3], (int, float)):
-                estimated_baseline = int(row[3])
-    except Exception:
-        pass
-
-    if total_incremental == 0:
-        try:
-            val = meas_res.scalar_one_or_none()
-            if isinstance(val, (int, float)):
-                total_incremental = int(val)
-        except Exception:
-            pass
-
-    return {
-        "total_incremental_recovery": total_incremental,
-        "incremental_recovery_estimate": total_incremental,
-        "observed_treatment_recovery": observed_treatment,
-        "observed_control_recovery": observed_control,
-        "estimated_counterfactual_recovery": estimated_baseline,
-        "baseline_method": "deterministic_heuristic",
-        "is_estimate": True,
-        "label": "ESTIMATE",
-    }
+    return await DashboardService.get_tenant_metrics(session=session, tenant=tenant)
 
 
 @router.get("/experiments/{experiment_id}")

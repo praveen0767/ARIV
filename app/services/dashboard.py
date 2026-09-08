@@ -217,6 +217,133 @@ class DashboardService:
         }
 
     @classmethod
+    async def get_tenant_metrics(cls, session: AsyncSession, tenant) -> Dict[str, Any]:
+        """
+        Single authoritative source for tenant-wide recovery metrics (GET /v1/recovery/metrics).
+
+        Strictly tenant-scoped and backed only by persisted records. Clearly separates:
+        - VERIFIED RECOVERIES: provider-confirmed payments (outcome RECOVERED / PARTIALLY_RECOVERED).
+        - PIPELINE: actions/cases decisioned & payment links dispatched (NOT yet recovered).
+        - AT RISK: outstanding revenue that is not yet verified as recovered.
+
+        Includes the same incremental/observation estimate keys as before (additive only), so
+        existing consumers of this endpoint keep working unchanged.
+        """
+        tid = tenant.id if hasattr(tenant, "id") else tenant
+
+        cases_res = await session.execute(
+            select(RecoveryCase).where(RecoveryCase.tenant_id == tid)
+        )
+        cases = list(cases_res.scalars().all())
+        total_cases = len(cases)
+        revenue_at_risk = sum(c.amount or 0 for c in cases)
+
+        outcomes_res = await session.execute(
+            select(RecoveryOutcome).where(RecoveryOutcome.tenant_id == tid)
+        )
+        outcomes = list(outcomes_res.scalars().all())
+        recovered_outcomes = [
+            o for o in outcomes
+            if o.outcome_status in (RecoveryOutcomeStatus.RECOVERED, RecoveryOutcomeStatus.PARTIALLY_RECOVERED)
+        ]
+        verified_recoveries = len(recovered_outcomes)
+        verified_revenue_minor = sum(o.recovered_amount or 0 for o in recovered_outcomes)
+        attributed_to_action = sum(
+            1 for o in recovered_outcomes if o.recovery_source == RecoverySource.ACTION_ATTRIBUTED
+        )
+
+        decisions_res = await session.execute(
+            select(DecisionRecord.case_id).where(DecisionRecord.tenant_id == tid)
+        )
+        decisioned_case_ids = {row[0] for row in decisions_res.all()}
+
+        actions_res = await session.execute(
+            select(Action).where(Action.tenant_id == tid)
+        )
+        actions = list(actions_res.scalars().all())
+        executed_case_ids = {a.case_id for a in actions if a.status != ActionStatus.CANCELLED}
+        link_case_ids = {
+            a.case_id for a in actions
+            if a.action_type == RecoveryAction.GENERATE_PAYMENT_LINK and a.status == ActionStatus.SUCCEEDED
+        }
+        waiting_for_payment = [
+            c for c in cases if (c.context or {}).get("recovery_stage") == "WAITING_FOR_PAYMENT"
+        ]
+        pending_minor = sum(c.amount or 0 for c in waiting_for_payment)
+
+        recovery_rate_pct = round((verified_revenue_minor / revenue_at_risk * 100.0), 1) if revenue_at_risk > 0 else 0.0
+
+        # Incremental / observation estimate metrics (unchanged semantics from the original /metrics endpoint)
+        meas_res = await session.execute(
+            select(
+                func.sum(RecoveryMeasurement.incremental_recovery),
+                func.sum(RecoveryMeasurement.treatment_recovery),
+                func.sum(RecoveryMeasurement.control_recovery),
+                func.sum(RecoveryMeasurement.estimated_control_recovery),
+            )
+            .select_from(RecoveryMeasurement)
+            .join(RecoveryOutcome, RecoveryMeasurement.outcome_id == RecoveryOutcome.id)
+            .where(RecoveryOutcome.tenant_id == tid)
+        )
+        total_incremental = 0
+        observed_treatment = 0
+        observed_control = 0
+        estimated_counterfactual = 0
+        try:
+            meas_row = meas_res.one_or_none()
+            if meas_row is not None and hasattr(meas_row, "__getitem__"):
+                if isinstance(meas_row[0], (int, float)):
+                    total_incremental = int(meas_row[0])
+                if len(meas_row) > 1 and isinstance(meas_row[1], (int, float)):
+                    observed_treatment = int(meas_row[1])
+                if len(meas_row) > 2 and isinstance(meas_row[2], (int, float)):
+                    observed_control = int(meas_row[2])
+                if len(meas_row) > 3 and isinstance(meas_row[3], (int, float)):
+                    estimated_counterfactual = int(meas_row[3])
+        except Exception:
+            pass
+
+        if total_incremental == 0:
+            try:
+                val = meas_res.scalar_one_or_none()
+                if isinstance(val, (int, float)):
+                    total_incremental = int(val)
+            except Exception:
+                pass
+
+        return {
+            "tenant_id": str(tid),
+            # Verified provider-confirmed recoveries
+            "verified_recoveries": {
+                "payments_recovered": verified_recoveries,
+                "recovered_revenue_minor": verified_revenue_minor,
+                "recovery_rate_pct": recovery_rate_pct,
+                "attributed_to_action": attributed_to_action,
+            },
+            "at_risk": {
+                "cases_total": total_cases,
+                "revenue_at_risk_minor": revenue_at_risk,
+                "waiting_for_payment_cases": len(waiting_for_payment),
+                "waiting_for_payment_minor": pending_minor,
+            },
+            # Pipeline = dispatched, NOT yet recovered
+            "pipeline": {
+                "cases_decisioned": len(decisioned_case_ids),
+                "actions_executed": len(executed_case_ids),
+                "payment_links_generated": len(link_case_ids),
+            },
+            # Legacy estimate fields (preserved for backward compatibility)
+            "total_incremental_recovery": total_incremental,
+            "incremental_recovery_estimate": total_incremental,
+            "observed_treatment_recovery": observed_treatment,
+            "observed_control_recovery": observed_control,
+            "estimated_counterfactual_recovery": estimated_counterfactual,
+            "baseline_method": "deterministic_heuristic",
+            "is_estimate": True,
+            "label": "ESTIMATE",
+        }
+
+    @classmethod
     async def get_case_list(
         cls,
         session: AsyncSession,
@@ -366,11 +493,16 @@ class DashboardService:
                 "description": f"Classified as {classification.failure_category.value} (Retryability: {classification.retryability.value}, Recoverability: {classification.recoverability.value})."
             })
         if decision:
+            conf_desc = (
+                f"{int(decision.ai_confidence * 100)}%"
+                if decision.ai_confidence is not None
+                else "Confidence unavailable"
+            )
             timeline.append({
                 "stage": "AI_PROPOSAL",
                 "timestamp": decision.timestamp.isoformat(),
                 "status": "COMPLETED",
-                "description": f"ARIV proposed action: {decision.proposed_action.value} (Confidence: {int((decision.ai_confidence or 0.85) * 100)}%)."
+                "description": f"ARIV proposed action: {decision.proposed_action.value} (Confidence: {conf_desc})."
             })
             timeline.append({
                 "stage": "POLICY_EVALUATION",
@@ -502,7 +634,7 @@ class DashboardService:
             "decision": {
                 "proposed_action": act_name,
                 "baseline_action": decision.baseline_action.value if decision else "RETRY_NOW",
-                "ai_confidence": decision.ai_confidence if decision else 0.88,
+                "ai_confidence": (decision.ai_confidence if (decision and decision.ai_confidence is not None) else None),
                 "policy_status": pol_status,
                 "autonomy_level": decision.autonomy_level.value if decision else "FULL_AUTO",
                 "rejection_reason": rejection_reason,

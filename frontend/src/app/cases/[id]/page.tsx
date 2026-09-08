@@ -380,7 +380,7 @@ export default function CaseDetailPage({ params }: { params: Promise<{ id: strin
                 { label: "Failure Category", value: classification.failure_category, cls: "text-red-700" },
                 { label: "Retryability", value: classification.retryability, cls: "" },
                 { label: "Recoverability", value: classification.recoverability, cls: "text-emerald-700" },
-                { label: "AI Confidence", value: `${(decision.ai_confidence * 100).toFixed(0)}%`, cls: "text-blue-700" },
+                { label: "AI Confidence", value: decision.ai_confidence != null ? `${(decision.ai_confidence * 100).toFixed(0)}%` : "N/A", cls: "text-blue-700" },
               ].map(({ label, value, cls }) => (
                 <div key={label} className="bg-white border border-slate-200 rounded-lg p-3">
                   <div className="text-xs text-slate-400 mb-1">{label}</div>

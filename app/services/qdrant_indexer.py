@@ -25,6 +25,36 @@ from app.services.qdrant_memory import QdrantMemoryService, QdrantIndexingError
 
 logger = logging.getLogger("ariv.services.qdrant_indexer")
 
+# Increment whenever the indexing target collection or payload shape changes.
+# COMPLETED entries carrying an older (or missing) version are re-drained into
+# the CURRENT collection so Postgres-authoritative memory is always propagated.
+# Legacy vectors in other collections are never deleted or rewritten.
+KNOWLEDGE_INDEX_VERSION = 2
+
+
+def _needs_processing(
+    item: "KnowledgeOutbox",
+    now: datetime,
+    version: int = KNOWLEDGE_INDEX_VERSION,
+) -> bool:
+    """Decide whether a KnowledgeOutbox row still needs to be indexed.
+
+    - PENDING / FAILED rows are always eligible (subject to retry budget).
+    - CLAIMED rows are claimable again once their lease expires (crash recovery).
+    - COMPLETED rows are re-drained only when their payload predates the CURRENT
+      index version (e.g. a collection rename) so the durable outbox remains the
+      single reconciliation mechanism for Postgres -> Qdrant memory.
+    """
+    if item.attempt_count >= item.max_retries:
+        return False
+    if item.status in (KnowledgeOutboxStatus.PENDING, KnowledgeOutboxStatus.FAILED):
+        return True
+    if item.status == KnowledgeOutboxStatus.CLAIMED:
+        return item.lease_expires_at is not None and item.lease_expires_at < now
+    if item.status == KnowledgeOutboxStatus.COMPLETED:
+        return bool((item.payload or {}).get("index_version", 0) != version)
+    return False
+
 
 class QdrantIndexerWorker:
     """
@@ -51,10 +81,15 @@ class QdrantIndexerWorker:
             logger.info("KnowledgeOutbox already exists for measurement %s", measurement_id)
             return found
 
+        # Copy payload so the outbox row owns its data; stamp the current index
+        # version so the drainer can detect collection-rename re-drains later.
+        stored_payload = dict(payload or {})
+        stored_payload["index_version"] = KNOWLEDGE_INDEX_VERSION
+
         outbox = KnowledgeOutbox(
             tenant_id=tenant_id,
             measurement_id=measurement_id,
-            payload=payload,
+            payload=stored_payload,
             status=KnowledgeOutboxStatus.PENDING,
             attempt_count=0,
             max_retries=3,
@@ -98,6 +133,10 @@ class QdrantIndexerWorker:
                             KnowledgeOutbox.status == KnowledgeOutboxStatus.CLAIMED,
                             KnowledgeOutbox.lease_expires_at < now,
                         ),
+                        # COMPLETED rows are filtered in Python by known index
+                        # version (_needs_processing) — the payload column is
+                        # generic JSON, so the version predicate is kept portable.
+                        KnowledgeOutbox.status == KnowledgeOutboxStatus.COMPLETED,
                     ),
                     KnowledgeOutbox.attempt_count < KnowledgeOutbox.max_retries,
                 )
@@ -108,7 +147,7 @@ class QdrantIndexerWorker:
         )
 
         result = await session.execute(stmt)
-        items = list(result.scalars().all())
+        items = [item for item in result.scalars().all() if _needs_processing(item, now)]
 
         for item in items:
             item.status = KnowledgeOutboxStatus.CLAIMED
@@ -144,6 +183,9 @@ class QdrantIndexerWorker:
             item.status = KnowledgeOutboxStatus.COMPLETED
             item.last_error = None
             item.lease_expires_at = None
+            stored_payload = dict(item.payload or {})
+            stored_payload["index_version"] = KNOWLEDGE_INDEX_VERSION
+            item.payload = stored_payload
             await session.flush()
             logger.info("KnowledgeOutbox %s marked COMPLETED", item.id)
             return True

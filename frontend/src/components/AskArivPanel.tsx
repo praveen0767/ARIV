@@ -264,42 +264,62 @@ export function AskArivPanel() {
         let buffer = "";
         let currentSteps: string[] = ["Context loaded", "Recovery telemetry loaded"];
         let finalContent = "";
+        let streamError: string | undefined;
         let receivedMeta: MessageMeta | undefined = undefined;
+
+        const handleLine = (line: string) => {
+          const trimmed = line.startsWith("\r") ? line.slice(1) : line;
+          if (!trimmed.startsWith("data: ")) return;
+          const raw = trimmed.slice(6).trim();
+          if (!raw || raw === "[DONE]") return;
+          let event: { type: string; text?: string; message?: string };
+          try {
+            event = JSON.parse(raw);
+          } catch {
+            return;
+          }
+          if (event.type === "step") {
+            currentSteps = [...currentSteps, event.text ?? ""];
+            setSteps([...currentSteps]);
+          } else if (event.type === "content") {
+            finalContent += event.text ?? "";
+          } else if (event.type === "error") {
+            streamError = event.message || "The operational agent reported an error.";
+          } else if (event.type === "meta") {
+            receivedMeta = event as MessageMeta;
+          }
+        };
 
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
           buffer += decoder.decode(value, { stream: true });
-
-          const lines = buffer.split("\n");
+          const lines = buffer.split(/\r?\n/);
           buffer = lines.pop() ?? "";
-
           for (const line of lines) {
-            if (!line.startsWith("data: ")) continue;
-            const raw = line.slice(6).trim();
-            if (!raw || raw === "[DONE]") continue;
-            try {
-              const event = JSON.parse(raw);
-              if (event.type === "step") {
-                currentSteps = [...currentSteps, event.text];
-                setSteps([...currentSteps]);
-              } else if (event.type === "content") {
-                finalContent += event.text;
-              } else if (event.type === "meta") {
-                receivedMeta = event as MessageMeta;
-              }
-            } catch {
-              /* ignore parse error */
-            }
+            handleLine(line);
+          }
+        }
+
+        // Flush decoder and any final buffered SSE event after stream completion.
+        buffer += decoder.decode();
+        if (buffer.trim()) {
+          for (const line of buffer.split(/\r?\n/)) {
+            handleLine(line);
           }
         }
 
         const rec = extractRecommendation(finalContent);
 
+        const streamErrorText = streamError
+          ? `${finalContent ? finalContent + "\n\n" : ""}[Operational agent error] ${streamError}`
+          : "";
+
         const assistantMsg: Message = {
           id: (Date.now() + 1).toString(),
           role: "assistant",
           content:
+            streamErrorText ||
             finalContent ||
             "No data available for this query. System is connected and ready for events.",
           steps: currentSteps,
@@ -309,12 +329,22 @@ export function AskArivPanel() {
         };
         setMessages((prev) => [...prev, assistantMsg]);
       } catch (err: any) {
+        // Distinguish a transport failure (reader threw / connection reset) from
+        // an application error, which always carries an HTTP status or message.
+        let detail = "";
+        if (err instanceof TypeError) {
+          detail = "Connection interrupted while streaming from the operational agent. Please retry.";
+        } else if (err && err.message) {
+          detail = err.message;
+        } else {
+          detail = "Unknown failure.";
+        }
         setMessages((prev) => [
           ...prev,
           {
             id: (Date.now() + 1).toString(),
             role: "assistant",
-            content: `Error communicating with operational agent: ${err.message}`,
+            content: `Error communicating with operational agent: ${detail}`,
             timestamp: new Date(),
           },
         ]);
@@ -323,7 +353,7 @@ export function AskArivPanel() {
         setSteps([]);
       }
     },
-    [loading]
+    [loading, pageContext]
   );
 
   // Auto-submit initialQuery if set

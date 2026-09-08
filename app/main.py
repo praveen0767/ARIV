@@ -1,4 +1,5 @@
 import os
+import asyncio
 import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
@@ -20,6 +21,45 @@ logging.basicConfig(
 logging.getLogger("ariv").setLevel(logging.INFO)
 
 logger = logging.getLogger("ariv.startup")
+
+
+async def _knowledge_drain_loop():
+    """Background durable KnowledgeOutbox -> Qdrant reconciliation drainer.
+
+    The durable outbox (created transactionally with each RecoveryMeasurement) is
+    the single producer for Qdrant memory vectors. Its claim-based consumer was
+    never wired to run, so PENDING items could sit forever and collection renames
+    were never reconciled. This loop claims PENDING/FAILED/expired items (and
+    COMPLETED items pending a newer index version) and processes them, using the
+    outbox row itself as the reconciliation record — never writing to Qdrant
+    outside that durable path.
+    """
+    from app.services.qdrant_indexer import QdrantIndexerWorker
+    from app.infrastructure.database import async_session_factory
+
+    interval = float(getattr(settings, "KNOWLEDGE_DRAIN_INTERVAL_SECONDS", 30.0))
+    worker_id = "lifespan_drainer"
+    drain_logger = logging.getLogger("ariv.knowledge_drain")
+    while True:
+        try:
+            async with async_session_factory() as session:
+                items = await QdrantIndexerWorker.claim_pending_items(
+                    session, worker_id=worker_id, batch_size=25, lease_seconds=60
+                )
+                if items:
+                    for item in items:
+                        await QdrantIndexerWorker.process_item(session, item)
+                    await session.commit()
+                    drain_logger.info(
+                        "Knowledge drainer processed %d item(s) in this sweep", len(items)
+                    )
+        except asyncio.CancelledError:
+            break
+        except Exception as exc:
+            # A failed sweep never breaks the loop; the outbox lease reclaims
+            # claimed rows and the next sweep retries them.
+            drain_logger.error("Knowledge drainer sweep failed (non-fatal): %s", exc)
+        await asyncio.sleep(interval)
 
 
 async def _bootstrap_demo_tenant():
@@ -96,7 +136,23 @@ async def lifespan(application: FastAPI):
         except Exception as exc:
             logger.error(f"Demo tenant bootstrap failed (non-fatal): {exc}")
 
+    # Start the durable KnowledgeOutbox -> Qdrant drainer (the missing consumer
+    # for the durable vector-index queue). Cancelled on shutdown.
+    drain_task = None
+    try:
+        drain_task = asyncio.create_task(_knowledge_drain_loop())
+        logger.info("KnowledgeOutbox drainer started (interval=%ss)", settings.KNOWLEDGE_DRAIN_INTERVAL_SECONDS)
+    except Exception as exc:
+        logger.error(f"Could not start knowledge drainer (non-fatal): {exc}")
+
     yield  # Application is now live and serving requests.
+
+    if drain_task is not None:
+        drain_task.cancel()
+        try:
+            await drain_task
+        except (asyncio.CancelledError, Exception):
+            pass
 
 
 app = FastAPI(

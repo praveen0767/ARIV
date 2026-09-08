@@ -2,6 +2,7 @@ import logging
 import json
 import uuid as _uuid
 import re
+import asyncio
 from typing import AsyncGenerator, Optional, Dict, Any, List
 
 from fastapi import APIRouter, Depends, Header, HTTPException
@@ -23,6 +24,7 @@ from app.services.execution_worker import ExecutionWorker
 from app.infrastructure.adapters import get_razorpay_adapter
 from app.services.activity import ActivityService
 from app.services.qdrant_memory import QdrantMemoryService
+from app.services.dashboard import DashboardService
 from app.services.ingestion import resolve_tenant
 import hmac
 import hashlib
@@ -85,9 +87,227 @@ def _fmt_inr(minor: int) -> str:
     return f"₹{minor / 100:,.2f}"
 
 
+def format_ai_confidence(dec_rec: Optional["DecisionRecord"]) -> str:
+    """Render recorded AI confidence without ever fabricating a value.
+
+    The decision engine stores the real float it produced (0.0 when no LLM is
+    configured). When no decision record exists, or the record carries no
+    confidence, the UI says so explicitly instead of printing a made-up per cent.
+    """
+    if dec_rec is not None and dec_rec.ai_confidence is not None:
+        return f"{int(dec_rec.ai_confidence * 100)}%"
+    return "Confidence unavailable"
+
+
+# ---------------------------------------------------------------------------
+# Conversational greeting / identity / capability routing
+# ---------------------------------------------------------------------------
+
+_CONVERSATIONAL_PHRASES = (
+    "good morning",
+    "good afternoon",
+    "good evening",
+    "good day",
+    "how are you",
+    "how's it going",
+    "how is it going",
+    "what can you do",
+    "what do you do",
+    "what can you help with",
+    "how can you help",
+    "can you help",
+    "help me",
+    "i need help",
+    "what are your capabilities",
+    "what can you tell me",
+    "who are you",
+    "what are you",
+    "are you ariv",
+    "nice to meet you",
+    "thank you",
+    "thanks a lot",
+    "thanks so much",
+    "thank you so much",
+    "great thanks",
+    "awesome thanks",
+    "welcome",
+)
+
+_CONVERSATIONAL_WORDS = frozenset({
+    "hi", "hello", "hey", "howdy", "hola", "yo",
+    "thanks", "thank", "thx", "ty",
+    "help", "greetings",
+})
+
+# Concrete operational intents that a greeting word must never override when it
+# is merely prefixed to a real request (e.g. "hey, recover this case").
+_OPERATIONAL_PINNERS = (
+    "recover this case",
+    "execute recovery",
+    "trigger recovery",
+    "where is the payment link",
+    "payment link",
+    "is ariv healthy",
+    "system health",
+    "who's pending",
+    "who is pending",
+    "how would ariv recover",
+)
+
+
+def is_conversational_greeting(q: str) -> bool:
+    """True for simple conversational input (greeting, courtesy, identity or
+    capability question). Aggressive by design so a bare "hi" never falls into
+    case-diagnosis or the workspace "no cases" guard — but it NEVER overrides an
+    aggregate, case-pinned, or concrete operational request that merely contains
+    a greeting word as a prefix.
+    """
+    q = (q or "").lower().strip()
+    if not q or len(q) > 120:
+        return False
+    if is_aggregate_metrics_query(q):
+        return False
+    if _query_pins_case(q):
+        return False
+    if any(op in q for op in _OPERATIONAL_PINNERS):
+        return False
+    if any(p in q for p in _CONVERSATIONAL_PHRASES):
+        return True
+    return bool(set(re.findall(r"[a-z']+", q)) & _CONVERSATIONAL_WORDS)
+
+
+def greeting_response_lines(q: str) -> List[str]:
+    """Lightweight, capability-grounded conversational response.
+
+    Only real ASK ARIV capabilities are described — every item is backed by an
+    existing routing branch or the authoritative metrics source.
+    """
+    ql = (q or "").lower().strip()
+
+    expressly_identity = any(
+        p in ql for p in ("what can you do", "what do you do", "can you help",
+                          "help me", "i need help", "what are your capabilities",
+                          "who are you", "what are you", "are you ariv")
+    )
+    expressly_thanks = any(
+        p in ql for p in ("thank", "thx", "ty", "welcome", "great thanks",
+                          "awesome thanks")
+    )
+
+    if expressly_thanks:
+        lines = ["You're welcome! I'm ASK ARIV, your revenue-recovery control layer."]
+    elif expressly_identity:
+        lines = ["I'm ASK ARIV, the autonomous revenue-recovery control layer for this workspace."]
+    else:
+        lines = ["Hey! I'm ASK ARIV, your revenue-recovery control layer."]
+
+    lines.append("")
+    lines.append("WHAT I CAN DO")
+    lines.append("=" * 45)
+    lines.append("  • Explain active recovery cases, decisions, and outcomes")
+    lines.append("  • Show payment-link status and where a case is in the pipeline")
+    lines.append("  • Report verified workspace recovery metrics (provider-confirmed only)")
+    lines.append("  • Trigger an authorized recovery action for a case (with policy firewalls)")
+    lines.append("  • Explain policy rejections and run a recovery preview")
+    lines.append("  • Report pending recoveries, system health, and the global snapshot")
+    lines.append("")
+    lines.append("SUGGESTED PROMPTS")
+    lines.append("  • 'What is happening right now?'")
+    lines.append("  • 'How much was recovered?'")
+    lines.append("  • 'What's happening with this case?'")
+    lines.append("  • 'Where is the payment link?'")
+    lines.append("  • 'Recover this case.'")
+    lines.append("  • 'Why is this case still pending?'")
+    lines.append("  • 'Is ARIV healthy?'")
+    return lines
+
+
+def _query_pins_case(q: str) -> bool:
+    """True when the query text explicitly names a single case (a UUID/hex id or
+    a case-proximate phrase). Case-pinned intents stay case-scoped regardless of
+    drawer context or any aggregate/greeting-looking keywords."""
+    return bool(
+        re.search(r"[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})?", q)
+    ) or any(
+        t in q for t in [
+            "this case",
+            "that case",
+            "this one",
+            " a case",
+            "the case",
+            "case id",
+            "case:",
+            "case -",
+        ]
+    )
+
+
+def is_aggregate_metrics_query(q: str) -> bool:
+    """True when a lowercased query asks for tenant-wide (workspace) recovery metrics
+    rather than a single-case diagnosis. Aggregate intent has the highest routing
+    precedence: it must win even when the drawer is open on a specific case page.
+    Only an explicit case reference in the query text pins the intent to one case."""
+    _aggregate_kw = any(
+        kw in q
+        for kw in [
+            "how many payments",
+            "how many recoveries",
+            "how many recovery",
+            "how many recovered",
+            "how many were recovered",
+            "number of payments",
+            "number of recoveries",
+            "payments were recovered",
+            "payments recovered",
+            "recoveries have happened",
+            "recoveries have been",
+            "payments have been recovered",
+            "recovery rate",
+            "recovered revenue",
+            "revenue recovered",
+            "revenue at risk",
+            "how much at risk",
+            "amount at risk",
+            "at risk",
+            "risk amount",
+            "total recovered",
+            "total recovered amount",
+            "total amount recovered",
+            "amount recovered",
+            "recovered amount",
+            "how much was recovered",
+            "how much recovered",
+            "how much was paid back",
+            "how much revenue recovered",
+            "total revenue",
+            "total at risk",
+            "so far",
+            "until now",
+            "untill now",
+            "to date",
+            "entirely",
+            "overall",
+            "all time",
+            "in total",
+            "ever recovered",
+            "across all",
+            "any payments",
+            "any recoveries",
+            "any revenue",
+        ]
+    )
+    return (not _query_pins_case(q)) and _aggregate_kw
+
+
 # ---------------------------------------------------------------------------
 # Streaming SSE generator
 # ---------------------------------------------------------------------------
+
+def _sse_event(type_: str, payload: Any) -> str:
+    if isinstance(payload, str):
+        return f"data: {json.dumps({'type': type_, 'text': payload})}\n\n"
+    return f"data: {json.dumps({'type': type_, **payload})}\n\n"
+
 
 async def _agent_stream(
     query: str,
@@ -96,12 +316,68 @@ async def _agent_stream(
     current_route: Optional[str] = None,
     context_case_id: Optional[str] = None,
 ) -> AsyncGenerator[str, None]:
+    """SSE wrapper. Guarantees a structured `error` event (code + message) is
+    emitted instead of a bare connection close when any stream branch raises, so
+    clients can surface operational errors distinctly from transport failures."""
+    try:
+        async for event in _agent_stream_impl(
+            query=query,
+            tenant_id=tenant_id,
+            db=db,
+            current_route=current_route,
+            context_case_id=context_case_id,
+        ):
+            yield event
+    except asyncio.CancelledError:
+        raise
+    except Exception as exc:
+        logger.error("Agent stream failed: %s", exc)
+        yield _sse_event("error", {
+            "code": "OPERATIONAL_ERROR",
+            "message": str(exc)[:400],
+        })
+        yield "data: [DONE]\n\n"
+
+
+async def _agent_stream_impl(
+    query: str,
+    tenant_id: str,
+    db: AsyncSession,
+    current_route: Optional[str] = None,
+    context_case_id: Optional[str] = None,
+) -> AsyncGenerator[str, None]:
     q = query.lower().strip()
 
-    def _event(type_: str, payload: Any) -> str:
-        if isinstance(payload, str):
-            return f"data: {json.dumps({'type': type_, 'text': payload})}\n\n"
-        return f"data: {json.dumps({'type': type_, **payload})}\n\n"
+    _event = _sse_event
+
+    # -----------------------------------------------------------------------
+    # BRANCH GRT: Conversational greeting / identity / capability question
+    # Pure text short-circuit at the TOP of the stream — before any DB access,
+    # case resolution, the aggregate branch, or any operational branch. A bare
+    # "hi" (typed anywhere, including the drawer of a specific case page, or in
+    # an empty workspace) always gets a normal spoken answer. Aggregate queries,
+    # case-pinned queries and concrete operational requests are explicitly
+    # excluded by is_conversational_greeting, so their existing routes are
+    # untouched.
+    # -----------------------------------------------------------------------
+    if is_conversational_greeting(q):
+        yield _event("step", "Reading you loud and clear…")
+        gmeta: Dict[str, Any] = {
+            "case_id": None,
+            "payment_link_url": None,
+            "action_type": None,
+            "status": None,
+            "can_recover": False,
+            "links": [
+                {"label": "View Operational Cases", "href": "/cases", "is_external": False},
+                {"label": "View Recovery Impact", "href": "/impact", "is_external": False},
+                {"label": "System Health", "href": "/system", "is_external": False},
+            ],
+        }
+        yield _event("meta", gmeta)
+        yield _event("content", "\n".join(greeting_response_lines(q)))
+        yield "data: [DONE]\n\n"
+        return
 
     # --- Step 1: Query tenant cases
     yield _event("step", "Querying tenant recovery cases…")
@@ -275,7 +551,81 @@ async def _agent_stream(
     kw_pending = any(kw in q for kw in ["pending", "waiting", "in progress", "open cases", "not yet"])
     kw_revenue = any(kw in q for kw in ["revenue", "at risk", "how much at risk", "incremental"])
 
+    # -----------------------------------------------------------------------
+    # Aggregate / workspace metrics intent detection.
+    # Highest precedence: even when the drawer is open on a specific case page
+    # (context_case_id -> target_case resolved), tenant-wide questions must be
+    # answered from authoritative workspace metrics, NOT a single-case
+    # diagnosis. Only an explicit case reference in the QUERY TEXT (UUID or
+    # "this case" / "the case" phrasing) pins the intent to a single case.
+    # -----------------------------------------------------------------------
+    is_aggregate = is_aggregate_metrics_query(q)
+
     lines: List[str] = []
+
+    # -----------------------------------------------------------------------
+    # BRANCH AGG: Workspace / Aggregate Recovery Metrics (highest precedence)
+    # Answer from the authoritative persisted metrics source (GET /v1/recovery/metrics).
+    # No values are recomputed here; whatever the metrics source returns is formatted.
+    # -----------------------------------------------------------------------
+    if is_aggregate:
+        yield _event("step", "Compiling authoritative tenant-wide recovery metrics…")
+        try:
+            metrics = await DashboardService.get_tenant_metrics(db, tenant_id)
+        except Exception as e:
+            logger.warning("Aggregate metrics lookup failed: %s", e)
+            metrics = None
+
+        if not metrics:
+            lines.append("Could not load workspace recovery metrics right now.")
+            lines.append("Please check that the recovery stack is running.")
+        else:
+            vr = metrics.get("verified_recoveries") or {}
+            ar = metrics.get("at_risk") or {}
+            pl = metrics.get("pipeline") or {}
+            paid = int(vr.get("payments_recovered") or 0)
+            rev = int(vr.get("recovered_revenue_minor") or 0)
+            rate = float(vr.get("recovery_rate_pct") or 0.0)
+            attr = int(vr.get("attributed_to_action") or 0)
+            at_risk_amount = int(ar.get("revenue_at_risk_minor") or 0)
+            total_cases = int(ar.get("cases_total") or 0)
+            waiting = int(ar.get("waiting_for_payment_cases") or 0)
+            waiting_minor = int(ar.get("waiting_for_payment_minor") or 0)
+            decisioned = int(pl.get("cases_decisioned") or 0)
+            executed = int(pl.get("actions_executed") or 0)
+            links = int(pl.get("payment_links_generated") or 0)
+
+            lines.append("ARIV WORKSPACE RECOVERY METRICS")
+            lines.append("=" * 45)
+            lines.append("")
+            lines.append("VERIFIED RECOVERIES (provider-confirmed)")
+            lines.append(f"  Payments Recovered:   {paid}")
+            lines.append(f"  Verified Revenue:     {_fmt_inr(rev)}")
+            if at_risk_amount > 0:
+                lines.append(f"  Recovery Rate:        {rate:.1f}% of revenue at risk")
+            if attr:
+                lines.append(f"  Action-Attributed:    {attr} of {paid}")
+            lines.append("")
+            lines.append("NOT YET RECOVERED / AT RISK")
+            lines.append(f"  Revenue at Risk:      {_fmt_inr(at_risk_amount)} ({total_cases} cases)")
+            if waiting:
+                lines.append(f"  Waiting for Payment:  {waiting} case(s) · {_fmt_inr(waiting_minor)}")
+            lines.append("")
+            lines.append("PIPELINE (dispatched, NOT recovered)")
+            lines.append(f"  Cases Decisioned:     {decisioned}")
+            lines.append(f"  Actions Executed:     {executed}")
+            lines.append(f"  Payment Links Sent:   {links}")
+            lines.append("")
+            lines.append("Recovery counts include only verified provider confirmations. Dispatched")
+            lines.append("payment links and pending cases are not counted as recovered until the")
+            lines.append("payment webhook is confirmed and attributed.")
+
+        meta["links"].append({"label": "View Recovery Impact", "href": "/impact", "is_external": False})
+        meta["links"].append({"label": "View Operational Cases", "href": "/cases", "is_external": False})
+        yield _event("meta", meta)
+        yield _event("content", "\n".join(lines))
+        yield "data: [DONE]\n\n"
+        return
 
     # -----------------------------------------------------------------------
     # BRANCH: No cases in workspace (except health check queries)
@@ -347,7 +697,7 @@ async def _agent_stream(
                 meta["payment_link_url"] = plink_url
                 meta["status"] = "WAITING_FOR_PAYMENT"
                 if plink_url:
-                    meta["links"].append({"label": "Open Razorpay Payment Link", "href": plink_url, "is_external": true})
+                    meta["links"].append({"label": "Open Razorpay Payment Link", "href": plink_url, "is_external": True})
 
                 lines.append(f"Case {cid_short}… is currently WAITING_FOR_PAYMENT.")
                 lines.append("")
@@ -452,7 +802,7 @@ async def _agent_stream(
                     meta["status"] = action.status.value if hasattr(action.status, "value") else str(action.status)
                     meta["payment_link_url"] = plink_url or None
                     if plink_url:
-                        meta["links"].append({"label": "Open Razorpay Payment Link", "href": plink_url, "is_external": true})
+                        meta["links"].append({"label": "Open Razorpay Payment Link", "href": plink_url, "is_external": True})
 
                     lines.append(f"Case {cid_short}… authorized recovery action processed.")
                     lines.append("")
@@ -595,7 +945,10 @@ async def _agent_stream(
 
         prop_act = dec_rec.proposed_action.value if dec_rec else (act_rec.action_type.value if act_rec else "GENERATE_PAYMENT_LINK")
         base_act = dec_rec.baseline_action.value if (dec_rec and dec_rec.baseline_action) else "RETRY_NOW"
-        confidence = int((dec_rec.ai_confidence or 0.88) * 100) if dec_rec else 88
+        # Confidence is NEVER fabricated: it is the value the decision engine
+        # actually recorded (0.0 when no LLM was configured). When there is no
+        # decision record, the UI says so instead of printing a made-up per cent.
+        confidence_text = format_ai_confidence(dec_rec)
         pol_status = dec_rec.policy_status.value if dec_rec else "APPROVED"
         autonomy = dec_rec.autonomy_level.value if dec_rec else "FULL_AUTO"
 
@@ -632,7 +985,7 @@ async def _agent_stream(
         lines.append("[DECISION]")
         lines.append(f"  • Proposed Action:   {prop_act}")
         lines.append(f"  • Baseline Action:   {base_act}")
-        lines.append(f"  • AI Confidence:     {confidence}%")
+        lines.append(f"  • AI Confidence:     {confidence_text}")
         lines.append("")
         lines.append("[POLICY FIREWALL]")
         lines.append(f"  • Gate Status:       {pol_status}")
@@ -892,7 +1245,7 @@ async def _agent_stream(
     # -----------------------------------------------------------------------
     elif kw_pending:
         yield _event("step", "Scanning operational cases queue for pending recoveries…")
-        pending = [c for c in cases if c.status in (CaseStatus.OPEN, CaseStatus.RISK_ASSESSED, CaseStatus.IN_PROGRESS)]
+        pending = [c for c in cases if c.status in (CaseStatus.OPEN, CaseStatus.RISK_ASSESSED, CaseStatus.PENDING_APPROVAL)]
         lines.append(f"PENDING RECOVERIES ({len(pending)} active)")
         lines.append("=" * 45)
         lines.append("")
@@ -913,7 +1266,7 @@ async def _agent_stream(
     # DEFAULT BRANCH: General Contextual Operational Assistant
     # -----------------------------------------------------------------------
     else:
-        open_cases = [c for c in cases if c.status in (CaseStatus.OPEN, CaseStatus.RISK_ASSESSED, CaseStatus.IN_PROGRESS)]
+        open_cases = [c for c in cases if c.status in (CaseStatus.OPEN, CaseStatus.RISK_ASSESSED, CaseStatus.PENDING_APPROVAL)]
         recovered = [c for c in cases if c.status == CaseStatus.RECOVERED]
         total_at_risk = sum(c.amount or 0 for c in cases)
 

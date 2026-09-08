@@ -28,6 +28,10 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL_NAME: str = "BAAI/bge-base-en-v1.5"
     EMBEDDING_DIMENSION: int = 768
 
+    # Durable KnowledgeOutbox drainer (background reconciliation of Postgres ->
+    # Qdrant memory). Seconds between claim/process sweeps.
+    KNOWLEDGE_DRAIN_INTERVAL_SECONDS: float = 30.0
+
     
     # Security & Provider Credentials
     INTERNAL_API_KEY: str = "test_internal_key"

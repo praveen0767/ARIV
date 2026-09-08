@@ -28,6 +28,8 @@ from app.domain.classification import RecoveryClassification, FailureCategory, R
 from app.domain.decision import DecisionRecord, RecoveryAction, PolicyStatus, AutonomyLevel
 from app.domain.action import Action, ActionStatus
 from app.domain.recovery.recovery_outcome import RecoveryOutcome, RecoveryOutcomeStatus, RecoverySource
+from app.api.agent import is_aggregate_metrics_query
+from app.api.agent import is_conversational_greeting
 
 
 ACCOUNT_ID = "acc_demo_test"
@@ -254,3 +256,275 @@ def test_agent_execution_meta_status_reflects_blocked_action():
     assert '"status": "SUCCEEDED"' not in resp.text
     assert "did not succeed" in resp.text
     mock_process.assert_awaited_once()
+
+
+# ---------------------------------------------------------------------------
+# Aggregate / workspace metrics intent routing (highest precedence)
+# ---------------------------------------------------------------------------
+
+def test_aggregate_metrics_query_intent():
+    """Workspace-level questions (including typos) must classify as aggregate."""
+    assert is_aggregate_metrics_query("how many payments recoveredd untill now?")
+    assert is_aggregate_metrics_query("how much revenue have we recovered overall?")
+    assert is_aggregate_metrics_query("how many recoveries have happened entirely?")
+    assert is_aggregate_metrics_query("what is our recovery rate?")
+    assert is_aggregate_metrics_query("how much revenue is at risk?")
+    assert is_aggregate_metrics_query("how much revenue do we have at risk?")
+    assert is_aggregate_metrics_query("how many payments were recovered so far?")
+
+    # Post-fix coverage: exact production phrases that previously fell through
+    # to the default/case branches.
+    assert is_aggregate_metrics_query("how many payments recovered until now?")
+    assert is_aggregate_metrics_query("how much was recovered?")
+    assert is_aggregate_metrics_query("how much recovered?")
+    assert is_aggregate_metrics_query("how many payments were recovered?")
+    assert is_aggregate_metrics_query("total recovered")
+    assert is_aggregate_metrics_query("total recovered amount across all cases?")
+    assert is_aggregate_metrics_query("what is the recovered amount?")
+    assert is_aggregate_metrics_query("how much amount recovered?")
+
+
+def test_case_pinned_queries_are_not_aggregate():
+    """Queries that reference a specific case must stay case-scoped."""
+    assert not is_aggregate_metrics_query("what's happening with this case?")
+    assert not is_aggregate_metrics_query("was the payment actually recovered?")
+    assert not is_aggregate_metrics_query("where is the payment link?")
+    assert not is_aggregate_metrics_query("why is this case still pending?")
+    assert not is_aggregate_metrics_query("recover this case")
+    assert not is_aggregate_metrics_query("how much revenue is at risk for that case?")
+    assert not is_aggregate_metrics_query(
+        "what happened with 516244d8-e20d-4ef5-af5d-1cc02eac075e?"
+    )
+
+
+def test_aggregate_query_answered_from_case_page_context():
+    """
+    Regression: aggregate questions opened from a specific case drawer
+    (case_id + /cases/{id} route) must return workspace metrics, NOT the
+    single-case diagnosis that used to hijack the response.
+    """
+    mock_tenant = Tenant(id=TENANT_ID, type=TenantType.CONSUMER, name="Test Tenant")
+    case_id = str(uuid.uuid4())
+
+    with patch("app.api.agent.resolve_tenant", new_callable=AsyncMock, return_value=mock_tenant):
+        resp = client.post(
+            "/v1/agent/query",
+            json={
+                "query": "how many payments recoveredd untill now?",
+                "current_route": f"/cases/{case_id}",
+                "case_id": case_id,
+            },
+            headers=auth_headers(),
+        )
+
+    assert resp.status_code == 200
+    assert "ARIV WORKSPACE RECOVERY METRICS" in resp.text
+    assert "Payments Recovered:   0" in resp.text
+    assert "STATUS & DIAGNOSIS" not in resp.text
+
+
+def test_case_pinned_query_keeps_own_branch():
+    """Case-control intents must NOT be rerouted to the aggregate branch."""
+    mock_tenant = Tenant(id=TENANT_ID, type=TenantType.CONSUMER, name="Test Tenant")
+
+    with patch("app.api.agent.resolve_tenant", new_callable=AsyncMock, return_value=mock_tenant):
+        resp = client.post(
+            "/v1/agent/query",
+            json={"query": "Recover this case."},
+            headers=auth_headers(),
+        )
+
+    assert resp.status_code == 200
+    assert "No recovery cases found in this workspace." in resp.text
+    assert "WORKSPACE RECOVERY METRICS" not in resp.text
+
+
+def test_aggregate_how_much_was_recovered_answered_from_case_page():
+    """
+    'how much was recovered?' opened from a specific case drawer must return the
+    authoritative workspace metrics, not the single-case diagnosis that used to
+    hijack the response.
+    """
+    mock_tenant = Tenant(id=TENANT_ID, type=TenantType.CONSUMER, name="Test Tenant")
+    case_id = str(uuid.uuid4())
+
+    with patch("app.api.agent.resolve_tenant", new_callable=AsyncMock, return_value=mock_tenant):
+        resp = client.post(
+            "/v1/agent/query",
+            json={
+                "query": "how much was recovered?",
+                "current_route": f"/cases/{case_id}",
+                "case_id": case_id,
+            },
+            headers=auth_headers(),
+        )
+
+    assert resp.status_code == 200
+    assert "ARIV WORKSPACE RECOVERY METRICS" in resp.text
+    assert "STATUS & DIAGNOSIS" not in resp.text
+
+
+def test_agent_stream_emits_structured_error_event():
+    """
+    A failure inside the stream must surface as a structured SSE `error` event
+    (code + message) followed by DONE — never a bare connection close.
+    """
+    mock_tenant = Tenant(id=TENANT_ID, type=TenantType.CONSUMER, name="Test Tenant")
+
+    async def _failing_execute(*a, **k):
+        raise RuntimeError("simulated operational failure")
+
+    mock_db = AsyncMock()
+    mock_db.execute = _failing_execute
+
+    async def _override():
+        yield mock_db
+
+    app.dependency_overrides[get_db_session] = _override
+    try:
+        with patch("app.api.agent.resolve_tenant", new_callable=AsyncMock, return_value=mock_tenant):
+            resp = client.post(
+                "/v1/agent/query",
+                json={"query": "Is ARIV healthy?"},
+                headers=auth_headers(),
+            )
+    finally:
+        app.dependency_overrides.pop(get_db_session, None)
+
+    assert resp.status_code == 200
+    assert '"type": "error"' in resp.text
+    assert 'OPERATIONAL_ERROR' in resp.text
+    assert "simulated operational failure" in resp.text
+    assert "[DONE]" in resp.text
+
+
+# ---------------------------------------------------------------------------
+# BRANCH GRT: conversational greeting / identity / capability routing
+# ---------------------------------------------------------------------------
+
+
+def test_is_conversational_greeting_true_positives():
+    greetings = [
+        "hi",
+        "hello",
+        "hey",
+        "howdy",
+        "good morning",
+        "good evening",
+        "how are you",
+        "what can you do?",
+        "what do you do?",
+        "who are you?",
+        "are you ARIV?",
+        "thank you",
+        "thanks a lot",
+        "help",
+        "Hi",
+        "HELLO THERE",
+    ]
+    for g in greetings:
+        assert is_conversational_greeting(g), f"expected greeting for: {g!r}"
+
+
+def test_is_conversational_greeting_false_for_operational_queries():
+    not_greetings = [
+        "how much was recovered?",
+        "how many payments recovered until now?",
+        "total recovered",
+        "what's happening with this case?",
+        "was the payment actually recovered?",
+        "where is the payment link?",
+        "recover this case.",
+        "why is this case still pending?",
+        "is ariv healthy?",
+        "who's pending?",
+        "how would ariv recover this case?",
+        "hey, recover this case.",
+        "hi, where is the payment link?",
+        "this case needs a check",
+        "long " * 40,
+        "",
+        "tell me about quantum physics",
+    ]
+    for ng in not_greetings:
+        assert not is_conversational_greeting(ng), f"expected NOT greeting for: {ng!r}"
+
+
+def test_greeting_answered_in_empty_workspace():
+    """Bare greetings must be answered even when the tenant has zero cases and
+    no drawer context — beating the 'No recovery cases found' guard."""
+    mock_tenant = Tenant(id=TENANT_ID, type=TenantType.CONSUMER, name="Test Tenant")
+
+    with patch("app.api.agent.resolve_tenant", new_callable=AsyncMock, return_value=mock_tenant):
+        resp = client.post(
+            "/v1/agent/query",
+            json={"query": "hi"},
+            headers=auth_headers(),
+        )
+
+    assert resp.status_code == 200
+    assert "Hey! I'm ASK ARIV" in resp.text
+    assert "No recovery cases found in this workspace." not in resp.text
+    assert "RECOVERY METRICS" not in resp.text
+    assert "STATUS & DIAGNOSIS" not in resp.text
+    assert "[DONE]" in resp.text
+
+
+def test_greeting_never_hijacked_by_case_drawer_context():
+    """A greeting sent from a case page drawer must NOT be treated as a request
+    to diagnose that case — conversational intent wins, case text is absent."""
+    mock_tenant = Tenant(id=TENANT_ID, type=TenantType.CONSUMER, name="Test Tenant")
+    case_id = str(uuid.uuid4())
+
+    with patch("app.api.agent.resolve_tenant", new_callable=AsyncMock, return_value=mock_tenant):
+        resp = client.post(
+            "/v1/agent/query",
+            json={
+                "query": "hello",
+                "current_route": f"/cases/{case_id}",
+                "case_id": case_id,
+            },
+            headers=auth_headers(),
+        )
+
+    assert resp.status_code == 200
+    assert "Hey! I'm ASK ARIV" in resp.text
+    assert "STATUS & DIAGNOSIS" not in resp.text
+    assert "[DONE]" in resp.text
+
+
+def test_capability_question_answers_with_grounded_capabilities():
+    mock_tenant = Tenant(id=TENANT_ID, type=TenantType.CONSUMER, name="Test Tenant")
+
+    with patch("app.api.agent.resolve_tenant", new_callable=AsyncMock, return_value=mock_tenant):
+        resp = client.post(
+            "/v1/agent/query",
+            json={"query": "what can you do?"},
+            headers=auth_headers(),
+        )
+
+    assert resp.status_code == 200
+    assert "revenue-recovery control layer" in resp.text
+    assert "payment-link status" in resp.text
+    assert "recovery metrics" in resp.text
+    assert "Recover this case" in resp.text
+    assert "[DONE]" in resp.text
+
+
+def test_greeting_prefix_does_not_reroute_operational_intent():
+    """A greeting prefixed to an operational request must keep the operational
+    routing (here: recover-this-case falls through to the case branch, which in
+    an empty workspace reports no cases — it must NOT be answered as a chat)."""
+    mock_tenant = Tenant(id=TENANT_ID, type=TenantType.CONSUMER, name="Test Tenant")
+
+    with patch("app.api.agent.resolve_tenant", new_callable=AsyncMock, return_value=mock_tenant):
+        resp = client.post(
+            "/v1/agent/query",
+            json={"query": "hey, recover this case."},
+            headers=auth_headers(),
+        )
+
+    assert resp.status_code == 200
+    assert "Hey! I'm ASK ARIV" not in resp.text
+    assert "No recovery cases found in this workspace." in resp.text
+    assert "[DONE]" in resp.text
