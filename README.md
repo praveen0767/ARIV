@@ -22,18 +22,18 @@
 
 ## 🏆 Buildathon Submission Summary
 
-**Problem:** Recover failed payments intelligently instead of blindly retrying everything.
+ARIV is built to recover failed payments intelligently instead of blindly retrying them.
 
 ### Key Claims
 
 - ✅ **Real Razorpay Test API integration** — provider execution is not mocked.
 - ✅ **Deterministic financial safety** — AI proposes; `PolicyEngine` authorizes.
-- ✅ **No single AI layer can move money independently.**
-- ✅ **258/258 tests passing** — full stack reproducible locally with Docker Compose.
+- ✅ **No single AI layer can independently move money.**
+- ✅ **258 tests passing** across the implemented stack.
 - ✅ **100% decision coverage** in both reported Test-Mode benchmark cohorts.
-- ✅ **Honest recovery measurement** — failure-only cohorts explicitly report **0 verified recoveries**.
-- ✅ **Economic optimization** — ENR ranking + systemic route intelligence.
-- ✅ **Real provider-confirmed recovery** — demonstrated separately in Razorpay Test Mode.
+- ✅ **Honest recovery measurement** — benchmark cohorts report **0 verified recoveries** because no customer completed those generated recovery actions.
+- ✅ **Economic optimization** through ENR ranking and systemic route intelligence.
+- ✅ **Real provider-confirmed recovery** demonstrated separately in Razorpay Test Mode.
 
 > **AI reasons. Economic logic ranks. PolicyEngine authorizes. Infrastructure executes. Razorpay confirms. Attribution measures.**
 
@@ -43,7 +43,7 @@
 
 A failed payment is not automatically a retry candidate.
 
-ARIV determines:
+ARIV asks:
 
 ```text
 Why did the payment fail?
@@ -52,18 +52,16 @@ Is recovery appropriate?
         ↓
 Which action has the best expected value?
         ↓
-Is that action allowed?
+Is that action allowed by policy?
         ↓
 Can it execute safely?
         ↓
-Did Razorpay actually confirm payment?
+Did Razorpay confirm payment?
         ↓
-Can the recovered revenue be attributed?
-```
+Can the result be attributed to the recovery action?
 
-### Core system flow
+Core pipeline:
 
-```text
 Razorpay Failure
       ↓
 Webhook Verification
@@ -94,18 +92,15 @@ Provider Reconciliation
       ↓
 Recovery Outcome
       ↓
-Attribution
-      ↓
-Measurement
-```
+Attribution + Measurement
 
-**Action success is not recovery.** Revenue is counted only after provider-confirmed payment and recovery attribution.
+Action execution is not treated as revenue recovery. Recovery revenue requires provider confirmation and attribution.
+
 
 ---
 
-## 🏗️ Architecture
+🏗️ Architecture
 
-```mermaid
 flowchart TD
     RP[Razorpay Events] --> WH[Webhook Verification]
     WH --> PE[ProviderEvent Persistence]
@@ -180,95 +175,107 @@ flowchart TD
     class TG,UI,ASK operator;
     class REDIS redis;
     class STOP stop;
-```
 
-> **Architectural boundary:** judgment ≠ authority ≠ execution ≠ provider truth.
+> Architectural boundary: judgment ≠ authority ≠ execution ≠ provider truth.
 
-The systems-integration layer is a typed capability boundary for controlled actions; it is not an unrestricted autonomous money-movement gateway.
+
+
+The integration layer is a typed capability boundary for controlled actions, not an unrestricted autonomous money-movement gateway.
+
 
 ---
 
-## 🤖 Decisioning
+🤖 Decisioning
 
-ARIV separates responsibilities deliberately:
+ARIV separates reasoning from financial authorization and execution.
 
-| Layer | Responsibility |
-|---|---|
-| **AI / Agentic layer** | Diagnose, retrieve context, propose |
-| **Economic Optimizer** | Rank candidates using ENR |
-| **PolicyEngine** | Deterministic financial authorization |
-| **Outbox + Worker** | Durable execution |
-| **Razorpay** | Provider-side execution + truth |
-| **Attribution** | Establish recovery linkage |
+Layer	Responsibility
 
-```text
+AI / Agentic	Diagnose, retrieve context, propose
+Economic Optimizer	Rank candidate actions
+PolicyEngine	Deterministic financial authorization
+Outbox + Worker	Durable execution
+Razorpay	Provider execution + confirmation
+Attribution	Recovery linkage + measurement
+
+
 ENR = P(recovery) × amount − cost − risk
-```
 
-AI confidence is **not** treated as recovery probability, and AI cannot bypass `PolicyEngine`.
+AI confidence is not treated as recovery probability, and AI cannot bypass PolicyEngine.
+
 
 ---
 
-# 🧪 Verified Test-Mode Evidence
+🧪 Verified Test-Mode Evidence
 
-Two real Test-Mode benchmark runs exercised the pipeline against Razorpay Test APIs.
+Two benchmark cohorts exercised the real Razorpay Test APIs through ARIV's normal pipeline.
 
-## Benchmark A — Execution Scale
+Benchmark A — Execution Scale
 
-**25 cases · ₹35,232.60 at risk**
+25 cases · ₹35,232.60 at risk
 
-| Metric | Result |
-|---|---:|
-| Cases decisioned | **25 / 25 (100%)** |
-| Policy evaluations / approvals | **25 / 25** |
-| Execution attempts | **25** |
-| Provider payment-link actions | **24 / 25** |
-| Real Razorpay failures | **1** (`RATE_LIMIT_EXCEEDED`) |
-| Verified recoveries | **0** |
-| Attributed recoveries | **0** |
-| Revenue recovered | **₹0** |
-| Recovery rate | **0%** |
+Metric	Result
 
-## Benchmark B — Scenario Diversity
+Cases decisioned	25 / 25 (100%)
+Policy evaluations / approvals	25 / 25
+Execution attempts	25
+Provider payment-link actions	24 / 25
+Real Razorpay failures	1 (RATE_LIMIT_EXCEEDED)
+Verified recoveries	0
+Attributed recoveries	0
+Revenue recovered	₹0
+Recovery rate	0%
 
-**18 cases · ₹145,400 at risk**
 
-| Metric | Result |
-|---|---:|
-| Cases decisioned | **18 / 18 (100%)** |
-| `RETRY_NOW` | **4** |
-| `GENERATE_PAYMENT_LINK` | **5** |
-| `STOP_RECOVERY` | **9** |
-| Policy approved / review | **16 / 2** |
-| `FULL_AUTO` / `HUMAN_APPROVAL` | **16 / 2** |
-| Execution attempts | **5** |
-| Provider actions completed | **5 / 5** |
-| Execution failures | **0** |
-| Human escalations | **2** |
-| Verified recoveries | **0** |
-| Attributed recoveries | **0** |
-| Revenue recovered | **₹0** |
-| Recovery rate | **0%** |
+Benchmark B — Scenario Diversity
 
-### Why 0% recovery?
+18 cases · ₹145,400 at risk
 
-These were primarily **failure → decision → policy → execution** cohorts. They did not include customers completing the generated recovery links.
+Metric	Result
+
+Cases decisioned	18 / 18 (100%)
+RETRY_NOW	4
+GENERATE_PAYMENT_LINK	5
+STOP_RECOVERY	9
+Policy approved / review	16 / 2
+FULL_AUTO / HUMAN_APPROVAL	16 / 2
+Execution attempts	5
+Provider actions completed	5 / 5
+Execution failures	0
+Human escalations	2
+Verified recoveries	0
+Attributed recoveries	0
+Revenue recovered	₹0
+Recovery rate	0%
+
+
+Why 0% recovery?
+
+These cohorts primarily exercised:
+
+Failure
+  ↓
+Decision
+  ↓
+Policy
+  ↓
+Execution
+
+They did not include customers completing the generated recovery links.
 
 Therefore:
 
-```text
 Action created ≠ Revenue recovered
-```
 
-ARIV deliberately reports zero rather than turning action execution into a recovery claim.
+ARIV reports 0 verified recoveries rather than converting executed actions into revenue claims.
+
 
 ---
 
-# ✅ Real Provider-Confirmed Recovery
+✅ Real Provider-Confirmed Recovery
 
-Separate from the benchmark denominators, ARIV demonstrated a real Razorpay Test-Mode customer-completed recovery:
+Separate from the benchmark denominators, ARIV demonstrated a customer-completed Razorpay Test-Mode recovery:
 
-```text
 Payment Failure
       ↓
 Recovery Case
@@ -290,120 +297,104 @@ ACTION_ATTRIBUTED
 Measurement
       ↓
 Telegram
-```
 
-This is a **separate provider-confirmed demonstration**, not added to the benchmark recovery totals.
+This is a separate provider-confirmed demonstration, not added to benchmark recovery totals.
 
----
-
-# 🧮 Offline Ablation
-
-The repository also contains an offline modeled ablation using **10 seeds × 10,000 synthetic cases**.
-
-| Comparison | Result |
-|---|---|
-| Economic vs Rules | **Economic strategy wins** |
-| AI + Economic vs Economic | AI did **not** improve modeled net recovery |
-| + Qdrant vs AI + Economic | Qdrant did **not** improve modeled net recovery |
-| + Systemic / Route Intelligence | **Improved modeled result** |
-| Full Stack vs Economic | Full stack did **not** outperform Economic |
-
-> These are **offline modeled findings**, not real-money causal measurements.
-
-The useful engineering conclusion is straightforward: the deterministic economic layer and systemic route intelligence showed the reported modeled gains; AI and semantic memory did not show incremental modeled recovery improvement in this ablation.
 
 ---
 
-# 📊 Attribution & Measurement
+🧮 Offline Ablation
 
-ARIV keeps three states separate:
+An offline modeled ablation used 10 seeds × 10,000 synthetic cases.
 
-```text
+Comparison	Result
+
+Economic vs Rules	Economic strategy wins
+AI + Economic vs Economic	AI did not improve modeled net recovery
++ Qdrant vs AI + Economic	Qdrant did not improve modeled net recovery
++ Systemic / Route Intelligence	Improved modeled result
+Full Stack vs Economic	Full stack did not outperform Economic
+
+
+> These are offline modeled findings, not real-money causal measurements.
+
+
+
+
+---
+
+📊 Attribution & Measurement
+
+ARIV separates action execution, payment confirmation, and attributable recovery.
+
 Action succeeded
       ↓
-Provider confirmed payment
+Provider confirms payment
       ↓
-Attributed recovery
-```
+Recovery attributed
 
 Only the final state contributes to recovery revenue.
 
-```text
 Action Success
-      ≠
+     ≠
 Payment Success
-      ≠
+     ≠
 Attributed Recovery
-```
 
-This prevents inflated recovery claims.
 
 ---
 
-# 📸 Product Proof
+📸 Product Proof
 
-The screenshots are ordered around the actual system and product story.
+Stage	Screenshot	Proof
 
-| Stage | Screenshot | Proof |
-|---|---|---|
-| **01** | ![Command Center](docs/screenshots/01-command-center.png) | 🖥️ Command center + live system state |
-| **02** | ![Failed Payment Case](docs/screenshots/02-failed-payment-case.png) | 💳 Failed payment → recovery case |
-| **03** | ![AI Decision Policy](docs/screenshots/03-ai-decision-policy.png) | 🤖 AI proposal + deterministic policy boundary |
-| **04** | ![Recovery Action](docs/screenshots/04-recovery-action.png) | ⚙️ Governed recovery action |
-| **05** | ![Razorpay Test Payment](docs/screenshots/05-razorpay-test-payment.png) | 💳 Real Razorpay Test-Mode payment |
-| **06** | ![Recovered Attribution](docs/screenshots/06-recovered-attribution.png) | ✅ Provider-confirmed recovery + attribution |
-| **07** | ![Telegram Recovery](docs/screenshots/07-telegram-recovery.png) | 📲 Recovery notification |
-| **08** | ![ASK ARIV](docs/screenshots/08-ask-ariv.png) | 💬 Conversational operator control |
-| **09** | ![Qdrant Memory](docs/screenshots/09-qdrant-memory.png) | 🧠 Semantic recovery memory |
-| **10** | ![System Health](docs/screenshots/10-system-health.png) | ❤️ Infrastructure health |
-| **11** | ![Measurement](docs/screenshots/11-measurement.png) | 📊 Recovery measurement |
+01		🖥️ Live command center + system state
+02		💳 Failed payment → recovery case
+03		🤖 AI proposal + policy boundary
+04		⚙️ Governed recovery action
+05		💳 Real Razorpay Test-Mode payment
+06		✅ Provider-confirmed recovery + attribution
+07		📲 Recovery notification
+08		💬 Conversational operator control
+09		🧠 Semantic recovery memory
+10		❤️ Infrastructure health
+11		📊 Recovery measurement
 
-```text
-01 Command Center
-      ↓
-02 Failed Payment Case
-      ↓
-03 AI Decision + Policy
-      ↓
-04 Recovery Action
-      ↓
-05 Razorpay Test Payment
-      ↓
-06 Recovered + Attributed
-      ↓
-07 Telegram
-      ↓
-08 ASK ARIV
-      ↓
-09 Qdrant Memory
-      ↓
-10 System Health
-      ↓
-11 Measurement
-```
+
 
 ---
 
-# 🔒 Reliability & Safety
+🔒 Reliability & Safety
 
-Key engineering safeguards:
+Implemented safeguards include:
 
-- HMAC-SHA256 webhook verification
-- Duplicate and out-of-order provider-event handling
-- Durable `ProviderEvent` persistence
-- Tenant-isolated semantic retrieval
-- Deterministic `PolicyEngine`
-- Transactional Outbox
-- Worker leases and idempotent execution
-- Optimistic locking
-- State-machine guards
-- Provider reconciliation before attribution
-- Request-safe background database sessions
-- Deterministic fallback when the LLM is unavailable
+HMAC-SHA256 webhook verification
 
-### Core invariant
+Duplicate and out-of-order provider-event handling
 
-```text
+Durable ProviderEvent persistence
+
+Tenant-isolated semantic retrieval
+
+Deterministic PolicyEngine
+
+Transactional Outbox
+
+Worker leases + idempotent execution
+
+Optimistic locking
+
+Recovery state-machine guards
+
+Provider reconciliation before attribution
+
+Request-safe background database sessions
+
+Deterministic fallback when the LLM is unavailable
+
+
+Core invariant
+
 AI proposes
     ↓
 PolicyEngine authorizes
@@ -413,187 +404,173 @@ Infrastructure executes
 Razorpay confirms
     ↓
 Attribution measures
-```
 
-**No single AI component can decide and independently move money.**
+No single AI component can decide and independently move money.
 
----
-
-# 💻 Technology Stack
-
-| Technology | Role |
-|---|---|
-| **FastAPI** | Backend APIs + webhook ingestion |
-| **PostgreSQL** | Authoritative state |
-| **Redis / BullMQ** | Coordination + background processing |
-| **Qdrant** | Semantic recovery memory |
-| **LLM adapter** | Context-aware reasoning |
-| **PolicyEngine** | Deterministic financial authorization |
-| **Transactional Outbox** | Durable side-effect boundary |
-| **Execution Worker** | Background execution |
-| **Razorpay Test APIs** | Provider Test-Mode execution |
-| **Razorpay Webhooks** | Provider truth |
-| **Next.js / React** | Operator interface |
-| **Docker Compose** | Reproducible local environment |
 
 ---
 
-# 🚀 Run Locally
+💻 Technology Stack
 
-### Requirements
+Technology	Role
 
-- Docker + Docker Compose
-- Razorpay Test Mode credentials
-- Webhook secret
-- Optional Telegram credentials
+FastAPI	Backend APIs + webhook ingestion
+PostgreSQL	Authoritative state
+Redis / BullMQ	Coordination + background processing
+Qdrant	Semantic recovery memory
+LLM adapter	Context-aware reasoning
+PolicyEngine	Deterministic financial authorization
+Transactional Outbox	Durable side-effect boundary
+Execution Worker	Background execution
+Razorpay Test APIs	Provider Test-Mode execution
+Razorpay Webhooks	Provider truth
+Next.js / React	Operator interface
+Docker Compose	Reproducible environment
 
-### Clone
 
-```bash
+
+---
+
+🚀 Run Locally
+
+Requirements
+
+Docker + Docker Compose
+
+Razorpay Test Mode credentials
+
+Webhook secret
+
+Optional Telegram credentials
+
+
+Clone
+
 git clone https://github.com/praveen0767/ARIV.git
 cd ARIV
-```
 
-### Configure
+Configure
 
-```bash
 cp .env.example .env
-```
 
-Configure Razorpay Test Mode credentials, webhook secret and required local settings.
+Configure the Razorpay Test Mode credentials, webhook secret, and required local settings.
 
-> Never commit `.env`, API keys, webhook secrets or Telegram tokens.
+> Never commit .env, API keys, webhook secrets, or Telegram tokens.
 
-### Start
 
-```bash
+
+Start
+
 docker compose up -d --build
-```
-
-Check:
-
-```bash
 docker compose ps
-```
 
 Open:
 
-```text
 Frontend → http://localhost:3000
 Backend  → http://localhost:8000
-```
 
-### Test
+Tests
 
-```bash
 docker compose exec web pytest -q
-```
 
-Verified result:
+Verified:
 
-```text
 258 passed
 1 skipped
 0 failed
-2 warnings
-```
 
-### Stop
+Stop
 
-```bash
 docker compose down
-```
 
 Fresh database:
 
-```bash
 docker compose down -v
-```
+
 
 ---
 
-# 🧪 Reproduce the Benchmarks
+🧪 Benchmark Reproduction
 
-### 25-case Test-Mode benchmark
+The benchmark runner sends payment-failure webhook events through the application pipeline, varies amounts, waits for persisted processing, and computes metrics from the database.
 
-```bash
-python scripts/run_benchmark.py \
-  --cases 25 \
-  --min 5000 \
-  --max 250000 \
-  --webhook-url http://localhost:8000/webhooks/razorpay \
-  --account-id acc_benchmark \
-  --output-dir . \
-  --poll-interval 3 \
-  --max-wait 300
-```
+python scripts/run_benchmark.py
 
-### 18-case scenario benchmark
+Reports are written as:
 
-```bash
-python scripts/run_benchmark.py \
-  --scenario-file scripts/scenarios_mixed_18.json \
-  --webhook-url http://localhost:8000/webhooks/razorpay \
-  --account-id acc_benchmark \
-  --output-dir . \
-  --poll-interval 3 \
-  --max-wait 300
-```
+benchmark_report_<benchmark_id>.json
 
-### Offline strategy benchmarks
+The benchmark runner does not directly fabricate recovery outcomes, bypass policy, mutate historical records, or write benchmark results into the application UI.
 
-```bash
-python scripts/run_economic_benchmark.py --cases 5 --seed 42
-python scripts/run_judge_benchmark.py
-```
-
-Detailed evidence:
-
-```text
-docs/benchmark-results.md
-docs/benchmark-summary.md
-artifacts/benchmarks/phase2_ablation_report.md
-```
 
 ---
 
-# 🎥 Product Walkthrough
+📁 Repository Structure
 
-**ARIV Product Demo**
+ARIV/
+├── app/
+│   ├── api/
+│   ├── agents/
+│   ├── models/
+│   ├── services/
+│   ├── policies/
+│   ├── workers/
+│   └── integrations/
+├── frontend/
+├── scripts/
+├── tests/
+├── docs/
+│   └── screenshots/
+├── docker-compose.yml
+├── Dockerfile
+├── .env.example
+└── README.md
+
+
+---
+
+🎥 Product Walkthrough
+
+ARIV Product Demo
 
 https://www.youtube.com/watch?v=vkv6G-Nq67s
 
-The walkthrough follows:
-
-```text
 Failure
-→ Diagnosis
-→ AI Decision
-→ Policy
-→ Recovery Action
-→ Razorpay
-→ Provider Confirmation
-→ Attribution
-→ Measurement
-```
+  ↓
+Diagnosis
+  ↓
+AI Decision
+  ↓
+Policy
+  ↓
+Recovery Action
+  ↓
+Razorpay
+  ↓
+Provider Confirmation
+  ↓
+Attribution
+  ↓
+Measurement
+
 
 ---
 
-# 🏁 Engineering Takeaway
+🏁 Engineering Takeaway
 
-ARIV is designed around a simple separation:
+ARIV is built as a closed-loop recovery control plane, not an LLM wrapper around a retry API.
 
-```text
 AI              → Reasons
 Economic Layer  → Ranks
 PolicyEngine    → Authorizes
 Outbox + Worker → Executes
 Razorpay        → Confirms
 Attribution     → Measures
-```
 
-The system does **not** assume that adding more AI automatically creates more recovered revenue. The reported evaluation distinguishes real Test-Mode execution, provider-confirmed recovery, and offline modeled results.
+The evaluation deliberately distinguishes between action execution, provider-confirmed recovery, and offline modeled results. The system does not assume that adding more AI automatically produces more recovered revenue.
 
-> **AI can recommend. Policy decides. Infrastructure executes. Razorpay confirms. Attribution proves.**
+> AI can recommend. Policy decides. Infrastructure executes. Razorpay confirms. Attribution proves.
 
-**Detect · Diagnose · Retrieve · Propose · Rank · Authorize · Execute · Verify · Attribute · Measure**
+
+
+Detect · Diagnose · Retrieve · Propose · Rank · Authorize · Execute · Verify · Attribute · Measure
