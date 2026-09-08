@@ -7,7 +7,7 @@
 <img src="https://img.shields.io/badge/Razorpay-Test%20Mode-0f172a?style=for-the-badge" alt="Razorpay Test Mode"/>
 <img src="https://img.shields.io/badge/FastAPI-Python-0f172a?style=for-the-badge&logo=fastapi" alt="FastAPI"/>
 <img src="https://img.shields.io/badge/PostgreSQL-Database-0f172a?style=for-the-badge&logo=postgresql" alt="PostgreSQL"/>
-<img src="https://img.shields.io/badge/Redis-Coordination-0f172a?style=for-the-badge&logo=redis" alt="Redis"/>
+<img src="https://img.shields.io/badge/Redis-Coordination-0f172a?style=for-the-badge" alt="Redis"/>
 <img src="https://img.shields.io/badge/Qdrant-Semantic%20Memory-0f172a?style=for-the-badge" alt="Qdrant"/>
 <img src="https://img.shields.io/badge/Docker-Compose-0f172a?style=for-the-badge&logo=docker" alt="Docker"/>
 <img src="https://img.shields.io/badge/Next.js-React-0f172a?style=for-the-badge&logo=next.js" alt="Next.js"/>
@@ -354,115 +354,107 @@ Attributed Recovery
 
 ---
 
-# 📸 Product Proof
+## 📸 Product Proof
 
-The screenshots below are intentionally arranged so the most important product evidence is large and immediately readable on desktop, while supporting views remain compact.
+<p align="center">
+  <img src="docs/screenshots/01-command-center.png" alt="Command Center" width="900"/>
+</p>
 
-### Core Product Evidence
+<p align="center">
+  <b>01 — Command Center</b><br/>
+  Command center + live system state
+</p>
 
-<div align="center">
+<p align="center">
+  <img src="docs/screenshots/02-failed-payment-case.png" alt="Failed Payment Case" width="900"/>
+</p>
 
-<img src="docs/screenshots/01-command-center.png" width="100%" alt="ARIV Command Center"/>
+<p align="center">
+  <b>02 — Failed Payment Case</b><br/>
+  Failed payment → recovery case
+</p>
 
-**01 — Command Center**  
-Live command center and recovery system state.
+<p align="center">
+  <img src="docs/screenshots/03-ai-decision-policy.png" alt="AI Decision and Policy" width="900"/>
+</p>
 
-<br/>
+<p align="center">
+  <b>03 — AI Decision + Policy</b><br/>
+  AI proposal + deterministic PolicyEngine boundary
+</p>
 
-<img src="docs/screenshots/02-failed-payment-case.png" width="100%" alt="Failed Payment Case"/>
+<p align="center">
+  <img src="docs/screenshots/04-recovery-action.png" alt="Recovery Action" width="900"/>
+</p>
 
-**02 — Failed Payment Case**  
-Failed payment converted into a recovery case.
+<p align="center">
+  <b>04 — Recovery Action</b><br/>
+  Governed recovery action
+</p>
 
-<br/>
+<p align="center">
+  <img src="docs/screenshots/05-razorpay-test-payment.png" alt="Razorpay Test Payment" width="900"/>
+</p>
 
-<img src="docs/screenshots/03-ai-decision-policy.png" width="100%" alt="AI Decision and Policy"/>
+<p align="center">
+  <b>05 — Razorpay Test Payment</b><br/>
+  Real Razorpay Test-Mode payment
+</p>
 
-**03 — AI Decision + Policy**  
-AI proposal with deterministic authorization boundary.
+<p align="center">
+  <img src="docs/screenshots/06-recovered-attribution.png" alt="Recovered Attribution" width="900"/>
+</p>
 
-<br/>
+<p align="center">
+  <b>06 — Recovered + Attributed</b><br/>
+  Provider-confirmed recovery + attribution
+</p>
 
-<img src="docs/screenshots/05-razorpay-test-payment.png" width="100%" alt="Razorpay Test Payment"/>
+<p align="center">
+  <img src="docs/screenshots/07-telegram-recovery.png" alt="Telegram Recovery" width="900"/>
+</p>
 
-**04 — Razorpay Test Payment**  
-Real Razorpay Test-Mode payment flow.
+<p align="center">
+  <b>07 — Telegram Recovery</b><br/>
+  Recovery notification
+</p>
 
-<br/>
+<p align="center">
+  <img src="docs/screenshots/08-ask-ariv.png" alt="ASK ARIV" width="900"/>
+</p>
 
-<img src="docs/screenshots/06-recovered-attribution.png" width="100%" alt="Recovered and Attributed"/>
+<p align="center">
+  <b>08 — ASK ARIV</b><br/>
+  Conversational operator control
+</p>
 
-**05 — Recovered + Attributed**  
-Provider-confirmed recovery and attribution.
+<p align="center">
+  <img src="docs/screenshots/09-qdrant-memory.png" alt="Qdrant Memory" width="900"/>
+</p>
 
-</div>
+<p align="center">
+  <b>09 — Qdrant Memory</b><br/>
+  Semantic recovery memory
+</p>
 
-### Supporting Product Evidence
+<p align="center">
+  <img src="docs/screenshots/10-system-health.png" alt="System Health" width="900"/>
+</p>
 
-<div align="center">
+<p align="center">
+  <b>10 — System Health</b><br/>
+  Infrastructure health
+</p>
 
-<table>
-<tr>
-<td align="center" width="50%">
+<p align="center">
+  <img src="docs/screenshots/11-measurement.png" alt="Measurement" width="900"/>
+</p>
 
-<img src="docs/screenshots/04-recovery-action.png" width="100%" alt="Recovery Action"/>
+<p align="center">
+  <b>11 — Measurement</b><br/>
+  Recovery measurement
+</p>
 
-**06 — Recovery Action**  
-Governed recovery action.
-
-</td>
-<td align="center" width="50%">
-
-<img src="docs/screenshots/07-telegram-recovery.png" width="100%" alt="Telegram Recovery"/>
-
-**07 — Telegram Recovery**  
-Recovery notification.
-
-</td>
-</tr>
-
-<tr>
-<td align="center" width="50%">
-
-<img src="docs/screenshots/08-ask-ariv.png" width="100%" alt="ASK ARIV"/>
-
-**08 — ASK ARIV**  
-Conversational operator control.
-
-</td>
-<td align="center" width="50%">
-
-<img src="docs/screenshots/09-qdrant-memory.png" width="100%" alt="Qdrant Memory"/>
-
-**09 — Qdrant Memory**  
-Semantic recovery memory.
-
-</td>
-</tr>
-
-<tr>
-<td align="center" width="50%">
-
-<img src="docs/screenshots/10-system-health.png" width="100%" alt="System Health"/>
-
-**09 — System Health**  
-Infrastructure and service health.
-
-</td>
-<td align="center" width="50%">
-
-<img src="docs/screenshots/11-measurement.png" width="100%" alt="Recovery Measurement"/>
-
-**10 — Measurement**  
-Recovery measurement and outcome visibility.
-
-</td>
-</tr>
-</table>
-
-</div>
-
-```
 ### Product Flow
 
 ```text
@@ -472,11 +464,11 @@ Recovery measurement and outcome visibility.
       ↓
 03 AI Decision + Policy
       ↓
-04 Razorpay Test Payment
+04 Recovery Action
       ↓
-05 Recovered + Attributed
+05 Razorpay Test Payment
       ↓
-06 Recovery Action
+06 Recovered + Attributed
       ↓
 07 Telegram
       ↓
@@ -487,6 +479,7 @@ Recovery measurement and outcome visibility.
 10 System Health
       ↓
 11 Measurement
+```
 
 ---
 
