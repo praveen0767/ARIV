@@ -1,0 +1,117 @@
+# ---------------------------------------------------------------------------
+# ARIV — Render Blueprint (Infrastructure-as-Code)
+#
+# Services:
+#   1. backend    (web)      — FastAPI API, single instance, runs DB migrations
+#   2. worker     (worker)   — background consumers:
+#                                • KnowledgeOutbox -> Qdrant drainer (always)
+#                                • ExecutionOutbox poller (only when Razorpay keys present)
+#   3. frontend   (web)      — Next.js app (same-origin proxy to backend)
+#
+# Managed infrastructure (provision separately in Render dashboard):
+#   - PostgreSQL               -> fills DATABASE_URL
+#   - Key Value (Redis)        -> fills REDIS_URL
+#   - Qdrant (Qdrant Cloud)    -> fills QDRANT_URL / QDRANT_API_KEY
+#
+# Read docs/DEPLOYMENT_RENDER.md before deploying.
+# ---------------------------------------------------------------------------
+
+services:
+  - name: ariv-backend
+    type: web
+    runtime: docker
+    plan: starter
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health/ready
+    preDeployCommand: alembic upgrade head
+    # Single instance: the ExecutionOutbox backstop and drainer are owned by the
+    # dedicated worker service below, so the web service must not also drain.
+    envVars:
+      - key: PYTHONPATH
+        value: /app
+      - key: KNOWLEDGE_DRAIN_ENABLED
+        value: "false"
+      - key: DEMO_MODE
+        value: "true"
+      # Production values — set these in the Render dashboard as secret env vars:
+      - key: INTERNAL_API_KEY
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_ENVIRONMENT
+        value: SANDBOX   # keep SANDBOX for the Buildathon demo; switch to live later
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: QDRANT_COLLECTION_NAME
+        value: historical_cases
+      - key: KNOWLEDGE_DRAIN_INTERVAL_SECONDS
+        value: "30.0"
+
+  - name: ariv-worker
+    type: worker
+    runtime: docker
+    plan: starter
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    # Overrides the Dockerfile CMD (uvicorn) with the durable background consumers.
+    dockerCommand: python -m app.worker
+    envVars:
+      - key: PYTHONPATH
+        value: /app
+      - key: KNOWLEDGE_DRAIN_ENABLED
+        value: "true"
+      - key: DEMO_MODE
+        value: "true"
+      - key: INTERNAL_API_KEY
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_ENVIRONMENT
+        value: SANDBOX
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: QDRANT_COLLECTION_NAME
+        value: historical_cases
+      - key: KNOWLEDGE_DRAIN_INTERVAL_SECONDS
+        value: "30.0"
+
+  - name: ariv-frontend
+    type: web
+    runtime: docker
+    plan: starter
+    region: oregon
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    healthCheckPath: /
+    envVars:
+      # The Next.js API proxy runs server-side; API_BASE must point at the
+      # backend's URL as seen from the frontend service. Replace with your value.
+      - key: API_BASE
+        sync: false
+      - key: ACCOUNT_ID
+        value: acc_demo_123
+      # Must match the backend INTERNAL_API_KEY (shared secret, not for browsers).
+      - key: INTERNAL_API_KEY
+        sync: false
+      - key: NEXT_PUBLIC_DEMO_MODE
+        value: "true"
+
+# Diagnostics: values below are shared across all services via
+# Render's database/key-value references. Wire them here or in the dashboard.
+# - key: DATABASE_URL  (from PostgreSQL resource)
+# - key: REDIS_URL      (from Key Value resource)
+# - key: QDRANT_URL     (Qdrant Cloud REST endpoint)
+# - key: QDRANT_API_KEY (Qdrant Cloud API key, optional for unsecured clusters)

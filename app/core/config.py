@@ -13,6 +13,22 @@ except Exception as e:
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
+
+def normalize_database_url(url: str) -> str:
+    """Convert a raw provider DATABASE_URL into an asyncpg-compatible URL.
+
+    Render managed Postgres (and many PAAS providers) expose a plain
+    ``postgres://`` / ``postgresql://`` URL. SQLAlchemy async engines and
+    asyncpg require the ``postgresql+asyncpg://`` driver prefix. The local
+    default already carries the driver, so this is a no-op outside of
+    production-style URLs.
+    """
+    if not url:
+        return url
+    if url.startswith("postgres://") or url.startswith("postgresql://"):
+        return "postgresql+asyncpg://" + url.split("://", 1)[1]
+    return url
+
 class Settings(BaseSettings):
     PROJECT_NAME: str = "ARIV"
     
@@ -20,6 +36,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "postgresql+asyncpg://ariv_user:ariv_pass@localhost:5432/ariv_db"
     REDIS_URL: str = "redis://localhost:6379/0"
     QDRANT_URL: str = "http://localhost:6333"
+    # API key for managed/cloud Qdrant clusters (optional; empty for unauthenticated local Qdrant).
+    QDRANT_API_KEY: str = ""
     # Canonical non-authoritative recovery-memory collection.  Decisioning and
     # measurement indexing must use the same collection contract.
     QDRANT_COLLECTION_NAME: str = "historical_cases"
@@ -29,8 +47,16 @@ class Settings(BaseSettings):
     EMBEDDING_DIMENSION: int = 768
 
     # Durable KnowledgeOutbox drainer (background reconciliation of Postgres ->
-    # Qdrant memory). Seconds between claim/process sweeps.
+    # Qdrant memory). Seconds between claim/process sweeps. When a dedicated
+    # Render worker service is running, set KNOWLEDGE_DRAIN_ENABLED=false on the
+    # web service to avoid redundant sweepers competing with the worker.
     KNOWLEDGE_DRAIN_INTERVAL_SECONDS: float = 30.0
+    KNOWLEDGE_DRAIN_ENABLED: bool = True
+
+    @property
+    def async_database_url(self) -> str:
+        """DATABASE_URL normalized to the asyncpg driver prefix."""
+        return normalize_database_url(self.DATABASE_URL)
 
     
     # Security & Provider Credentials

@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Response
 from app.infrastructure.database import check_db_health
 from app.infrastructure.redis import check_redis_health
 from app.infrastructure.qdrant import check_qdrant_health
@@ -13,6 +13,32 @@ async def ready():
 @router.get("/v1/health")
 async def health():
     return {"status": "ok"}
+
+@router.get("/health/ready")
+@router.get("/v1/health/ready")
+async def readiness(response: Response):
+    """Readiness probe for orchestration platforms (e.g. Render healthCheckPath).
+
+    Unlike the liveness endpoints (/health, /ready), this verifies the service is
+    actually able to serve operational traffic: Postgres and Redis (the two core
+    dependencies for financial recovery) must be reachable. Returns HTTP 200 only
+    when core dependencies are healthy, otherwise HTTP 503 so the platform keeps
+    the instance out of the load balancer.
+    """
+    db_ok = await check_db_health()
+    redis_ok = await check_redis_health()
+    if not (db_ok and redis_ok):
+        response.status_code = 503
+        return {
+            "status": "not_ready",
+            "postgres": "ok" if db_ok else "down",
+            "redis": "ok" if redis_ok else "down",
+        }
+    return {
+        "status": "ready",
+        "postgres": "ok",
+        "redis": "ok",
+    }
 
 @router.get("/health/dependencies")
 @router.get("/v1/health/dependencies")

@@ -5,7 +5,10 @@ from app.core.config import settings
 
 logger = logging.getLogger("ariv.qdrant")
 
-qdrant_client = AsyncQdrantClient(url=settings.QDRANT_URL)
+qdrant_client = AsyncQdrantClient(
+    url=settings.QDRANT_URL,
+    api_key=settings.QDRANT_API_KEY or None,
+)
 
 # Collections required by the application and their vector configuration.
 # Adding a name here is sufficient to have it auto-created on startup.

@@ -53,7 +53,7 @@ Measurement
 - ✅ Real Razorpay Test API integration
 - ✅ Deterministic financial safety — AI proposes; `PolicyEngine` authorizes
 - ✅ No single AI component can independently move money
-- ✅ 258/258 tests passing
+- ✅ 281 tests passing, 1 skipped
 - ✅ 100% decision coverage in both reported Test-Mode benchmark cohorts
 - ✅ Honest recovery accounting — benchmark cohorts report **0 verified recoveries**
 - ✅ Separate provider-confirmed customer recovery demonstrated in Razorpay Test Mode

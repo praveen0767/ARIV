@@ -7,7 +7,7 @@ from app.core.config import settings
 logger = logging.getLogger("ariv.db")
 
 engine = create_async_engine(
-    settings.DATABASE_URL,
+    settings.async_database_url,
     echo=False,
     future=True,
     pool_size=10,

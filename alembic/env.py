@@ -15,7 +15,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 # access to the values within the .ini file in use.
 from app.core.config import settings
 config = context.config
-config.set_main_option('sqlalchemy.url', settings.DATABASE_URL)
+config.set_main_option('sqlalchemy.url', settings.async_database_url)
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

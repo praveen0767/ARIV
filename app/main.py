@@ -23,7 +23,7 @@ logging.getLogger("ariv").setLevel(logging.INFO)
 logger = logging.getLogger("ariv.startup")
 
 
-async def _knowledge_drain_loop():
+async def _knowledge_drain_loop(worker_id: str = "lifespan_drainer"):
     """Background durable KnowledgeOutbox -> Qdrant reconciliation drainer.
 
     The durable outbox (created transactionally with each RecoveryMeasurement) is
@@ -33,12 +33,14 @@ async def _knowledge_drain_loop():
     COMPLETED items pending a newer index version) and processes them, using the
     outbox row itself as the reconciliation record — never writing to Qdrant
     outside that durable path.
+
+    ``worker_id`` names the claim holder; pass a distinct id when running from a
+    dedicated Render worker service (e.g. "worker_render_drainer").
     """
     from app.services.qdrant_indexer import QdrantIndexerWorker
     from app.infrastructure.database import async_session_factory
 
     interval = float(getattr(settings, "KNOWLEDGE_DRAIN_INTERVAL_SECONDS", 30.0))
-    worker_id = "lifespan_drainer"
     drain_logger = logging.getLogger("ariv.knowledge_drain")
     while True:
         try:
@@ -137,13 +139,18 @@ async def lifespan(application: FastAPI):
             logger.error(f"Demo tenant bootstrap failed (non-fatal): {exc}")
 
     # Start the durable KnowledgeOutbox -> Qdrant drainer (the missing consumer
-    # for the durable vector-index queue). Cancelled on shutdown.
+    # for the durable vector-index queue). Cancelled on shutdown. When a dedicated
+    # Render worker service owns the drainer, the web service can opt out via
+    # KNOWLEDGE_DRAIN_ENABLED=false to avoid competing sweepers.
     drain_task = None
-    try:
-        drain_task = asyncio.create_task(_knowledge_drain_loop())
-        logger.info("KnowledgeOutbox drainer started (interval=%ss)", settings.KNOWLEDGE_DRAIN_INTERVAL_SECONDS)
-    except Exception as exc:
-        logger.error(f"Could not start knowledge drainer (non-fatal): {exc}")
+    if getattr(settings, "KNOWLEDGE_DRAIN_ENABLED", True):
+        try:
+            drain_task = asyncio.create_task(_knowledge_drain_loop())
+            logger.info("KnowledgeOutbox drainer started (interval=%ss)", settings.KNOWLEDGE_DRAIN_INTERVAL_SECONDS)
+        except Exception as exc:
+            logger.error(f"Could not start knowledge drainer (non-fatal): {exc}")
+    else:
+        logger.info("KnowledgeOutbox drainer disabled on this service (KNOWLEDGE_DRAIN_ENABLED=false)")
 
     yield  # Application is now live and serving requests.
 

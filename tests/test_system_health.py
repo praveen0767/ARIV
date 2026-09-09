@@ -185,6 +185,38 @@ async def test_telegram_health_probe_configured_failure():
 
 
 @pytest.mark.asyncio
+async def test_health_ready_endpoint_core_healthy_returns_200():
+    """Readiness probe returns 200 {"status":"ready"} when Postgres and Redis are up."""
+    with patch("app.api.health.check_db_health", new_callable=AsyncMock, return_value=True), \
+         patch("app.api.health.check_redis_health", new_callable=AsyncMock, return_value=True), \
+         patch("app.api.health.check_qdrant_health", new_callable=AsyncMock, return_value="ok"):
+
+        async with AsyncClient(app=app, base_url="http://test") as ac:
+            res = await ac.get("/health/ready")
+            assert res.status_code == 200
+            data = res.json()
+            assert data["status"] == "ready"
+            assert data["postgres"] == "ok"
+            assert data["redis"] == "ok"
+
+
+@pytest.mark.asyncio
+async def test_health_ready_endpoint_core_down_returns_503():
+    """Readiness probe returns 503 when Postgres is down (keeps instance out of rotation)."""
+    with patch("app.api.health.check_db_health", new_callable=AsyncMock, return_value=False), \
+         patch("app.api.health.check_redis_health", new_callable=AsyncMock, return_value=True), \
+         patch("app.api.health.check_qdrant_health", new_callable=AsyncMock, return_value="ok"):
+
+        async with AsyncClient(app=app, base_url="http://test") as ac:
+            res = await ac.get("/v1/health/ready")
+            assert res.status_code == 503
+            data = res.json()
+            assert data["status"] == "not_ready"
+            assert data["postgres"] == "down"
+            assert data["redis"] == "ok"
+
+
+@pytest.mark.asyncio
 async def test_health_dependencies_endpoint_healthy():
     with patch("app.api.health.check_db_health", new_callable=AsyncMock, return_value=True), \
          patch("app.api.health.check_redis_health", new_callable=AsyncMock, return_value=True), \
