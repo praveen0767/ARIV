@@ -118,183 +118,178 @@ Attributed Recovery
 
 Revenue is counted only after provider-confirmed payment and recovery attribution.
 
----
+```
 
 ## 🏗️ Architecture
 
 ```mermaid
-flowchart TD
-    %% 1. PROVIDER / INGESTION
-    subgraph S_INGEST ["1. PROVIDER / INGESTION"]
-        RP["Razorpay Events\n(Webhook Failures)"]
-        WH["Webhook Verification\n(Tenant Isolation + HMAC Auth)"]
-        PE["ProviderEvent Persistence\n(Authoritative Raw Audit)"]
+flowchart LR
+
+    %% =========================================================
+    %% PRIMARY CONTROL PLANE
+    %% =========================================================
+
+    subgraph ING["01 · INGEST & CASE"]
+        direction TB
+        RP["Razorpay Events"]
+        WH["Webhook Verification<br/>HMAC + Tenant Isolation"]
+        PE["ProviderEvent<br/>Durable Persistence"]
+        CASE["Recovery Case<br/>State Machine"]
+
+        RP --> WH --> PE --> CASE
     end
 
-    %% 2. CASE + INTELLIGENCE
-    subgraph S_CASE ["2. CASE & ROUTE INTELLIGENCE"]
-        C["Recovery Case\n(State Machine & Lifecycle)"]
-        FI["Failure Intelligence\n(Classification & Root Cause)"]
-        SYS["Systemic Route Intelligence\n(Corridor Degradation Signals)"]
-        DC["Decision Context\n(Unified Recovery State)"]
+    subgraph INT["02 · INTELLIGENCE & MEMORY"]
+        direction TB
+        FI["Failure Intelligence<br/>Root Cause + Classification"]
+        SYS["Systemic Route Intelligence<br/>Corridor / Provider Signals"]
+        DC["Decision Context"]
+        MEM["Qdrant Semantic Memory<br/>Tenant-Scoped Retrieval"]
+        LEARN["Recovery Learning<br/>Dirichlet-Smoothed Priors"]
+
+        FI --> DC
+        SYS --> DC
+        MEM -.->|"precedents"| DC
+        LEARN -.->|"corridor priors"| DC
     end
 
-    %% 3. MEMORY & CLOSED-LOOP LEARNING
-    subgraph S_MEM ["3. SEMANTIC MEMORY & LEARNING"]
-        QDRANT[("Qdrant\nSemantic Recovery Memory")]
-        LEARN["Recovery Learning Service\n(Dirichlet-Smoothed Precedents)"]
-        KOUT["Knowledge Outbox\n(Durable Vector Indexing Queue)"]
+    subgraph DEC["03 · AGENTIC DECISION & ECONOMICS"]
+        direction TB
+        AI["AI / Agentic Decision Engine"]
+        PROP["Typed Decision Proposal"]
+        GEN["Candidate Generator"]
+        ENR["Economic Optimizer<br/>ENR Ranking"]
+
+        AI --> PROP --> GEN --> ENR
     end
 
-    %% 4. AGENTIC DECISIONING
-    subgraph S_AI ["4. AGENTIC DECISIONING"]
-        AI["AI / Agentic Decision Engine\n(Context & Strategy Formulation)"]
-        PROP["Typed Decision Proposal\n(Recommended Action Proposal)"]
+    subgraph AUTH["04 · POLICY + MCP CONTROL"]
+        direction TB
+        POL["Deterministic PolicyEngine<br/>Safety + Domain Constraints"]
+
+        subgraph MCP["MCP / TOOL CONTROL RUNTIME"]
+            direction TB
+            GW["MCPToolGateway"]
+            REG["Tool Registry"]
+            VAL["Schema + Capability Validation"]
+            RISK["Server-Side Risk Classification"]
+            TEN["Tenant / Case Ownership"]
+            CTRL["ExecutionControl<br/>Kill Switch + Preconditions"]
+
+            GW --> REG --> VAL --> TEN --> RISK --> CTRL
+        end
+
+        STOP["STOP_RECOVERY"]
+
+        POL -->|"Approved"| GW
+        POL -->|"Rejected"| STOP
     end
 
-    %% 5. ECONOMIC CONTROL
-    subgraph S_ECON ["5. ECONOMIC CONTROL"]
-        GEN["Candidate Generator\n(Action Space Exploration)"]
-        ECON["Economic Optimizer (ENR)\nExpected Net Recovery Ranking"]
+    subgraph EXEC["05 · DURABLE EXECUTION"]
+        direction TB
+        OUT["Transactional Outbox<br/>Authorized Action"]
+        GATE["18-Point Preflight Safety Gate"]
+        WK["Execution Worker"]
+        AD["Razorpay Adapter"]
+
+        OUT --> GATE --> WK --> AD
     end
 
-    %% 6. POLICY AUTHORIZATION
-    subgraph S_POL ["6. POLICY AUTHORIZATION"]
-        POL["Deterministic PolicyEngine\nSafety Rules & Domain Constraints"]
-        STOP["STOP_RECOVERY\n(Suppression / Terminal Exit)"]
+    subgraph VERIFY["06 · PROVIDER VERIFICATION"]
+        direction TB
+        API["Razorpay API<br/>Test / Production Provider"]
+        RECON["Provider Reconciliation"]
+        OUTCOME["Recovery Outcome<br/>Provider-Confirmed"]
+
+        API --> RECON --> OUTCOME
     end
 
-    %% 6b. MCP / TOOL CONTROL RUNTIME
-    subgraph S_MCP ["6b. MCP / TOOL CONTROL RUNTIME (MCPToolGateway)"]
-        TR["MCPToolRegistry\n(Tool Lookup & Registration)"]
-        TV["Input Schema Validation\n(JSON Schema + Required Fields)"]
-        TI["Tenant & Case Ownership\n(Isolation Enforcement)"]
-        RC["Server-Side Risk Classification\nToolRiskClassification: READ | FINANCIAL"]
-        EC["ExecutionControlService\n(DB-backed Kill Switch — Fail-Closed)"]
-        AUDIT["AuditEvent Trail\n(Sanitized Credential-Free Audit Log)"]
+    subgraph MEASURE["07 · ATTRIBUTION & MEASUREMENT"]
+        direction TB
+        ATTR["Recovery Attribution"]
+        MET["Recovery Measurement"]
+        KOUT["Knowledge Outbox"]
+
+        ATTR --> MET --> KOUT
     end
 
-    %% 7. DURABLE EXECUTION
-    subgraph S_EXEC ["7. DURABLE EXECUTION"]
-        OUT["Transactional Outbox\nOutboxService.create_authorized_action"]
-        GATE["18-Point Preflight Safety Gate\n(Kill Switch & Tenant Validation)"]
-        WK["Execution Worker\n(Durable Action Dispatcher)"]
-        AD["Razorpay Adapter\n(Typed Provider Interface)"]
+    subgraph OPS["08 · OPERATOR EXPERIENCE"]
+        direction TB
+        UI["Operator Dashboard"]
+        ASK["ASK ARIV<br/>Conversational Recovery Control"]
+        TG["Telegram Alerts"]
+
+        UI <--> ASK
+        MET -.-> UI
+        MET -.-> TG
     end
 
-    %% 8. PROVIDER RECONCILIATION
-    subgraph S_RECON ["8. PROVIDER RECONCILIATION"]
-        RPI["Razorpay API\n(Test Mode Financial Mutations)"]
-        RECON["Provider Reconciliation\n(State Verification & Settlement)"]
+    %% =========================================================
+    %% AUTHORITATIVE / COORDINATION STORES
+    %% =========================================================
+
+    subgraph DATA["AUTHORITATIVE DATA & COORDINATION"]
+        direction LR
+        PG[("PostgreSQL<br/>Authoritative Operational State")]
+        REDIS[("Redis<br/>Queue + Coordination")]
     end
 
-    %% 9. OUTCOME / MEASUREMENT
-    subgraph S_MEAS ["9. OUTCOME & MEASUREMENT"]
-        OC["Recovery Outcome\n(Terminal State: Success / Failed)"]
-        ATTR["Recovery Attribution\n(Exact Ledger Match Verification)"]
-        MEAS["Recovery Measurement\n(Financial & Health Metrics)"]
-    end
+    %% =========================================================
+    %% MAIN FORWARD FLOW
+    %% =========================================================
 
-    %% 10. OPERATOR EXPERIENCE
-    subgraph S_OPS ["10. OPERATOR EXPERIENCE"]
-        UI["Operator Dashboard\n(Real-Time Analytics & Live Stream)"]
-        ASK["ASK ARIV\n(Natural Language Agent — Streaming)"]
-        TG["Telegram Notifier\n(Critical Outage & Action Alerts)"]
-    end
+    CASE --> FI
+    CASE --> SYS
 
-    %% 11. INFRASTRUCTURE / COORDINATION
-    subgraph S_INFRA ["11. INFRASTRUCTURE & COORDINATION"]
-        PG[("PostgreSQL\nAuthoritative Operational State")]
-        REDIS[("Redis\nCoordination / Queue")]
-    end
-
-    %% Core Forward Flow
-    RP --> WH
-    WH --> PE
-    PE --> C
-    C --> FI
-    C --> SYS
-    FI --> DC
-    SYS --> DC
-
-    %% Memory to Decision Context
-    QDRANT -.->|Precedents & Playbooks| DC
-
-    %% Decisioning & Economics
     DC --> AI
-    AI --> PROP
-    PROP --> GEN
-    GEN --> ECON
-    LEARN -.->|Corridor Priors| ECON
+    ENR --> POL
 
-    %% Policy Gate
-    ECON --> POL
-    POL -->|Rejected / Suppressed| STOP
+    GW --> OUT
 
-    %% MCP Tool Runtime Control Plane
-    POL -->|Approved — ToolInvocation| TR
-    TR --> TV
-    TV --> TI
-    TI --> RC
-    RC -->|FINANCIAL: PolicyEngine Revalidation + Kill Switch| EC
-    RC -->|READ: Synchronous Provider Query| AD
-    EC -->|Enabled| OUT
-    EC -->|Disabled — BLOCKED| AUDIT
+    AD --> API
 
-    %% Durable Execution
-    OUT --> WK
-    WK --> GATE
-    GATE -->|Safety Revalidated| AD
-    AD --> RPI
-    RPI --> RECON
-    RECON --> OC
+    OUTCOME --> ATTR
 
-    %% Audit trail after every MCP outcome
-    TR -.->|TOOL_NOT_FOUND| AUDIT
-    TV -.->|INVALID_INPUT| AUDIT
-    TI -.->|TENANT_FORBIDDEN| AUDIT
-    OUT -.->|Action + Outbox Created| AUDIT
-    WK -.->|Execution Result| AUDIT
+    %% =========================================================
+    %% CLOSED-LOOP LEARNING
+    %% =========================================================
 
-    %% Outcome & Attribution
-    OC --> ATTR
-    ATTR --> MEAS
+    OUTCOME -.->|"terminal outcome"| LEARN
+    KOUT -.->|"durable indexing"| MEM
 
-    %% Closed-Loop Feedback
-    OC -.->|Terminal Outcomes| LEARN
-    MEAS -.->|Post-Settlement Enqueue| KOUT
-    KOUT -.->|Durable Indexer Worker| QDRANT
+    %% =========================================================
+    %% ASK ARIV → TOOL RUNTIME
+    %% =========================================================
 
-    %% Operator Experience & Alerts
-    MEAS -.-> UI
-    MEAS -.-> TG
-    UI <--> ASK
-    ASK -.->|MCPToolGateway.invoke| TR
+    ASK -.->|"authorized tool request"| GW
 
-    %% Queue & Leases
-    REDIS -.->|Coordination / Leases| WK
-    OUT -.-> REDIS
+    %% =========================================================
+    %% INFRASTRUCTURE RELATIONSHIPS
+    %% =========================================================
 
-    %% Authoritative Persistence Backbone Links
-    PG -.- PE
-    PG -.- C
-    PG -.- OUT
-    PG -.- OC
-    PG -.- MEAS
-    PG -.- KOUT
-    PG -.- AUDIT
+    PE -.-> PG
+    CASE -.-> PG
+    OUT -.-> PG
+    OUTCOME -.-> PG
+    MET -.-> PG
+    KOUT -.-> PG
+    GW -.-> PG
 
-    %% Styling & Class Definitions
+    OUT -.->|"leases / coordination"| REDIS
+    WK -.->|"queue / leases"| REDIS
+
+    %% =========================================================
+    %% STYLING
+    %% =========================================================
+
     classDef provider fill:#3B3518,stroke:#E0B93F,color:#FFF4C2,stroke-width:2px;
     classDef ingestion fill:#172B45,stroke:#5B9BFF,color:#DCEBFF,stroke-width:2px;
-    classDef case_intel fill:#1E2246,stroke:#7B88FF,color:#E6EAFF,stroke-width:2px;
+    classDef intelligence fill:#1F244A,stroke:#7F8CFF,color:#E8ECFF,stroke-width:2px;
     classDef memory fill:#452538,stroke:#E08AA5,color:#FFE8F0,stroke-width:2px;
     classDef agentic fill:#30244C,stroke:#A88BE8,color:#F1E9FF,stroke-width:2px;
     classDef economics fill:#49371E,stroke:#D9A65A,color:#FFF0D2,stroke-width:3px;
     classDef policy fill:#193D2B,stroke:#68C28A,color:#DDF8E7,stroke-width:3px;
-    classDef tool_mcp fill:#143D3B,stroke:#4ED0C0,color:#D7FAF5,stroke-width:3px;
-    classDef mcp_internal fill:#0E3030,stroke:#2EC4B6,color:#CCFAF5,stroke-width:2px;
-    classDef outbox fill:#163D3A,stroke:#59BDB1,color:#D9F8F4,stroke-width:3px;
+    classDef mcp fill:#123A39,stroke:#38D2C0,color:#D9FFF9,stroke-width:3px;
     classDef execution fill:#163D3A,stroke:#59BDB1,color:#D9F8F4,stroke-width:2px;
     classDef reconciliation fill:#183D32,stroke:#65C69A,color:#DDF9EC,stroke-width:2px;
     classDef outcome fill:#1B4228,stroke:#6BC982,color:#DDF9E2,stroke-width:3px;
@@ -303,26 +298,23 @@ flowchart TD
     classDef postgres fill:#1C2E3D,stroke:#6897BB,color:#D9E8F5,stroke-width:2.5px;
     classDef redis fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:2.5px;
     classDef stop fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:2.5px;
-    classDef audit fill:#2A1E3A,stroke:#B07AD0,color:#F0E6FF,stroke-width:2px;
 
-    class RP,RPI provider;
+    class RP,API provider;
     class WH,PE ingestion;
-    class C,FI,SYS,DC case_intel;
-    class QDRANT,LEARN,KOUT memory;
+    class CASE,FI,SYS,DC intelligence;
+    class MEM,LEARN,KOUT memory;
     class AI,PROP agentic;
-    class GEN,ECON economics;
+    class GEN,ENR economics;
     class POL policy;
-    class TR,TV,TI,RC,EC tool_mcp;
+    class GW,REG,VAL,RISK,TEN,CTRL mcp;
     class STOP stop;
-    class OUT outbox;
-    class GATE,WK,AD execution;
+    class OUT,GATE,WK,AD execution;
     class RECON reconciliation;
-    class OC outcome;
-    class ATTR,MEAS measurement;
+    class OUTCOME outcome;
+    class ATTR,MET measurement;
     class UI,ASK,TG operator;
     class PG postgres;
     class REDIS redis;
-    class AUDIT audit;
 ```
 
 > **Architectural boundary:** Probabilistic reasoning proposes actions; deterministic policy and tool controls constrain execution; durable workers perform approved operations; Razorpay confirms the financial outcome.
