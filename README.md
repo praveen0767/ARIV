@@ -116,9 +116,7 @@ Payment Success
 Attributed Recovery
 ```
 
-Revenue is counted only after provider-confirmed payment and recovery attribution.
 
-```
 
 ## 🏗️ Architecture
 
