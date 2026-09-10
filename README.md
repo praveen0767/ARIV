@@ -316,7 +316,6 @@ flowchart LR
     class PG postgres;
     class REDIS redis;
 ```
-
 > **Architectural boundary:** Probabilistic reasoning proposes actions; deterministic policy and tool controls constrain execution; durable workers perform approved operations; Razorpay confirms the financial outcome.
 
 ### Control-plane invariant
