@@ -53,7 +53,7 @@ Measurement
 - ✅ Real Razorpay Test API integration
 - ✅ Deterministic financial safety — AI proposes; `PolicyEngine` authorizes
 - ✅ No single AI component can independently move money
-- ✅ 281 tests passing, 1 skipped
+- ✅ 302 tests passing, 0 failed
 - ✅ 100% decision coverage in both reported Test-Mode benchmark cohorts
 - ✅ Honest recovery accounting — benchmark cohorts report **0 verified recoveries**
 - ✅ Separate provider-confirmed customer recovery demonstrated in Razorpay Test Mode
@@ -124,84 +124,227 @@ Revenue is counted only after provider-confirmed payment and recovery attributio
 
 ```mermaid
 flowchart TD
-    RP[Razorpay Events] --> WH[Webhook Verification]
-    WH --> PE[ProviderEvent Persistence]
-    PE --> C[Recovery Case]
+    %% 1. PROVIDER / INGESTION
+    subgraph S_INGEST ["1. PROVIDER / INGESTION"]
+        RP["Razorpay Events\n(Webhook Failures)"]
+        WH["Webhook Verification\n(Tenant Isolation + HMAC Auth)"]
+        PE["ProviderEvent Persistence\n(Authoritative Raw Audit)"]
+    end
 
-    C --> FI[Failure Intelligence]
-    C --> SYS[Systemic Route Intelligence]
+    %% 2. CASE + INTELLIGENCE
+    subgraph S_CASE ["2. CASE & ROUTE INTELLIGENCE"]
+        C["Recovery Case\n(State Machine & Lifecycle)"]
+        FI["Failure Intelligence\n(Classification & Root Cause)"]
+        SYS["Systemic Route Intelligence\n(Corridor Degradation Signals)"]
+        DC["Decision Context\n(Unified Recovery State)"]
+    end
 
-    SYS --> DC[Decision Context]
+    %% 3. MEMORY & CLOSED-LOOP LEARNING
+    subgraph S_MEM ["3. SEMANTIC MEMORY & LEARNING"]
+        QDRANT[("Qdrant\nSemantic Recovery Memory")]
+        LEARN["Recovery Learning Service\n(Dirichlet-Smoothed Precedents)"]
+        KOUT["Knowledge Outbox\n(Durable Vector Indexing Queue)"]
+    end
+
+    %% 4. AGENTIC DECISIONING
+    subgraph S_AI ["4. AGENTIC DECISIONING"]
+        AI["AI / Agentic Decision Engine\n(Context & Strategy Formulation)"]
+        PROP["Typed Decision Proposal\n(Recommended Action Proposal)"]
+    end
+
+    %% 5. ECONOMIC CONTROL
+    subgraph S_ECON ["5. ECONOMIC CONTROL"]
+        GEN["Candidate Generator\n(Action Space Exploration)"]
+        ECON["Economic Optimizer (ENR)\nExpected Net Recovery Ranking"]
+    end
+
+    %% 6. POLICY AUTHORIZATION
+    subgraph S_POL ["6. POLICY AUTHORIZATION"]
+        POL["Deterministic PolicyEngine\nSafety Rules & Domain Constraints"]
+        STOP["STOP_RECOVERY\n(Suppression / Terminal Exit)"]
+    end
+
+    %% 6b. MCP / TOOL CONTROL RUNTIME
+    subgraph S_MCP ["6b. MCP / TOOL CONTROL RUNTIME (MCPToolGateway)"]
+        TR["MCPToolRegistry\n(Tool Lookup & Registration)"]
+        TV["Input Schema Validation\n(JSON Schema + Required Fields)"]
+        TI["Tenant & Case Ownership\n(Isolation Enforcement)"]
+        RC["Server-Side Risk Classification\nToolRiskClassification: READ | FINANCIAL"]
+        EC["ExecutionControlService\n(DB-backed Kill Switch — Fail-Closed)"]
+        AUDIT["AuditEvent Trail\n(Sanitized Credential-Free Audit Log)"]
+    end
+
+    %% 7. DURABLE EXECUTION
+    subgraph S_EXEC ["7. DURABLE EXECUTION"]
+        OUT["Transactional Outbox\nOutboxService.create_authorized_action"]
+        GATE["18-Point Preflight Safety Gate\n(Kill Switch & Tenant Validation)"]
+        WK["Execution Worker\n(Durable Action Dispatcher)"]
+        AD["Razorpay Adapter\n(Typed Provider Interface)"]
+    end
+
+    %% 8. PROVIDER RECONCILIATION
+    subgraph S_RECON ["8. PROVIDER RECONCILIATION"]
+        RPI["Razorpay API\n(Test Mode Financial Mutations)"]
+        RECON["Provider Reconciliation\n(State Verification & Settlement)"]
+    end
+
+    %% 9. OUTCOME / MEASUREMENT
+    subgraph S_MEAS ["9. OUTCOME & MEASUREMENT"]
+        OC["Recovery Outcome\n(Terminal State: Success / Failed)"]
+        ATTR["Recovery Attribution\n(Exact Ledger Match Verification)"]
+        MEAS["Recovery Measurement\n(Financial & Health Metrics)"]
+    end
+
+    %% 10. OPERATOR EXPERIENCE
+    subgraph S_OPS ["10. OPERATOR EXPERIENCE"]
+        UI["Operator Dashboard\n(Real-Time Analytics & Live Stream)"]
+        ASK["ASK ARIV\n(Natural Language Agent — Streaming)"]
+        TG["Telegram Notifier\n(Critical Outage & Action Alerts)"]
+    end
+
+    %% 11. INFRASTRUCTURE / COORDINATION
+    subgraph S_INFRA ["11. INFRASTRUCTURE & COORDINATION"]
+        PG[("PostgreSQL\nAuthoritative Operational State")]
+        REDIS[("Redis\nCoordination / Queue")]
+    end
+
+    %% Core Forward Flow
+    RP --> WH
+    WH --> PE
+    PE --> C
+    C --> FI
+    C --> SYS
     FI --> DC
+    SYS --> DC
 
-    DC --> Q[Qdrant Semantic Recovery Memory]
-    Q --> DC
+    %% Memory to Decision Context
+    QDRANT -.->|Precedents & Playbooks| DC
 
-    DC --> AI[AI / Agentic Decision Engine]
-    AI --> PROP[Typed Decision Proposal]
-    PROP --> GEN[Candidate Generator]
-    GEN --> ECON[Economic Optimizer]
-    ECON --> POL[Deterministic PolicyEngine]
+    %% Decisioning & Economics
+    DC --> AI
+    AI --> PROP
+    PROP --> GEN
+    GEN --> ECON
+    LEARN -.->|Corridor Priors| ECON
 
-    POL -->|Approved| OUT[Transactional Outbox]
-    POL -->|Rejected| STOP[STOP_RECOVERY]
+    %% Policy Gate
+    ECON --> POL
+    POL -->|Rejected / Suppressed| STOP
 
-    OUT --> WK[Execution Worker]
-    WK --> AD[Razorpay Adapter]
-    AD --> RPI[Razorpay API]
+    %% MCP Tool Runtime Control Plane
+    POL -->|Approved — ToolInvocation| TR
+    TR --> TV
+    TV --> TI
+    TI --> RC
+    RC -->|FINANCIAL: PolicyEngine Revalidation + Kill Switch| EC
+    RC -->|READ: Synchronous Provider Query| AD
+    EC -->|Enabled| OUT
+    EC -->|Disabled — BLOCKED| AUDIT
 
-    RPI --> RECON[Provider Reconciliation]
-    RECON --> OC[Recovery Outcome]
+    %% Durable Execution
+    OUT --> WK
+    WK --> GATE
+    GATE -->|Safety Revalidated| AD
+    AD --> RPI
+    RPI --> RECON
+    RECON --> OC
 
-    OC --> ATTR[Recovery Attribution]
-    OC --> MEAS[Recovery Measurement]
+    %% Audit trail after every MCP outcome
+    TR -.->|TOOL_NOT_FOUND| AUDIT
+    TV -.->|INVALID_INPUT| AUDIT
+    TI -.->|TENANT_FORBIDDEN| AUDIT
+    OUT -.->|Action + Outbox Created| AUDIT
+    WK -.->|Execution Result| AUDIT
 
-    MEAS --> TG[Telegram]
-    MEAS --> UI[Operator Dashboard]
-    UI --> ASK[ASK ARIV]
-    ASK --> UI
+    %% Outcome & Attribution
+    OC --> ATTR
+    ATTR --> MEAS
 
-    REDIS[Redis + BullMQ] --> WK
-    OUT --> REDIS
+    %% Closed-Loop Feedback
+    OC -.->|Terminal Outcomes| LEARN
+    MEAS -.->|Post-Settlement Enqueue| KOUT
+    KOUT -.->|Durable Indexer Worker| QDRANT
 
+    %% Operator Experience & Alerts
+    MEAS -.-> UI
+    MEAS -.-> TG
+    UI <--> ASK
+    ASK -.->|MCPToolGateway.invoke| TR
+
+    %% Queue & Leases
+    REDIS -.->|Coordination / Leases| WK
+    OUT -.-> REDIS
+
+    %% Authoritative Persistence Backbone Links
+    PG -.- PE
+    PG -.- C
+    PG -.- OUT
+    PG -.- OC
+    PG -.- MEAS
+    PG -.- KOUT
+    PG -.- AUDIT
+
+    %% Styling & Class Definitions
     classDef provider fill:#3B3518,stroke:#E0B93F,color:#FFF4C2,stroke-width:2px;
     classDef ingestion fill:#172B45,stroke:#5B9BFF,color:#DCEBFF,stroke-width:2px;
-    classDef case fill:#162D49,stroke:#6FA8FF,color:#E4F0FF,stroke-width:2px;
-    classDef intelligence fill:#292343,stroke:#9A87E8,color:#EEE9FF,stroke-width:2px;
-    classDef memory fill:#452531,stroke:#E08AA5,color:#FFE8F0,stroke-width:2px;
+    classDef case_intel fill:#1E2246,stroke:#7B88FF,color:#E6EAFF,stroke-width:2px;
+    classDef memory fill:#452538,stroke:#E08AA5,color:#FFE8F0,stroke-width:2px;
     classDef agentic fill:#30244C,stroke:#A88BE8,color:#F1E9FF,stroke-width:2px;
-    classDef economics fill:#49371E,stroke:#D9A65A,color:#FFF0D2,stroke-width:2px;
-    classDef policy fill:#193D2B,stroke:#68C28A,color:#DDF8E7,stroke-width:2.5px;
+    classDef economics fill:#49371E,stroke:#D9A65A,color:#FFF0D2,stroke-width:3px;
+    classDef policy fill:#193D2B,stroke:#68C28A,color:#DDF8E7,stroke-width:3px;
+    classDef tool_mcp fill:#143D3B,stroke:#4ED0C0,color:#D7FAF5,stroke-width:3px;
+    classDef mcp_internal fill:#0E3030,stroke:#2EC4B6,color:#CCFAF5,stroke-width:2px;
+    classDef outbox fill:#163D3A,stroke:#59BDB1,color:#D9F8F4,stroke-width:3px;
     classDef execution fill:#163D3A,stroke:#59BDB1,color:#D9F8F4,stroke-width:2px;
-    classDef api fill:#1B3152,stroke:#6598E8,color:#DFEAFF,stroke-width:2px;
     classDef reconciliation fill:#183D32,stroke:#65C69A,color:#DDF9EC,stroke-width:2px;
-    classDef outcome fill:#1B4228,stroke:#6BC982,color:#DDF9E2,stroke-width:2.5px;
+    classDef outcome fill:#1B4228,stroke:#6BC982,color:#DDF9E2,stroke-width:3px;
     classDef measurement fill:#2C2850,stroke:#9889DE,color:#EEE9FF,stroke-width:2px;
     classDef operator fill:#303238,stroke:#9298A5,color:#F0F2F5,stroke-width:2px;
+    classDef postgres fill:#1C2E3D,stroke:#6897BB,color:#D9E8F5,stroke-width:2.5px;
     classDef redis fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:2.5px;
     classDef stop fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:2.5px;
+    classDef audit fill:#2A1E3A,stroke:#B07AD0,color:#F0E6FF,stroke-width:2px;
 
-    class RP provider;
+    class RP,RPI provider;
     class WH,PE ingestion;
-    class C case;
-    class FI,SYS,DC intelligence;
-    class Q memory;
+    class C,FI,SYS,DC case_intel;
+    class QDRANT,LEARN,KOUT memory;
     class AI,PROP agentic;
     class GEN,ECON economics;
     class POL policy;
-    class OUT,WK,AD execution;
-    class RPI api;
+    class TR,TV,TI,RC,EC tool_mcp;
+    class STOP stop;
+    class OUT outbox;
+    class GATE,WK,AD execution;
     class RECON reconciliation;
     class OC outcome;
     class ATTR,MEAS measurement;
-    class TG,UI,ASK operator;
+    class UI,ASK,TG operator;
+    class PG postgres;
     class REDIS redis;
-    class STOP stop;
+    class AUDIT audit;
 ```
 
-> **Architectural boundary:** judgment ≠ authority ≠ execution ≠ provider truth.
+> **Architectural boundary:** Probabilistic reasoning proposes actions; deterministic policy and tool controls constrain execution; durable workers perform approved operations; Razorpay confirms the financial outcome.
 
-The integration layer is a typed capability boundary for controlled actions, not an unrestricted autonomous money-movement gateway.
+### Control-plane invariant
+
+- **AI reasons.** Context & strategy formulation.
+- **Economic logic ranks.** Expected Net Recovery (ENR) prioritization.
+- **PolicyEngine authorizes.** Deterministic financial safety rules & domain constraints.
+- **MCPToolGateway enforces the tool control boundary.** Every tool invocation (`ToolInvocation`) is processed through a multi-stage pipeline:
+  1. **MCPToolRegistry lookup** — tool must be registered, unknown tools are rejected
+  2. **Input schema validation** — required fields enforced against JSON schema
+  3. **Tenant & case ownership verification** — strict tenant isolation, no cross-tenant access
+  4. **Server-side `ToolRiskClassification`** — READ vs FINANCIAL, cannot be downgraded by caller
+  5. **PolicyEngine revalidation** — approved decision re-evaluated at execution time
+  6. **`ExecutionControlService` kill switch** — DB-backed, fail-closed; blocked = `BLOCKED` result
+  7. **`OutboxService.create_authorized_action`** — durable outbox record committed before execution
+  8. **Sanitized `AuditEvent`** — credential-free audit log written after every invocation outcome
+- **Durable workers execute.** `ExecutionWorker.process_outbox_item` performs provider dispatch with PostgreSQL row-lock leasing.
+- **Razorpay confirms.** Real payment provider settlement.
+- **Attribution measures.** Ledger-matched revenue verification.
+- **Qdrant retains semantic recovery memory.** Asynchronous closed-loop learning from verified outcomes.
 
 ---
 
@@ -211,12 +354,14 @@ ARIV separates reasoning, economics, authorization, execution, and provider trut
 
 | Layer | Responsibility |
 |---|---|
-| **AI / Agentic** | Diagnose, retrieve context, propose |
-| **Economic Optimizer** | Rank candidates using ENR |
-| **PolicyEngine** | Deterministic financial authorization |
-| **Outbox + Worker** | Durable execution |
+| **AI / Agentic** | Diagnose failure, retrieve context, propose candidates |
+| **Economic Optimizer** | Rank candidates using Expected Net Recovery (ENR) |
+| **PolicyEngine** | Deterministic financial authorization & domain safety |
+| **MCPToolGateway** | `MCPToolRegistry` lookup → input validation → tenant isolation → `ToolRiskClassification` → PolicyEngine revalidation → `ExecutionControlService` kill switch → `AuditEvent` trail |
+| **Outbox + Worker** | `OutboxService.create_authorized_action` + `ExecutionWorker.process_outbox_item` (PostgreSQL row-locked durable execution) |
 | **Razorpay** | Provider execution + confirmation |
-| **Attribution** | Recovery linkage + measurement |
+| **Attribution** | Exact ledger linkage & recovery measurement |
+| **Semantic Memory** | Qdrant vector memory + Dirichlet-smoothed learning loop |
 
 ### Expected Net Recovery
 

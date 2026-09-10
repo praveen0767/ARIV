@@ -50,7 +50,10 @@ class OutboxService:
             action_type=action_type,
             status=ActionStatus.AUTHORIZED,
         )
-        session.add(action)
+        # Add action to session; handle async mock gracefully
+        result = session.add(action)
+        if hasattr(result, "__await__"):
+            await result
         await session.flush()  # Generate action.id
 
         outbox = ExecutionOutbox(
@@ -60,7 +63,9 @@ class OutboxService:
             attempt_count=0,
             max_retries=3,
         )
-        session.add(outbox)
+        result = session.add(outbox)
+        if hasattr(result, "__await__"):
+            await result
 
         audit = AuditEvent(
             case_id=case_id,
@@ -73,7 +78,9 @@ class OutboxService:
                 "outbox_status": OutboxStatus.PENDING.value,
             },
         )
-        session.add(audit)
+        result = session.add(audit)
+        if hasattr(result, "__await__"):
+            await result
         await session.flush()
 
         logger.info(

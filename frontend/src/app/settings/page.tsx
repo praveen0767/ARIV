@@ -94,7 +94,7 @@ export default function SettingsPage() {
           <SettingRow label="Bot Token" value="Set via TELEGRAM_BOT_TOKEN env" masked />
           <SettingRow label="Chat ID" value="Set via TELEGRAM_CHAT_ID env" masked />
           <div className="text-xs text-slate-400 mt-2">
-            Telegram bot token and chat ID are stored as environment variables and never sent to the browser.
+docker compose exec web python -c "import os; names=['RAZORPAY_KEY_ID','RAZORPAY_KEY_SECRET','RAZORPAY_WEBHOOK_SECRET','TELEGRAM_BOT_TOKEN','TELEGRAM_CHAT_ID']; [(print(n, 'SET' if os.getenv(n) else 'MISSING')) for n in names]"            Telegram bot token and chat ID are stored as environment variables and never sent to the browser.
             Configure these in your backend <code className="bg-slate-100 px-1 py-0.5 rounded">.env</code> file.
           </div>
         </SettingSection>

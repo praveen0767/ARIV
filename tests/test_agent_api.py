@@ -27,6 +27,7 @@ from app.domain.recovery_case import RecoveryCase, CaseStatus, RecoveryDomain, C
 from app.domain.classification import RecoveryClassification, FailureCategory, Retryability, Recoverability
 from app.domain.decision import DecisionRecord, RecoveryAction, PolicyStatus, AutonomyLevel
 from app.domain.action import Action, ActionStatus
+from app.domain.system_settings import SystemSetting
 from app.domain.recovery.recovery_outcome import RecoveryOutcome, RecoveryOutcomeStatus, RecoverySource
 from app.api.agent import is_aggregate_metrics_query
 from app.api.agent import is_conversational_greeting
@@ -200,9 +201,18 @@ def test_agent_execution_meta_status_reflects_blocked_action():
     attempt.attempt_metadata = {}
     attempt.provider_request_id = "N/A"
 
+    # Mock SystemSetting for execution kill switch (must be True to allow execution)
+    mock_setting = MagicMock(spec=SystemSetting)
+    mock_setting.value = True
+    mock_setting.key = "execution_enabled"
+
+    # Mock tenant for gateway's _verify_tenant_and_case
+    mock_tenant_result = _scalar_query(mock_tenant)
+
     mock_session = AsyncMock()
     mock_case_result = MagicMock()
     mock_case_result.scalars.return_value.all.return_value = [case]
+    mock_case_result.scalar_one_or_none.return_value = case
     mock_class_result = _scalar_query(classification)
     mock_dec_result = _scalar_query(decision)
     mock_att_result = _scalar_query(attempt)
@@ -212,6 +222,10 @@ def test_agent_execution_meta_status_reflects_blocked_action():
 
     async def mock_execute(query, *args, **kwargs):
         q = str(query)
+        if "system_setting" in q.lower() or "execution_enabled" in q:
+            return _scalar_query(mock_setting)
+        if "FROM tenant" in q or "from tenant" in q.lower():
+            return mock_tenant_result
         if "recovery_classification" in q:
             return mock_class_result
         if "decision_record" in q:

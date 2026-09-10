@@ -10,6 +10,7 @@ from app.api.health import router as health_router
 from app.api.webhooks.razorpay import router as razorpay_router
 from app.api.recovery import router as recovery_router
 from app.api.agent import router as agent_router
+from app.api.mcp import router as mcp_router
 from app.core.config import settings
 
 # Configure ariv.* loggers to emit INFO so Telegram notification outcomes
@@ -171,6 +172,7 @@ app.include_router(health_router)
 app.include_router(razorpay_router, prefix="/webhooks", tags=["webhooks"])
 app.include_router(recovery_router)
 app.include_router(agent_router)
+app.include_router(mcp_router)
 
 # Mount static files and serve dashboard
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")

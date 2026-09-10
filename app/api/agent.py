@@ -26,6 +26,8 @@ from app.services.activity import ActivityService
 from app.services.qdrant_memory import QdrantMemoryService
 from app.services.dashboard import DashboardService
 from app.services.ingestion import resolve_tenant
+from app.interfaces.mcp import ToolInvocation, MCPErrorCode
+from app.services.mcp_gateway import MCPToolGateway
 import hmac
 import hashlib
 
@@ -735,7 +737,7 @@ async def _agent_stream_impl(
                     lines.append(f"Case {cid_short}… is missing failure intelligence.")
                     lines.append("Recovery requires initial classification signals from the gateway payload.")
                 elif decision.policy_status == PolicyStatus.REJECTED:
-                    meta["status"] = "BLOCKED"
+                    meta["status"] = "CANCELLED"
                     lines.append(f"Recovery for case {cid_short}… was BLOCKED by the Policy Firewall.")
                     lines.append("")
                     lines.append(f"Action Proposed:  {decision.proposed_action.value}")
@@ -743,84 +745,108 @@ async def _agent_stream_impl(
                     lines.append(f"Rejection Reason: {decision.rejection_reason or 'Policy safety boundary triggered'}")
                     lines.append("")
                     lines.append("PolicyEngine deterministic constraints prevented action dispatch.")
+                    lines.append("Recovery did not succeed.")
                 else:
                     action_type = decision.proposed_action
-                    yield _event("step", f"Submitting authorized action {action_type.value} via Execution Outbox…")
+                    yield _event("step", f"Submitting authorized action {action_type.value} via Tool / MCP Gateway…")
 
-                    outbox_payload = {
-                        "amount": target_case.amount_minor or 10000,
-                        "currency": ctx.get("currency", "INR"),
-                        "description": f"ARIV Autonomous Recovery - Case {cid_short}",
-                        "customer_email": ctx.get("customer_email"),
-                        "customer_phone": ctx.get("customer_phone"),
-                        "customer_name": ctx.get("customer_name"),
-                    }
-
-                    action, outbox = await OutboxService.create_authorized_action(
-                        session=db,
-                        case_id=target_case.id,
+                    gateway = MCPToolGateway()
+                    invocation = ToolInvocation(
+                        tool_name="razorpay_create_payment_link",
                         tenant_id=target_case.tenant_id,
-                        decision_id=decision.id,
-                        action_type=action_type,
-                        payload=outbox_payload,
+                        actor="ask_ariv",
+                        case_id=target_case.id,
+                        input={
+                            "amount": target_case.amount_minor or 10000,
+                            "currency": ctx.get("currency", "INR"),
+                            "description": f"ARIV Autonomous Recovery - Case {cid_short}",
+                            "customer_email": ctx.get("customer_email"),
+                            "customer_phone": ctx.get("customer_phone"),
+                            "customer_name": ctx.get("customer_name"),
+                        },
                     )
 
-                    yield _event("step", "Dispatching authorized action to Razorpay provider…")
-                    adapter = get_razorpay_adapter()
-                    if adapter:
-                        try:
-                            worker = ExecutionWorker(provider_adapter=adapter)
-                            await worker.process_outbox_item(db, outbox)
-                        except Exception as e:
-                            logger.error("ExecutionWorker error: %s", e)
+                    # Submit authorized action via MCP Tool Gateway (durable outbox handled inside gateway)
+                    tool_result = await gateway.invoke(db, invocation)
 
-                    # Reload attempt
-                    att_r = await db.execute(
-                        select(ExecutionAttempt)
-                        .where(ExecutionAttempt.action_id == action.id)
-                        .order_by(desc(ExecutionAttempt.attempt_number))
-                        .limit(1)
-                    )
-                    attempt = att_r.scalar_one_or_none()
-                    att_meta = attempt.attempt_metadata if (attempt and isinstance(attempt.attempt_metadata, dict)) else {}
-                    plink_url = att_meta.get("short_url") or ""
-                    req_id = attempt.provider_request_id if attempt else "N/A"
-
-                    ctx["recovery_stage"] = (
-                        "WAITING_FOR_PAYMENT"
-                        if plink_url and action.status == ActionStatus.SUCCEEDED
-                        else (action.status.value if hasattr(action.status, "value") else str(action.status))
-                    )
-                    if plink_url:
-                        ctx["payment_link_url"] = plink_url
-                    if req_id and req_id != "N/A":
-                        ctx["payment_link_id"] = req_id
-                    target_case.context = ctx
-                    await db.commit()
-
-                    meta["action_type"] = action_type.value
-                    meta["status"] = action.status.value if hasattr(action.status, "value") else str(action.status)
-                    meta["payment_link_url"] = plink_url or None
-                    if plink_url:
-                        meta["links"].append({"label": "Open Razorpay Payment Link", "href": plink_url, "is_external": True})
-
-                    lines.append(f"Case {cid_short}… authorized recovery action processed.")
-                    lines.append("")
-                    lines.append("Execution:")
-                    lines.append(f"  Action:       {action_type.value}")
-                    lines.append(f"  Status:       {action.status.value}")
-                    lines.append(f"  Policy Gate:  APPROVED (Autonomy: {decision.autonomy_level.value})")
-                    if req_id != "N/A":
-                        lines.append(f"  Provider Ref: {req_id}")
-                    if plink_url:
-                        lines.append(f"  Payment Link: {plink_url}")
-                    lines.append("")
-                    if action.status == ActionStatus.SUCCEEDED:
-                        lines.append("Recovery stage updated to WAITING_FOR_PAYMENT.")
-                        lines.append("System is monitoring for payment_link.paid webhook to confirm and attribute recovery.")
+                    if tool_result.status == "BLOCKED" or tool_result.error_code == MCPErrorCode.POLICY_REJECTED.value:
+                        meta["status"] = "CANCELLED"
+                        lines.append(f"Recovery for case {cid_short}… was BLOCKED by the Policy Firewall.")
+                        lines.append("")
+                        lines.append(f"Action Proposed:  {decision.proposed_action.value}")
+                        lines.append("Policy Gate:      REJECTED")
+                        lines.append(f"Rejection Reason: {decision.rejection_reason or 'Policy safety boundary triggered'}")
+                        lines.append("")
+                        lines.append("PolicyEngine deterministic constraints prevented action dispatch.")
+                        lines.append("Recovery did not succeed.")
+                    elif tool_result.error_code == MCPErrorCode.EXECUTION_DISABLED.value:
+                        meta["status"] = "CANCELLED"
+                        lines.append(f"Recovery for case {cid_short}… was BLOCKED by the Global Execution Kill Switch.")
+                        lines.append("")
+                        lines.append(f"Reason: {tool_result.error_message}")
+                        lines.append("Recovery did not succeed.")
+                    elif tool_result.status == "IDEMPOTENT_HIT":
+                        plink_url = (tool_result.output or {}).get("payment_link_url")
+                        plink_id = (tool_result.output or {}).get("payment_link_id", "Generated")
+                        meta["payment_link_url"] = plink_url
+                        meta["status"] = "WAITING_FOR_PAYMENT"
+                        if plink_url:
+                            meta["links"].append({"label": "Open Razorpay Payment Link", "href": plink_url, "is_external": True})
+                        lines.append(f"Case {cid_short}… is currently WAITING_FOR_PAYMENT.")
+                        lines.append("")
+                        lines.append("Recovery:")
+                        lines.append("  Action:   GENERATE_PAYMENT_LINK (SUCCEEDED)")
+                        lines.append(f"  Amount:   {_fmt_inr(target_case.amount or 0)}")
+                        lines.append(f"  Provider: Razorpay Payment Link ({plink_id})")
+                        if plink_url:
+                            lines.append(f"  URL:      {plink_url}")
+                        lines.append("")
+                        lines.append("PolicyEngine deterministic safety rules prevent generating duplicate links.")
+                        lines.append("The payment link is live. Waiting for the customer to complete payment.")
+                    elif tool_result.success and tool_result.status in ("SUCCEEDED", "SUCCEEDED"):
+                        out_data = tool_result.output or {}
+                        plink_url = out_data.get("payment_link_url") or ""
+                        req_id = out_data.get("payment_link_id") or "N/A"
+                        meta["action_type"] = action_type.value
+                        meta["status"] = "WAITING_FOR_PAYMENT" if plink_url else "SUCCEEDED"
+                        if plink_url:
+                            meta["payment_link_url"] = plink_url
+                            meta["links"].append({"label": "Open Razorpay Payment Link", "href": plink_url, "is_external": True})
+                        lines.append(f"Case {cid_short}… recovery action SUCCEEDED.")
+                        lines.append("")
+                        lines.append("Execution:")
+                        lines.append(f"  Action:       {action_type.value}")
+                        lines.append(f"  Status:       SUCCEEDED")
+                        lines.append(f"  Policy Gate:  APPROVED (Autonomy: {decision.autonomy_level.value})")
+                        if plink_url:
+                            lines.append(f"  Payment Link: {plink_url}")
+                            lines.append(f"  Link ID:      {req_id}")
+                        lines.append("")
+                        lines.append("Recovery action dispatched. Waiting for customer to complete payment.")
+                    elif not tool_result.success:
+                        meta["action_type"] = action_type.value
+                        meta["status"] = "CANCELLED"
+                        lines.append(f"Recovery for case {cid_short}… was blocked by the execution pipeline.")
+                        lines.append("")
+                        lines.append(f"Action Proposed:  {action_type.value}")
+                        lines.append(f"Execution Status: {tool_result.status}")
+                        if tool_result.error_message:
+                            lines.append(f"Reason:           {tool_result.error_message}")
+                        lines.append("")
+                        lines.append("Recovery action did not succeed.")
                     else:
-                        lines.append("Recovery action did not succeed; no payment link was generated.")
-                        lines.append("Inspect the case timeline for the deterministic execution audit trail.")
+                        # Fallback: queued to outbox but not yet processed synchronously
+                        meta["action_type"] = action_type.value
+                        meta["status"] = "PENDING"
+                        lines.append(f"Case {cid_short}… authorized recovery action queued to Durable Outbox.")
+                        lines.append("")
+                        lines.append("Execution:")
+                        lines.append(f"  Action:       {action_type.value}")
+                        lines.append(f"  Status:       PENDING (Outbox Queued)")
+                        lines.append(f"  Policy Gate:  APPROVED (Autonomy: {decision.autonomy_level.value})")
+                        lines.append("")
+                        lines.append("Recovery action committed to transactional outbox.")
+                        lines.append("Background worker will process execution and monitor webhooks.")
 
     # -----------------------------------------------------------------------
     # BRANCH 2: Global Operational Snapshot — "What is happening right now?"
