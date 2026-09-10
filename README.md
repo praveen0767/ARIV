@@ -9,6 +9,7 @@
 <img src="https://img.shields.io/badge/PostgreSQL-Database-0f172a?style=for-the-badge&logo=postgresql" alt="PostgreSQL"/>
 <img src="https://img.shields.io/badge/Redis-Coordination-0f172a?style=for-the-badge" alt="Redis"/>
 <img src="https://img.shields.io/badge/Qdrant-Semantic%20Memory-0f172a?style=for-the-badge" alt="Qdrant"/>
+<img src="https://img.shields.io/badge/MCP-Tool%20Runtime-0f172a?style=for-the-badge" alt="MCP Tool Runtime"/>
 <img src="https://img.shields.io/badge/Docker-Compose-0f172a?style=for-the-badge&logo=docker" alt="Docker"/>
 <img src="https://img.shields.io/badge/Next.js-React-0f172a?style=for-the-badge&logo=next.js" alt="Next.js"/>
 
@@ -53,6 +54,7 @@ Measurement
 - ✅ Real Razorpay Test API integration
 - ✅ Deterministic financial safety — AI proposes; `PolicyEngine` authorizes
 - ✅ No single AI component can independently move money
+- ✅ Real MCP / Tool Runtime with `MCPToolGateway`
 - ✅ 302 tests passing, 0 failed
 - ✅ 100% decision coverage in both reported Test-Mode benchmark cohorts
 - ✅ Honest recovery accounting — benchmark cohorts report **0 verified recoveries**
@@ -61,8 +63,11 @@ Measurement
 - ✅ Systemic / route-aware recovery intelligence
 - ✅ Durable execution with transactional outbox and worker leases
 - ✅ Attribution only after provider confirmation
+- ✅ Tenant-isolated semantic recovery memory
+- ✅ ASK ARIV conversational recovery control
+- ✅ Structured operational auditability
 
-> **AI reasons. Economic logic ranks. PolicyEngine authorizes. Infrastructure executes. Razorpay confirms. Attribution measures.**
+> **AI reasons. Economic logic ranks. PolicyEngine authorizes. MCPToolGateway controls tools. Infrastructure executes. Razorpay confirms. Attribution measures.**
 
 ---
 
@@ -93,9 +98,15 @@ Economic Optimization (ENR)
       ↓
 Deterministic PolicyEngine
       ↓
+MCPToolGateway
+      ↓
+ExecutionControl
+      ↓
 Transactional Outbox
       ↓
 Execution Worker
+      ↓
+Razorpay Adapter
       ↓
 Razorpay
       ↓
@@ -104,6 +115,10 @@ Provider Reconciliation
 Recovery Outcome
       ↓
 Attribution + Measurement
+      ↓
+Knowledge Outbox
+      ↓
+Qdrant Semantic Memory
 ```
 
 ### The key invariant
@@ -116,14 +131,18 @@ Payment Success
 Attributed Recovery
 ```
 
+Revenue is counted only after provider-confirmed payment and recovery attribution.
 
+---
 
 ## 🏗️ Architecture
 
 <p align="center">
-  <img src="./docs/architecture/ariv-architecture.svg"
-       alt="ARIV Architecture — Agentic Revenue Recovery Control Plane"
-       width="100%"/>
+  <img
+    src="./docs/architecture/ariv-architecture.png"
+    alt="ARIV Architecture — Agentic Revenue Recovery Control Plane"
+    width="100%"
+  />
 </p>
 
 > **Control-plane invariant:** AI proposes → Economic Optimizer ranks → PolicyEngine authorizes → MCPToolGateway controls tools → ExecutionControl validates → Outbox persists → Worker executes → Razorpay confirms → ARIV attributes and measures.
@@ -148,7 +167,7 @@ flowchart LR
         F["Systemic Route Intelligence"]
         G["Decision Context"]
         H[("Qdrant Semantic Memory")]
-        
+
         D --> E
         D --> F
         E --> G
@@ -274,26 +293,33 @@ flowchart LR
 
 </details>
 
-> **Architectural boundary:** Probabilistic reasoning proposes actions; deterministic policy and tool controls constrain execution; durable workers perform approved operations; Razorpay confirms the financial outcome.
+### MCP / Tool Control
 
-### Control-plane invariant
+The MCP layer is a **real application runtime**, not an unrestricted model-to-provider bridge.
 
-- **AI reasons.** Context & strategy formulation.
-- **Economic logic ranks.** Expected Net Recovery (ENR) prioritization.
-- **PolicyEngine authorizes.** Deterministic financial safety rules & domain constraints.
-- **MCPToolGateway enforces the tool control boundary.** Every tool invocation (`ToolInvocation`) is processed through a multi-stage pipeline:
-  1. **MCPToolRegistry lookup** — tool must be registered, unknown tools are rejected
-  2. **Input schema validation** — required fields enforced against JSON schema
-  3. **Tenant & case ownership verification** — strict tenant isolation, no cross-tenant access
-  4. **Server-side `ToolRiskClassification`** — READ vs FINANCIAL, cannot be downgraded by caller
-  5. **PolicyEngine revalidation** — approved decision re-evaluated at execution time
-  6. **`ExecutionControlService` kill switch** — DB-backed, fail-closed; blocked = `BLOCKED` result
-  7. **`OutboxService.create_authorized_action`** — durable outbox record committed before execution
-  8. **Sanitized `AuditEvent`** — credential-free audit log written after every invocation outcome
-- **Durable workers execute.** `ExecutionWorker.process_outbox_item` performs provider dispatch with PostgreSQL row-lock leasing.
-- **Razorpay confirms.** Real payment provider settlement.
-- **Attribution measures.** Ledger-matched revenue verification.
-- **Qdrant retains semantic recovery memory.** Asynchronous closed-loop learning from verified outcomes.
+The runtime enforces:
+
+```text
+Tool Request
+    ↓
+MCPToolRegistry
+    ↓
+Input Schema Validation
+    ↓
+Tenant / Case Ownership
+    ↓
+Server-Side Risk Classification
+    ↓
+PolicyEngine Revalidation
+    ↓
+ExecutionControl
+    ↓
+Transactional Outbox
+    ↓
+Durable Worker
+```
+
+Financial operations remain behind deterministic execution controls.
 
 ---
 
@@ -306,11 +332,11 @@ ARIV separates reasoning, economics, authorization, execution, and provider trut
 | **AI / Agentic** | Diagnose failure, retrieve context, propose candidates |
 | **Economic Optimizer** | Rank candidates using Expected Net Recovery (ENR) |
 | **PolicyEngine** | Deterministic financial authorization & domain safety |
-| **MCPToolGateway** | `MCPToolRegistry` lookup → input validation → tenant isolation → `ToolRiskClassification` → PolicyEngine revalidation → `ExecutionControlService` kill switch → `AuditEvent` trail |
-| **Outbox + Worker** | `OutboxService.create_authorized_action` + `ExecutionWorker.process_outbox_item` (PostgreSQL row-locked durable execution) |
+| **MCPToolGateway** | Tool registry → schema validation → tenant isolation → server-side risk classification → policy revalidation → execution control |
+| **Outbox + Worker** | `OutboxService.create_authorized_action` + `ExecutionWorker.process_outbox_item` |
 | **Razorpay** | Provider execution + confirmation |
 | **Attribution** | Exact ledger linkage & recovery measurement |
-| **Semantic Memory** | Qdrant vector memory + Dirichlet-smoothed learning loop |
+| **Semantic Memory** | Qdrant vector memory + closed-loop learning |
 
 ### Expected Net Recovery
 
@@ -605,7 +631,7 @@ This prevents:
 
 <p align="center">
   <b>08 — ASK ARIV</b><br/>
-  Conversational operator control
+  Conversational recovery control
 </p>
 
 <p align="center">
@@ -672,6 +698,10 @@ Key engineering safeguards:
 - Durable `ProviderEvent` persistence
 - Tenant-isolated semantic retrieval
 - Deterministic `PolicyEngine`
+- Real MCP / Tool Runtime boundary
+- Server-side tool risk classification
+- Tool input/schema validation
+- Tenant and case ownership enforcement
 - Transactional Outbox
 - Worker leases and idempotent execution
 - Optimistic locking
@@ -690,6 +720,10 @@ AI proposes
 Economic layer ranks
     ↓
 PolicyEngine decides
+    ↓
+MCPToolGateway controls tools
+    ↓
+ExecutionControl validates
     ↓
 Outbox persists
     ↓
@@ -832,6 +866,8 @@ Decision
       ↓
 Policy Evaluation
       ↓
+Tool / MCP Invocation
+      ↓
 Execution
       ↓
 Provider Outcome
@@ -853,6 +889,8 @@ The Razorpay adapter provides controlled capabilities including:
 - fetch payment
 - fetch payment link
 - cancel payment link
+
+Provider capabilities are exposed through the governed tool/runtime boundary and the existing typed provider adapter.
 
 The implementation uses Razorpay Test Mode for real provider interaction.
 
@@ -880,6 +918,7 @@ ARIV counts recovery
 - PostgreSQL
 - Redis
 - Qdrant
+- MCP / Tool Runtime
 - Docker Compose
 
 ### Frontend
@@ -908,6 +947,7 @@ ARIV counts recovery
 - Optimistic locking
 - State-machine guards
 - HMAC verification
+- MCP tool governance
 - Semantic retrieval
 - Policy engine
 - Measurement / attribution
@@ -957,7 +997,7 @@ end to end through a real webhook and never touches production auth:
    (`acc_demo_123`).
 2. The running backend ingests it through `POST /webhooks/razorpay` → ProviderEvent → **Recovery Case**.
 3. Decisioning runs the real AI/deterministic baseline → **Economic Optimization (ENR)** →
-   **PolicyEngine** gate → outbox → Execution Worker.
+   **PolicyEngine** gate → MCP / Tool Runtime → outbox → Execution Worker.
 4. When `GENERATE_PAYMENT_LINK` is approved (it is, for this scenario), the worker
    creates a **real Razorpay Test-Mode payment link** tied to the case.
 5. The command prints: scenario/payment ID, case ID (with frontend URL), selected
@@ -1031,12 +1071,23 @@ No conversion of action attempts into recovered revenue
 ARIV/
 ├── app/
 │   ├── api/
+│   │   ├── agent.py
+│   │   ├── health.py
+│   │   ├── mcp.py
+│   │   └── recovery.py
 │   ├── core/
 │   ├── db/
+│   ├── interfaces/
+│   │   └── mcp.py
 │   ├── models/
 │   ├── schemas/
 │   ├── services/
-│   └── workers/
+│   │   ├── mcp_gateway.py
+│   │   ├── mcp_tools.py
+│   │   ├── execution_control.py
+│   │   ├── execution_worker.py
+│   │   └── ...
+│   └── worker.py
 │
 ├── frontend/
 │   ├── app/
@@ -1045,12 +1096,16 @@ ARIV/
 │
 ├── scripts/
 │   ├── run_benchmark.py
+│   ├── run_test_recovery.py
+│   ├── create_test_payment_link.py
 │   └── benchmark_utils.py
 │
 ├── tests/
 │
 ├── docs/
-│   └── screenshots/
+│   ├── screenshots/
+│   └── architecture/
+│       └── ariv-architecture.png
 │
 ├── .env.example
 ├── Dockerfile
@@ -1075,7 +1130,11 @@ Understand Failure
       ↓
 Inspect AI Decision
       ↓
+Inspect Economic Ranking
+      ↓
 Inspect Policy Boundary
+      ↓
+Inspect Tool / MCP Controls
       ↓
 Approve / Execute
       ↓
@@ -1090,6 +1149,8 @@ Telegram Notification
 ASK ARIV Investigation
       ↓
 Measurement
+      ↓
+Semantic Memory
 ```
 
 ---
@@ -1112,6 +1173,8 @@ AI / rule-based decisioning
 Economic ranking
         ↓
 Deterministic policy authorization
+        ↓
+MCP / Tool governance
         ↓
 Durable execution
         ↓
@@ -1174,6 +1237,14 @@ PolicyEngine
 ↓
 Deterministic authorization
 
+MCPToolGateway
+↓
+Tool capability + risk control
+
+ExecutionControl
+↓
+Runtime safety
+
 Outbox + Worker
 ↓
 Durable execution
@@ -1185,6 +1256,10 @@ Provider truth
 Attribution
 ↓
 Financial measurement
+
+Qdrant
+↓
+Semantic recovery memory
 ```
 
 And the central measurement decision is equally important:
