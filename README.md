@@ -6,12 +6,12 @@
 
 <img src="https://img.shields.io/badge/Razorpay-Test%20Mode-0f172a?style=for-the-badge" alt="Razorpay Test Mode"/>
 <img src="https://img.shields.io/badge/FastAPI-Python-0f172a?style=for-the-badge&logo=fastapi" alt="FastAPI"/>
-<img src="https://img.shields.io/badge/PostgreSQL-Database-0f172a?style=for-the-badge&logo=postgresql" alt="PostgreSQL"/>
-<img src="https://img.shields.io/badge/Redis-Coordination-0f172a?style=for-the-badge" alt="Redis"/>
-<img src="https://img.shields.io/badge/Qdrant-Semantic%20Memory-0f172a?style=for-the-badge" alt="Qdrant"/>
-<img src="https://img.shields.io/badge/MCP-Tool%20Runtime-0f172a?style=for-the-badge" alt="MCP Tool Runtime"/>
-<img src="https://img.shields.io/badge/Docker-Compose-0f172a?style=for-the-badge&logo=docker" alt="Docker"/>
-<img src="https://img.shields.io/badge/Next.js-React-0f172a?style=for-the-badge&logo=next.js" alt="Next.js"/>
+<img src="https://img.shields.io/badge/PostgreSQL-Database-2563eb?style=for-the-badge&logo=postgresql" alt="PostgreSQL"/>
+<img src="https://img.shields.io/badge/Redis-Coordination-dc2626?style=for-the-badge" alt="Redis"/>
+<img src="https://img.shields.io/badge/Qdrant-Semantic%20Memory-7c3aed?style=for-the-badge" alt="Qdrant"/>
+<img src="https://img.shields.io/badge/MCP-Tool%20Runtime-0f766e?style=for-the-badge" alt="MCP Tool Runtime"/>
+<img src="https://img.shields.io/badge/Docker-Compose-2563eb?style=for-the-badge&logo=docker" alt="Docker"/>
+<img src="https://img.shields.io/badge/Next.js-React-374151?style=for-the-badge&logo=next.js" alt="Next.js"/>
 
 **Detect → Diagnose → Retrieve → Propose → Rank → Authorize → Execute → Verify → Attribute → Measure**
 
