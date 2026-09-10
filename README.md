@@ -120,200 +120,160 @@ Attributed Recovery
 
 ## 🏗️ Architecture
 
+<p align="center">
+  <img src="./docs/architecture/ariv-architecture.svg"
+       alt="ARIV Architecture — Agentic Revenue Recovery Control Plane"
+       width="100%"/>
+</p>
+
+> **Control-plane invariant:** AI proposes → Economic Optimizer ranks → PolicyEngine authorizes → MCPToolGateway controls tools → ExecutionControl validates → Outbox persists → Worker executes → Razorpay confirms → ARIV attributes and measures.
+
+<details>
+<summary>View detailed implementation architecture</summary>
+
 ```mermaid
 flowchart LR
 
-    %% =========================================================
-    %% PRIMARY CONTROL PLANE
-    %% =========================================================
-
     subgraph ING["01 · INGEST & CASE"]
-        direction TB
-        RP["Razorpay Events"]
-        WH["Webhook Verification<br/>HMAC + Tenant Isolation"]
-        PE["ProviderEvent<br/>Durable Persistence"]
-        CASE["Recovery Case<br/>State Machine"]
+        A["Razorpay Events"]
+        B["Webhook Verification"]
+        C["ProviderEvent Persistence"]
+        D["Recovery Case"]
 
-        RP --> WH --> PE --> CASE
+        A --> B --> C --> D
     end
 
     subgraph INT["02 · INTELLIGENCE & MEMORY"]
-        direction TB
-        FI["Failure Intelligence<br/>Root Cause + Classification"]
-        SYS["Systemic Route Intelligence<br/>Corridor / Provider Signals"]
-        DC["Decision Context"]
-        MEM["Qdrant Semantic Memory<br/>Tenant-Scoped Retrieval"]
-        LEARN["Recovery Learning<br/>Dirichlet-Smoothed Priors"]
-
-        FI --> DC
-        SYS --> DC
-        MEM -.->|"precedents"| DC
-        LEARN -.->|"corridor priors"| DC
+        E["Failure Intelligence"]
+        F["Systemic Route Intelligence"]
+        G["Decision Context"]
+        H[("Qdrant Semantic Memory")]
+        
+        D --> E
+        D --> F
+        E --> G
+        F --> G
+        H -. "semantic precedents" .-> G
     end
 
-    subgraph DEC["03 · AGENTIC DECISION & ECONOMICS"]
-        direction TB
-        AI["AI / Agentic Decision Engine"]
-        PROP["Typed Decision Proposal"]
-        GEN["Candidate Generator"]
-        ENR["Economic Optimizer<br/>ENR Ranking"]
+    subgraph DEC["03 · DECISION & ECONOMICS"]
+        I["AI / Agentic Decision Engine"]
+        J["Typed Decision Proposal"]
+        K["Candidate Generator"]
+        L["Economic Optimizer · ENR"]
 
-        AI --> PROP --> GEN --> ENR
+        G --> I --> J --> K --> L
     end
 
     subgraph AUTH["04 · POLICY + MCP CONTROL"]
-        direction TB
-        POL["Deterministic PolicyEngine<br/>Safety + Domain Constraints"]
+        M["Deterministic PolicyEngine"]
 
         subgraph MCP["MCP / TOOL CONTROL RUNTIME"]
-            direction TB
-            GW["MCPToolGateway"]
-            REG["Tool Registry"]
-            VAL["Schema + Capability Validation"]
-            RISK["Server-Side Risk Classification"]
-            TEN["Tenant / Case Ownership"]
-            CTRL["ExecutionControl<br/>Kill Switch + Preconditions"]
+            N["MCPToolGateway"]
+            O["Tool Registry"]
+            P["Schema + Capability Validation"]
+            Q["Tenant / Case Ownership"]
+            R["Server-Side Risk Classification"]
+            S["ExecutionControl"]
 
-            GW --> REG --> VAL --> TEN --> RISK --> CTRL
+            N --> O --> P --> Q --> R --> S
         end
 
         STOP["STOP_RECOVERY"]
 
-        POL -->|"Approved"| GW
-        POL -->|"Rejected"| STOP
+        L --> M
+        M -->|APPROVED| N
+        M -->|REJECTED| STOP
     end
 
     subgraph EXEC["05 · DURABLE EXECUTION"]
-        direction TB
-        OUT["Transactional Outbox<br/>Authorized Action"]
-        GATE["18-Point Preflight Safety Gate"]
-        WK["Execution Worker"]
-        AD["Razorpay Adapter"]
+        T["Transactional Outbox"]
+        U["18-Point Preflight Gate"]
+        V["Execution Worker"]
+        W["Razorpay Adapter"]
 
-        OUT --> GATE --> WK --> AD
+        S --> T --> U --> V --> W
     end
 
-    subgraph VERIFY["06 · PROVIDER VERIFICATION"]
-        direction TB
-        API["Razorpay API<br/>Test / Production Provider"]
-        RECON["Provider Reconciliation"]
-        OUTCOME["Recovery Outcome<br/>Provider-Confirmed"]
+    subgraph VERIFY["06 · PROVIDER TRUTH"]
+        X["Razorpay API"]
+        Y["Provider Reconciliation"]
+        Z["Recovery Outcome"]
 
-        API --> RECON --> OUTCOME
+        W --> X --> Y --> Z
     end
 
-    subgraph MEASURE["07 · ATTRIBUTION & MEASUREMENT"]
-        direction TB
-        ATTR["Recovery Attribution"]
-        MET["Recovery Measurement"]
-        KOUT["Knowledge Outbox"]
+    subgraph MEAS["07 · ATTRIBUTION + MEASUREMENT"]
+        AA["Recovery Attribution"]
+        AB["Recovery Measurement"]
+        AC["Knowledge Outbox"]
 
-        ATTR --> MET --> KOUT
+        Z --> AA --> AB --> AC
     end
 
     subgraph OPS["08 · OPERATOR EXPERIENCE"]
-        direction TB
-        UI["Operator Dashboard"]
-        ASK["ASK ARIV<br/>Conversational Recovery Control"]
-        TG["Telegram Alerts"]
+        AD["Operator Dashboard"]
+        AE["ASK ARIV"]
+        AF["Telegram Alerts"]
 
-        UI <--> ASK
-        MET -.-> UI
-        MET -.-> TG
+        AB -.-> AD
+        AD <--> AE
+        AB -.-> AF
+        AE -. "authorized tool request" .-> N
     end
 
-    %% =========================================================
-    %% AUTHORITATIVE / COORDINATION STORES
-    %% =========================================================
+    PG[("PostgreSQL\nAuthoritative Operational State")]
+    RD[("Redis\nQueue / Coordination")]
 
-    subgraph DATA["AUTHORITATIVE DATA & COORDINATION"]
-        direction LR
-        PG[("PostgreSQL<br/>Authoritative Operational State")]
-        REDIS[("Redis<br/>Queue + Coordination")]
-    end
+    C -.-> PG
+    D -.-> PG
+    T -.-> PG
+    Z -.-> PG
+    AB -.-> PG
+    AC -.-> PG
 
-    %% =========================================================
-    %% MAIN FORWARD FLOW
-    %% =========================================================
+    T -.-> RD
+    V -.-> RD
 
-    CASE --> FI
-    CASE --> SYS
-
-    DC --> AI
-    ENR --> POL
-
-    GW --> OUT
-
-    AD --> API
-
-    OUTCOME --> ATTR
-
-    %% =========================================================
-    %% CLOSED-LOOP LEARNING
-    %% =========================================================
-
-    OUTCOME -.->|"terminal outcome"| LEARN
-    KOUT -.->|"durable indexing"| MEM
-
-    %% =========================================================
-    %% ASK ARIV → TOOL RUNTIME
-    %% =========================================================
-
-    ASK -.->|"authorized tool request"| GW
-
-    %% =========================================================
-    %% INFRASTRUCTURE RELATIONSHIPS
-    %% =========================================================
-
-    PE -.-> PG
-    CASE -.-> PG
-    OUT -.-> PG
-    OUTCOME -.-> PG
-    MET -.-> PG
-    KOUT -.-> PG
-    GW -.-> PG
-
-    OUT -.->|"leases / coordination"| REDIS
-    WK -.->|"queue / leases"| REDIS
-
-    %% =========================================================
-    %% STYLING
-    %% =========================================================
+    AB -. "verified outcome memory" .-> H
+    Z -. "learning signal" .-> L
+    AC -. "durable indexing" .-> H
 
     classDef provider fill:#3B3518,stroke:#E0B93F,color:#FFF4C2,stroke-width:2px;
-    classDef ingestion fill:#172B45,stroke:#5B9BFF,color:#DCEBFF,stroke-width:2px;
-    classDef intelligence fill:#1F244A,stroke:#7F8CFF,color:#E8ECFF,stroke-width:2px;
+    classDef ingest fill:#172B45,stroke:#5B9BFF,color:#DCEBFF,stroke-width:2px;
+    classDef intelligence fill:#20264A,stroke:#7F8CFF,color:#E8ECFF,stroke-width:2px;
     classDef memory fill:#452538,stroke:#E08AA5,color:#FFE8F0,stroke-width:2px;
-    classDef agentic fill:#30244C,stroke:#A88BE8,color:#F1E9FF,stroke-width:2px;
+    classDef ai fill:#30244C,stroke:#A88BE8,color:#F1E9FF,stroke-width:2px;
     classDef economics fill:#49371E,stroke:#D9A65A,color:#FFF0D2,stroke-width:3px;
     classDef policy fill:#193D2B,stroke:#68C28A,color:#DDF8E7,stroke-width:3px;
     classDef mcp fill:#123A39,stroke:#38D2C0,color:#D9FFF9,stroke-width:3px;
     classDef execution fill:#163D3A,stroke:#59BDB1,color:#D9F8F4,stroke-width:2px;
-    classDef reconciliation fill:#183D32,stroke:#65C69A,color:#DDF9EC,stroke-width:2px;
     classDef outcome fill:#1B4228,stroke:#6BC982,color:#DDF9E2,stroke-width:3px;
     classDef measurement fill:#2C2850,stroke:#9889DE,color:#EEE9FF,stroke-width:2px;
     classDef operator fill:#303238,stroke:#9298A5,color:#F0F2F5,stroke-width:2px;
-    classDef postgres fill:#1C2E3D,stroke:#6897BB,color:#D9E8F5,stroke-width:2.5px;
+    classDef database fill:#1C2E3D,stroke:#6897BB,color:#D9E8F5,stroke-width:2.5px;
     classDef redis fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:2.5px;
     classDef stop fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:2.5px;
 
-    class RP,API provider;
-    class WH,PE ingestion;
-    class CASE,FI,SYS,DC intelligence;
-    class MEM,LEARN,KOUT memory;
-    class AI,PROP agentic;
-    class GEN,ENR economics;
-    class POL policy;
-    class GW,REG,VAL,RISK,TEN,CTRL mcp;
+    class A,X provider;
+    class B,C ingest;
+    class D,E,F,G intelligence;
+    class H,AC memory;
+    class I,J ai;
+    class K,L economics;
+    class M policy;
+    class N,O,P,Q,R,S mcp;
     class STOP stop;
-    class OUT,GATE,WK,AD execution;
-    class RECON reconciliation;
-    class OUTCOME outcome;
-    class ATTR,MET measurement;
-    class UI,ASK,TG operator;
-    class PG postgres;
-    class REDIS redis;
+    class T,U,V,W execution;
+    class Y,Z outcome;
+    class AA,AB measurement;
+    class AD,AE,AF operator;
+    class PG database;
+    class RD redis;
 ```
+
+</details>
+
 > **Architectural boundary:** Probabilistic reasoning proposes actions; deterministic policy and tool controls constrain execution; durable workers perform approved operations; Razorpay confirms the financial outcome.
 
 ### Control-plane invariant
