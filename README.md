@@ -165,7 +165,9 @@ flowchart TB
         C["ProviderEvent Persistence<br/>Authoritative Raw Event"]
         D["Recovery Case<br/>Gap Matrix + SLA"]
 
-        A --> B --> C --> D
+        A --> B
+        B --> C
+        C --> D
     end
 
 
@@ -176,10 +178,10 @@ flowchart TB
     subgraph INT["02 · INTELLIGENCE & MEMORY"]
         direction LR
 
-        E["Failure Intelligence<br/>Classification + Root Cause"]
-        F["Systemic Route Intelligence<br/>Correlated Degradation Signals"]
-        G["Decision Context<br/>Unified Recovery State"]
-        H[("Qdrant<br/>Semantic Recovery Memory")]
+        E["Failure Intelligence"]
+        F["Systemic Route Intelligence"]
+        G["Decision Context"]
+        H[("Qdrant Semantic Memory")]
 
         D --> E
         D --> F
@@ -198,10 +200,13 @@ flowchart TB
 
         I["AI / Agentic Decision Engine"]
         J["Typed Decision Proposal"]
-        K["Candidate Generator<br/>Action Space Expansion"]
-        L["Economic Optimizer<br/>ENR Ranking"]
+        K["Candidate Generator"]
+        L["Economic Optimizer · ENR"]
 
-        G --> I --> J --> K --> L
+        G --> I
+        I --> J
+        J --> K
+        K --> L
     end
 
 
@@ -217,14 +222,18 @@ flowchart TB
         subgraph MCP["MCP / TOOL CONTROL RUNTIME"]
             direction LR
 
-            N["MCPToolGateway<br/>Tool Request Boundary"]
+            N["MCPToolGateway"]
             O["Tool Registry"]
             P["Schema + Capability Validation"]
             Q["Tenant / Case Ownership"]
             R["Server-Side Risk Classification"]
             S["ExecutionControl"]
 
-            N --> O --> P --> Q --> R --> S
+            N --> O
+            O --> P
+            P --> Q
+            Q --> R
+            R --> S
         end
 
         STOP["STOP_RECOVERY"]
@@ -242,12 +251,15 @@ flowchart TB
     subgraph EXEC["05 · DURABLE EXECUTION"]
         direction LR
 
-        T["Transactional Outbox<br/>Atomic Intent Persistence"]
+        T["Transactional Outbox"]
         U["18-Point Preflight Gate"]
         V["Execution Worker"]
         W["Razorpay Adapter"]
 
-        S --> T --> U --> V --> W
+        S --> T
+        T --> U
+        U --> V
+        V --> W
     end
 
 
@@ -262,7 +274,9 @@ flowchart TB
         Y["Provider Reconciliation"]
         Z["Recovery Outcome"]
 
-        W --> X --> Y --> Z
+        W --> X
+        X --> Y
+        Y --> Z
     end
 
 
@@ -277,7 +291,9 @@ flowchart TB
         AB["Recovery Measurement"]
         AC["Knowledge Outbox"]
 
-        Z --> AA --> AB --> AC
+        Z --> AA
+        AA --> AB
+        AB --> AC
     end
 
 
@@ -300,67 +316,29 @@ flowchart TB
 
 
     %% ============================================================
-    %% 09 · INFRASTRUCTURE & COORDINATION
+    %% INFRASTRUCTURE
     %% ============================================================
 
-    subgraph INFRA["09 · INFRASTRUCTURE & COORDINATION"]
-        direction LR
-
-        PG[("PostgreSQL<br/>Authoritative Operational State")]
-        RD[("Redis<br/>Queue / Coordination")]
-
-        QD[("Qdrant<br/>Semantic Recovery Memory")]
-    end
-
-
-    %% ============================================================
-    %% AUTHORITATIVE OPERATIONAL STATE
-    %% ============================================================
+    PG[("PostgreSQL<br/>Authoritative Operational State")]
+    RD[("Redis<br/>Queue / Coordination")]
 
     C -.-> PG
     D -.-> PG
     T -.-> PG
     Z -.-> PG
-    AA -.-> PG
     AB -.-> PG
     AC -.-> PG
-
-
-    %% ============================================================
-    %% REDIS QUEUE / COORDINATION
-    %% ============================================================
 
     T -.-> RD
     V -.-> RD
 
-
     %% ============================================================
-    %% QDRANT MEMORY / LEARNING
+    %% SEMANTIC MEMORY + LEARNING
     %% ============================================================
 
-    Z -. "verified outcome memory" .-> H
-    AB -. "learning signal" .-> L
+    AB -. "verified outcome memory" .-> H
+    Z -. "learning signal" .-> L
     AC -. "durable indexing" .-> H
-
-    Z -.-> QD
-    AC -.-> QD
-    QD -. "semantic retrieval" .-> G
-
-
-    %% ============================================================
-    %% CLOSED-LOOP LEARNING
-    %% ============================================================
-
-    Z -. "verified outcome" .-> H
-    AB -. "optimization feedback" .-> L
-    AC -. "knowledge update" .-> H
-
-
-    %% ============================================================
-    %% TERMINAL / SUPPRESSION PATH
-    %% ============================================================
-
-    STOP -. "terminal / suppressed case" .-> Z
 
 
     %% ============================================================
@@ -381,13 +359,12 @@ flowchart TB
     classDef operator fill:#303238,stroke:#9298A5,color:#F0F2F5,stroke-width:2px;
     classDef database fill:#1C2E3D,stroke:#6897BB,color:#D9E8F5,stroke-width:2.5px;
     classDef redis fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:2.5px;
-    classDef qdrant fill:#452538,stroke:#E08AA5,color:#FFE8F0,stroke-width:2.5px;
     classDef stop fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:2.5px;
 
     class A,X provider;
     class B,C ingest;
     class D,E,F,G intelligence;
-    class H,QD memory;
+    class H,AC memory;
     class I,J ai;
     class K,L economics;
     class M policy;
@@ -399,7 +376,36 @@ flowchart TB
     class AD,AE,AF operator;
     class PG database;
     class RD redis;
+
+```
+
 </details>
+
+### MCP / Tool Control
+
+The MCP layer is a **real application runtime**, not an unrestricted model-to-provider bridge.
+
+The runtime enforces:
+
+```text
+Tool Request
+    ↓
+MCPToolRegistry
+    ↓
+Input Schema Validation
+    ↓
+Tenant / Case Ownership
+    ↓
+Server-Side Risk Classification
+    ↓
+PolicyEngine Revalidation
+    ↓
+ExecutionControl
+    ↓
+Transactional Outbox
+    ↓
+Durable Worker
+
 
  ```
 ### MCP / Tool Control
