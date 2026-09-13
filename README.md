@@ -151,14 +151,32 @@ Revenue is counted only after provider-confirmed payment and recovery attributio
 <summary>View detailed implementation architecture</summary>
 
 ```mermaid
+%%{init: {
+  "theme": "dark",
+  "flowchart": {
+    "htmlLabels": true,
+    "curve": "basis",
+    "nodeSpacing": 18,
+    "rankSpacing": 32,
+    "padding": 12,
+    "useMaxWidth": true
+  },
+  "themeVariables": {
+    "fontFamily": "Arial, sans-serif",
+    "fontSize": "16px",
+    "primaryTextColor": "#F5F7FA",
+    "lineColor": "#7C8796"
+  }
+}}%%
+
 flowchart TB
 
-    %% ============================================================
+    %% =========================================================
     %% 01 · INGEST & CASE
-    %% ============================================================
+    %% =========================================================
 
     subgraph ING["01 · INGEST & CASE"]
-        direction LR
+        direction TB
 
         A["Razorpay Events"]
         B["Webhook Verification"]
@@ -171,16 +189,16 @@ flowchart TB
     end
 
 
-    %% ============================================================
+    %% =========================================================
     %% 02 · INTELLIGENCE & MEMORY
-    %% ============================================================
+    %% =========================================================
 
     subgraph INT["02 · INTELLIGENCE & MEMORY"]
-        direction LR
+        direction TB
 
-        E["Failure Intelligence"]
-        F["Systemic Route Intelligence"]
-        G["Decision Context"]
+        E["Failure Intelligence<br/>Classification + Root Cause"]
+        F["Systemic Route Intelligence<br/>Correlated Degradation Signals"]
+        G["Decision Context<br/>Unified Recovery State"]
         H[("Qdrant Semantic Memory")]
 
         D --> E
@@ -191,16 +209,16 @@ flowchart TB
     end
 
 
-    %% ============================================================
+    %% =========================================================
     %% 03 · DECISION & ECONOMICS
-    %% ============================================================
+    %% =========================================================
 
     subgraph DEC["03 · DECISION & ECONOMICS"]
-        direction LR
+        direction TB
 
         I["AI / Agentic Decision Engine"]
         J["Typed Decision Proposal"]
-        K["Candidate Generator"]
+        K["Candidate Generator<br/>Action Space Expansion"]
         L["Economic Optimizer · ENR"]
 
         G --> I
@@ -210,140 +228,213 @@ flowchart TB
     end
 
 
-    %% ============================================================
-    %% 04 · POLICY + MCP CONTROL
-    %% ============================================================
+    %% =========================================================
+    %% 04 · POLICY AUTHORIZATION
+    %% =========================================================
 
-    subgraph AUTH["04 · POLICY + MCP CONTROL"]
+    subgraph AUTH["04 · POLICY AUTHORIZATION"]
         direction TB
 
         M["Deterministic PolicyEngine"]
 
-        subgraph MCP["MCP / TOOL CONTROL RUNTIME"]
-            direction LR
-
-            N["MCPToolGateway"]
-            O["Tool Registry"]
-            P["Schema + Capability Validation"]
-            Q["Tenant / Case Ownership"]
-            R["Server-Side Risk Classification"]
-            S["ExecutionControl"]
-
-            N --> O
-            O --> P
-            P --> Q
-            Q --> R
-            R --> S
-        end
-
-        STOP["STOP_RECOVERY"]
+        P1["APPROVED"]
+        P2["REJECTED"]
+        STOP["STOP_RECOVERY<br/>Suppression / Terminal Exit"]
 
         L --> M
-        M -->|APPROVED| N
-        M -->|REJECTED| STOP
+        M -->|APPROVED| P1
+        M -->|REJECTED| P2
+        P2 --> STOP
     end
 
 
-    %% ============================================================
-    %% 05 · DURABLE EXECUTION
-    %% ============================================================
+    %% =========================================================
+    %% 05 · MCP / TOOL CONTROL RUNTIME
+    %% =========================================================
 
-    subgraph EXEC["05 · DURABLE EXECUTION"]
-        direction LR
+    subgraph MCP["05 · MCP / TOOL CONTROL RUNTIME"]
+        direction TB
 
-        T["Transactional Outbox"]
-        U["18-Point Preflight Gate"]
-        V["Execution Worker"]
-        W["Razorpay Adapter"]
+        N["MCPToolGateway<br/>Tool Request Boundary"]
+        O["Tool Registry<br/>Scoping + Registration"]
+        P["Schema + Capability Validation"]
+        Q["Tenant / Case Ownership<br/>Isolation + Authorization"]
+        R["Server-Side Risk Classification<br/>Fraud / Financial / Abuse"]
+        S["PolicyEngine Revalidation<br/>Execution Decision Gate"]
+        T["ExecutionControl<br/>Idempotency + Dedupe"]
 
+        P1 --> N
+
+        N --> O
+        O --> P
+        P --> Q
+        Q --> R
+        R --> S
         S --> T
+    end
+
+
+    %% =========================================================
+    %% 06 · DURABLE EXECUTION
+    %% =========================================================
+
+    subgraph EXEC["06 · DURABLE EXECUTION"]
+        direction TB
+
+        U["Transactional Outbox<br/>Atomic Intent Persistence"]
+        V["18-Point Preflight Gate<br/>Safety Validation"]
+        W["Execution Worker<br/>Bounded Action Dispatch"]
+        X["Razorpay Adapter<br/>Typed Provider Interface"]
+
         T --> U
         U --> V
         V --> W
+        W --> X
     end
 
 
-    %% ============================================================
-    %% 06 · PROVIDER TRUTH
-    %% ============================================================
+    %% =========================================================
+    %% 07 · PROVIDER TRUTH
+    %% =========================================================
 
-    subgraph VERIFY["06 · PROVIDER TRUTH"]
-        direction LR
+    subgraph VERIFY["07 · PROVIDER TRUTH"]
+        direction TB
 
-        X["Razorpay API"]
-        Y["Provider Reconciliation"]
-        Z["Recovery Outcome"]
+        Y["Razorpay API<br/>Real Provider Mutations"]
+        Z["Provider Reconciliation<br/>Settlement / Confirmation"]
+        AA["Recovery Outcome<br/>Success / Failed / Terminal"]
 
-        W --> X
         X --> Y
         Y --> Z
+        Z --> AA
     end
 
 
-    %% ============================================================
-    %% 07 · ATTRIBUTION + MEASUREMENT
-    %% ============================================================
+    %% =========================================================
+    %% 08 · ATTRIBUTION + MEASUREMENT
+    %% =========================================================
 
-    subgraph MEAS["07 · ATTRIBUTION + MEASUREMENT"]
-        direction LR
+    subgraph MEAS["08 · ATTRIBUTION + MEASUREMENT"]
+        direction TB
 
-        AA["Recovery Attribution"]
-        AB["Recovery Measurement"]
-        AC["Knowledge Outbox"]
+        AB["Recovery Attribution<br/>Exact Recovery Match"]
+        AC["Recovery Measurement<br/>Health + Habit Metrics"]
+        AD["Knowledge Outbox<br/>Durable Vector Index Queue"]
 
-        Z --> AA
         AA --> AB
         AB --> AC
+        AC --> AD
     end
 
 
-    %% ============================================================
-    %% 08 · OPERATOR EXPERIENCE
-    %% ============================================================
+    %% =========================================================
+    %% 09 · OPERATOR EXPERIENCE
+    %% =========================================================
 
-    subgraph OPS["08 · OPERATOR EXPERIENCE"]
-        direction LR
+    subgraph OPS["09 · OPERATOR EXPERIENCE"]
+        direction TB
 
-        AD["Operator Dashboard"]
-        AE["ASK ARIV"]
-        AF["Telegram Alerts"]
+        AE["Operator Dashboard<br/>Real-Time Analytics + Case Stream"]
+        AF["ASK ARIV<br/>Natural Language Operator Console"]
+        AG["Telegram Alerts<br/>Critical Outage + Action Alerts"]
 
-        AB -.-> AD
-        AD <--> AE
-        AB -.-> AF
-        AE -. "authorized tool request" .-> N
+        AC -. "recovery analytics" .-> AE
+        AE <--> AF
+        AC -. "critical alerts" .-> AG
+        AF -. "authorized tool request" .-> N
     end
 
 
-    %% ============================================================
-    %% INFRASTRUCTURE
-    %% ============================================================
+    %% =========================================================
+    %% 10 · INFRASTRUCTURE & COORDINATION
+    %% =========================================================
 
-    PG[("PostgreSQL<br/>Authoritative Operational State")]
-    RD[("Redis<br/>Queue / Coordination")]
+    subgraph INFRA["10 · INFRASTRUCTURE & COORDINATION"]
+        direction TB
+
+        PG[("PostgreSQL<br/>Authoritative Operational State")]
+
+        subgraph REDIS["Redis · Queue / Coordination"]
+            direction TB
+
+            R1["Outbox Queue"]
+            R2["Execution Coordination"]
+            R3["Worker Leases"]
+            R4["Distributed Locks"]
+
+            R1 --- R2
+            R2 --- R3
+            R3 --- R4
+        end
+
+        subgraph QDRANT["Qdrant · Semantic Recovery Memory"]
+            direction TB
+
+            Q1["Vector Index<br/>Past Cases"]
+            Q2["Tenant-Scoped Retrieval"]
+            Q3["Direction-Smooth Priors"]
+            Q4["Knowledge Indexing"]
+
+            Q1 --- Q2
+            Q2 --- Q3
+            Q3 --- Q4
+        end
+    end
+
+
+    %% =========================================================
+    %% POSTGRESQL · AUTHORITATIVE STATE
+    %% =========================================================
 
     C -.-> PG
     D -.-> PG
-    T -.-> PG
-    Z -.-> PG
+    U -.-> PG
+    AA -.-> PG
     AB -.-> PG
     AC -.-> PG
-
-    T -.-> RD
-    V -.-> RD
-
-    %% ============================================================
-    %% SEMANTIC MEMORY + LEARNING
-    %% ============================================================
-
-    AB -. "verified outcome memory" .-> H
-    Z -. "learning signal" .-> L
-    AC -. "durable indexing" .-> H
+    AD -.-> PG
 
 
-    %% ============================================================
+    %% =========================================================
+    %% REDIS · QUEUE / COORDINATION
+    %% =========================================================
+
+    U -.-> R1
+    W -.-> R2
+    W -.-> R3
+    U -.-> R4
+
+
+    %% =========================================================
+    %% QDRANT · SEMANTIC MEMORY
+    %% =========================================================
+
+    AA -. "verified outcome memory" .-> Q1
+    AD -. "durable indexing" .-> Q4
+    Q2 -. "tenant-scoped retrieval" .-> G
+    Q3 -. "semantic priors" .-> G
+    Q4 -. "knowledge indexing" .-> H
+
+
+    %% =========================================================
+    %% CLOSED-LOOP LEARNING
+    %% =========================================================
+
+    AA -. "verified outcome" .-> H
+    AC -. "learning signal" .-> L
+    AD -. "knowledge update" .-> H
+
+
+    %% =========================================================
+    %% TERMINAL / SUPPRESSION
+    %% =========================================================
+
+    STOP -. "terminal / suppressed case" .-> AA
+
+
+    %% =========================================================
     %% STYLING
-    %% ============================================================
+    %% =========================================================
 
     classDef provider fill:#3B3518,stroke:#E0B93F,color:#FFF4C2,stroke-width:2px;
     classDef ingest fill:#172B45,stroke:#5B9BFF,color:#DCEBFF,stroke-width:2px;
@@ -352,6 +443,8 @@ flowchart TB
     classDef ai fill:#30244C,stroke:#A88BE8,color:#F1E9FF,stroke-width:2px;
     classDef economics fill:#49371E,stroke:#D9A65A,color:#FFF0D2,stroke-width:3px;
     classDef policy fill:#193D2B,stroke:#68C28A,color:#DDF8E7,stroke-width:3px;
+    classDef approved fill:#174B31,stroke:#62D08C,color:#E0FFE9,stroke-width:3px;
+    classDef rejected fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:3px;
     classDef mcp fill:#123A39,stroke:#38D2C0,color:#D9FFF9,stroke-width:3px;
     classDef execution fill:#163D3A,stroke:#59BDB1,color:#D9F8F4,stroke-width:2px;
     classDef outcome fill:#1B4228,stroke:#6BC982,color:#DDF9E2,stroke-width:3px;
@@ -359,23 +452,31 @@ flowchart TB
     classDef operator fill:#303238,stroke:#9298A5,color:#F0F2F5,stroke-width:2px;
     classDef database fill:#1C2E3D,stroke:#6897BB,color:#D9E8F5,stroke-width:2.5px;
     classDef redis fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:2.5px;
-    classDef stop fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:2.5px;
+    classDef qdrant fill:#452538,stroke:#E08AA5,color:#FFE8F0,stroke-width:2.5px;
+    classDef stop fill:#4A2022,stroke:#E05A5A,color:#FFE3E3,stroke-width:3px;
 
-    class A,X provider;
-    class B,C ingest;
-    class D,E,F,G intelligence;
-    class H,AC memory;
+
+    %% =========================================================
+    %% NODE ASSIGNMENTS
+    %% =========================================================
+
+    class A,Y provider;
+    class B,C,D ingest;
+    class E,F,G intelligence;
+    class H,Q1,Q2,Q3,Q4,AD memory;
     class I,J ai;
     class K,L economics;
     class M policy;
-    class N,O,P,Q,R,S mcp;
+    class P1 approved;
+    class P2 rejected;
     class STOP stop;
-    class T,U,V,W execution;
-    class Y,Z outcome;
-    class AA,AB measurement;
-    class AD,AE,AF operator;
+    class N,O,P,Q,R,S,T mcp;
+    class U,V,W,X execution;
+    class Z,AA outcome;
+    class AB,AC measurement;
+    class AE,AF,AG operator;
     class PG database;
-    class RD redis;
+    class R1,R2,R3,R4 redis;
 
 ```
 
