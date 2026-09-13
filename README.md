@@ -436,32 +436,6 @@ Transactional Outbox
     ↓
 Durable Worker
 
-
- ```
-### MCP / Tool Control
-
-The MCP layer is a **real application runtime**, not an unrestricted model-to-provider bridge.
-
-The runtime enforces:
-
-```text
-Tool Request
-    ↓
-MCPToolRegistry
-    ↓
-Input Schema Validation
-    ↓
-Tenant / Case Ownership
-    ↓
-Server-Side Risk Classification
-    ↓
-PolicyEngine Revalidation
-    ↓
-ExecutionControl
-    ↓
-Transactional Outbox
-    ↓
-Durable Worker
 ```
 
 Financial operations remain behind deterministic execution controls.
