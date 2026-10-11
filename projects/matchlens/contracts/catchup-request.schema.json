@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/matchlens/catchup-request.schema.json",
+  "title": "MatchLens Catch-up Request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "match_id",
+    "innings",
+    "start_boundary",
+    "end_boundary",
+    "lens",
+    "language",
+    "explanation_depth"
+  ],
+  "properties": {
+    "match_id": {"type": "string", "minLength": 1, "maxLength": 120},
+    "innings": {"type": "integer", "minimum": 1, "maximum": 4},
+    "start_boundary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable named boundary from the server's supported boundary catalogue."
+    },
+    "end_boundary": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Stable named boundary from the server's supported boundary catalogue."
+    },
+    "lens": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "value"],
+      "properties": {
+        "type": {"enum": ["match", "team", "player"]},
+        "value": {"type": ["string", "null"], "maxLength": 160}
+      }
+    },
+    "language": {"enum": ["en", "ta"]},
+    "explanation_depth": {"enum": ["simple", "tactical", "stats_first"]}
+  }
+}
